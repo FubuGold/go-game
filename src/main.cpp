@@ -1,7 +1,12 @@
 #include <iostream>
+#include <cstdlib>
+
 #include "../include/game_logic.h"
 
 int main() {
-    std::cout << add(5 ,6);
+    while (true) {
+        break;
+        system("cls");
+    }
     return 0;
 }
