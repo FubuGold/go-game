@@ -1,9 +1,9 @@
 # go-game
 
-# Tech stack
+## Tech stack
 Language: C++
 Graphic: SFML
 AI: ...
 
-# Extensions
+## Extensions
 file-tree-generator
