@@ -8,7 +8,7 @@ char opposite_stone(const char &cur_stone) {
     return 'X';
 }
 
-Move::Move(int pos_x = 0, int pos_y = 0, char stone_type = '.', std::vector<std::pair<int, int>> captured_stones = {}) {
+Move::Move(int pos_x, int pos_y, char stone_type, std::vector<std::pair<int, int>> captured_stones) {
     this->pos_x = pos_x;
     this->pos_y = pos_y;
     this->stone_type = stone_type;
