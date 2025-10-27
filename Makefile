@@ -13,4 +13,4 @@ $(TARGET): $(OBJ)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f src/*.o $(TARGET)
+	rm -f src/*.o

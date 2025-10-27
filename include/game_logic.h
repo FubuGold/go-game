@@ -12,4 +12,4 @@ void reset_game();
 
 bool check_vaild_move(const Move &new_move);
 
-#endif GAME_LOGIC_H
+#endif

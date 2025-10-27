@@ -18,4 +18,4 @@ public:
     void update_hash(const int &pos_x, const int &pos_y, const char &stone_type); //Update current_hash value after add/remove a stone
 };
 
-#endif ZOBRIST_HASH_H
+#endif
