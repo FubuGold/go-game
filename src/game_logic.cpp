@@ -1,5 +1,7 @@
 #include "../include/game_logic.h"
 
+Board current_board;
+
 void reset_game() {
     current_board.reset();
 }

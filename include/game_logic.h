@@ -6,7 +6,7 @@
 const int direction_x[] = {0, 0, 1, -1};
 const int direction_y[] = {1, -1, 0, 0};
 
-Board current_board;
+extern Board current_board;
 
 void reset_game();
 
