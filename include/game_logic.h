@@ -10,6 +10,6 @@ extern Board current_board;
 
 void reset_game();
 
-bool check_vaild_move(const Move &new_move);
+bool check_vaild_move(Move &new_move);
 
 #endif
