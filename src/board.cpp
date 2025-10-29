@@ -32,8 +32,8 @@ char Board::get_state(const int &pos_x, const int &pos_y) const {
 }
 
 void Board::print_board() const {
-    for (int i = 0; i < 19; i++) {
-        for (int j = 0; j < 19; j++) {
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
             std::cout << board[i][j];
         }
         std::cout << std::endl;

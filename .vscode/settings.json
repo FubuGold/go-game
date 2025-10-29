@@ -58,7 +58,19 @@
         "sstream": "cpp",
         "set": "cpp",
         "unordered_set": "cpp",
-        "cstdarg": "cpp"
+        "ios": "cpp",
+        "list": "cpp",
+        "xfacet": "cpp",
+        "xhash": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp",
+        "xlocinfo": "cpp",
+        "xlocnum": "cpp",
+        "xmemory": "cpp",
+        "xstddef": "cpp",
+        "xstring": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp"
     },
     "makefile.configureOnOpen": false
 }

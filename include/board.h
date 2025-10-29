@@ -6,6 +6,8 @@
 
 #include "zobrist_hash.h"
 
+#define BOARD_SIZE 19
+
 char opposite_stone(const char &cur_stone); //Return the opposite stone of the current stone
 
 struct Move {
@@ -18,7 +20,7 @@ struct Move {
 
 class Board {
 private:
-    char board[19][19]; //Use this array to show the board state on the screen
+    char board[BOARD_SIZE][BOARD_SIZE]; //Use this array to show the board state on the screen
     std::vector<Move> move_list; //Store all the moves players have made so far
     std::vector<Move> undo_list; //Store all the undo moves for redo function
     Zobrist_hash zobrist_hash;

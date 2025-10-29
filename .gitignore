@@ -1,3 +1,6 @@
 .env
 env.*
 .vscode/c_cpp_properties.json
+*.o
+*.exe
+.vscode/settings.json
