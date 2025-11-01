@@ -10,6 +10,8 @@ extern Board current_board;
 
 void reset_game();
 
-bool check_vaild_move(Move &new_move);
+std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> find_captured_stone(); //Return two vectors which contain captured white and black stone 
+
+bool check_vaild_move(Move new_move);
 
 #endif
