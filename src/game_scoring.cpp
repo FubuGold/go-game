@@ -4,10 +4,10 @@
 const int KOMI = 6;
 
 bool check(int x,int y) {
-    return x >= 0 && y >= 0 && x < 19 && y < 19;
+    return x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE;
 }
 
-void dfs(int x,int y,int setter,int (&vst)[19][19], const Board &board) {
+void dfs(int x,int y,int setter,int (&vst)[BOARD_SIZE][BOARD_SIZE], const Board &board) {
     vst[x][y] = setter;
     for (int i=0;i<4;i++) {
         int vx = x + direction_x[i], vy = y + direction_y[i];
@@ -17,10 +17,10 @@ void dfs(int x,int y,int setter,int (&vst)[19][19], const Board &board) {
 
 std::pair<int,int> scoring(const Board &board) {
     int black_point = 0, white_point = KOMI;
-    int vst[19][19];
-    for (int i=0;i<19;i++) for (int j=0;j<19;j++) vst[i][j] = 0;
-    for (int i=0;i<19;i++) {
-        for (int j=0;j<19;j++) {
+    int vst[BOARD_SIZE][BOARD_SIZE];
+    for (int i=0;i<BOARD_SIZE;i++) for (int j=0;j<BOARD_SIZE;j++) vst[i][j] = 0;
+    for (int i=0;i<BOARD_SIZE;i++) {
+        for (int j=0;j<BOARD_SIZE;j++) {
             if (board.get_state(i,j) == 'X') {
                 for (int d = 0; d < 4; d++) {
                     int vx = i + direction_x[d],
@@ -43,8 +43,8 @@ std::pair<int,int> scoring(const Board &board) {
             }
         }
     }
-    for (int i=0;i<19;i++) {
-        for (int j=0;j<19;j++) {
+    for (int i=0;i<BOARD_SIZE;i++) {
+        for (int j=0;j<BOARD_SIZE;j++) {
             black_point += vst[i][j] == 1;
             white_point += vst[i][j] == 2;
         }
