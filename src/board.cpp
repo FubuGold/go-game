@@ -1,7 +1,12 @@
 #include <cstring>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include "../lib/json.hpp"
 
 #include "../include/board.h"
+
+using json = nlohmann::json;
 
 char opposite_stone(const char &cur_stone) {
     if (cur_stone == 'X') return 'O';
@@ -102,4 +107,69 @@ uint64_t Board::get_board_hash() const {
 bool Board::check_existed_state() const {
     if ((int)move_list.size() < 3) return false;
     return zobrist_hash.get_hash() == move_list[(int)move_list.size() - 3].hash_val;
+}
+
+void to_json(json &j,const Move &move) {
+    j["pos_x"] = move.pos_x;
+    j["pos_y"] = move.pos_y;
+    j["stone_type"] = move.stone_type;
+    j["hash_val"] = move.hash_val;
+    j["captured_stones"] = move.captured_stones;
+}
+
+void from_json(const json &j, Move &move) {
+    j.at("pos_x").get_to(move.pos_x);
+    j.at("pos_y").get_to(move.pos_y);
+    j.at("hash_val").get_to(move.hash_val);
+    j.at("captured_stones").get_to(move.captured_stones);
+}
+
+bool Board::save_game() const {
+    try {
+        json j;
+
+        j["board"] = this->board;
+        j["move_list"] = this->move_list;
+        j["undo_list"] = this->undo_list;
+        j["zobrist_hash"] = this->zobrist_hash;
+
+        std::ofstream o("data/saved_game.json");
+        o << j << std::endl;
+        o.close();
+
+        return true;
+    }
+    catch (...){
+        return false;
+    }
+}
+
+bool Board::load_game() {
+    try {
+        json j;
+
+        std::ifstream i("data/saved_game.json");
+        i >> j;
+        i.close();
+
+        std::cerr << "Json loaded" << std::endl;
+        
+        std::vector<std::string> vec_board;
+        j.at("board").get_to(vec_board);
+        for (int i=0;i<BOARD_SIZE;i++) for (int j=0;j<BOARD_SIZE;j++) 
+        this->board[i][j] = vec_board[i][j];
+        
+        std::cerr << "Board loaded" << std::endl;
+        j.at("move_list").get_to(this->move_list);
+        std::cerr << "Move list loaded" << std::endl;
+        j.at("undo_list").get_to(this->undo_list);
+        std::cerr << "Undo list loaded" << std::endl;
+        j.at("zobrist_hash").get_to(this->zobrist_hash);
+        std::cerr << "Hash loaded" << std::endl;
+
+        return true;
+    }
+    catch (...) {
+        return false;
+    }
 }

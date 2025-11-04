@@ -49,6 +49,34 @@ public:
     uint64_t get_board_hash() const; //Return current board hash
 
     bool check_existed_state() const; //Return true if the input state is already existed
+
+    /**
+     * @brief Save game to file
+     * 
+     * Save current board state to a local file. Override previous file if exist.
+     * 
+     * Return if the process is success or not
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool save_game() const;
+
+    /**
+     * @brief Load game from file
+     * 
+     * Load board state from locally saved json file and override the current board
+     * 
+     * Return if the process is success or not
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool load_game();
 };
+
+void to_json(json &j,const Move &move);
+
+void from_json(const json &j,Move &move);
 
 #endif
