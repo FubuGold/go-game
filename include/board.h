@@ -34,7 +34,7 @@ public:
 
     void print_board() const; //Print the board array to the screen
 
-    void add_move(Move &new_move); //Add new move to move_list, need to check vaild move before we call this function
+    void add_move(Move new_move); //Add new move to move_list, need to check vaild move before we call this function
 
     void update_cell(const int &pos_x, const int &pos_y, const char &prev_stone_type, const char &new_stone_type); //Update one cell state and update the new hash value
 

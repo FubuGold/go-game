@@ -40,7 +40,7 @@ void Board::print_board() const {
     std::cout << std::endl;
 }
 
-void Board::add_move(Move &new_move) {
+void Board::add_move(Move new_move) {
     //Assumed this move is vaild
     update_cell(new_move.pos_x, new_move.pos_y, '.', new_move.stone_type);
 
