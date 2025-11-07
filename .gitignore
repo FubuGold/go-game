@@ -4,3 +4,4 @@ env.*
 *.o
 *.exe
 .vscode/settings.json
+data/*
