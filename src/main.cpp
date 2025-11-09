@@ -32,7 +32,7 @@ bool validate_user_action_input(std::string s) {
     to_lower_all(s);
     if (s == "m" || s == "p" || s == "u") return true;
     if (s == "s" || s == "l" || s == "r") return true;
-    if (s == "e") return true;
+    if (s == "rs" || s == "e") return true;
     return false; 
 }
 
@@ -72,6 +72,7 @@ int main() {
         std::cout << "r: redo move\n";
         std::cout << "s: current game\n";
         std::cout << "l: load game in save file\n";
+        std::cout << "rs: reset game\n";
         std::cout << "e: exit gamne\n";
         std::cout << prev_resp << '\n';
         std::cout << "Input: ";
@@ -131,6 +132,9 @@ int main() {
         else if (inp == "l") {
             if (!current_board.load_game()) prev_resp = "Load game failed";
             else prev_resp = "Loaded game successfully";
+        }
+        else if (inp == "rs") {
+            current_board.reset();
         }
         else if (inp == "e") {
             break;
