@@ -48,6 +48,9 @@ void Board::print_board() const {
 void Board::add_move(Move new_move) {
     //Assumed this move is vaild
     update_cell(new_move.pos_x, new_move.pos_y, '.', new_move.stone_type);
+    
+    if (new_move.stone_type == 'X') captured_white += new_move.captured_stones.size();
+    else if (new_move.stone_type == 'O') captured_black += new_move.captured_stones.size();
 
     char cur_opposite_stone = opposite_stone(new_move.stone_type);
     for (auto &[pos_x, pos_y] : new_move.captured_stones) {
@@ -98,6 +101,14 @@ void Board::redo_move() {
     }
 
     move_list.push_back(last_move);
+}
+
+int Board::get_captured_black() const {
+    return captured_black;
+}
+    
+int Board::get_captured_white() const {
+    return captured_white;
 }
 
 uint64_t Board::get_board_hash() const {

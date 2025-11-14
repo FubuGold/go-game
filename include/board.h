@@ -23,6 +23,7 @@ private:
     char board[BOARD_SIZE][BOARD_SIZE]; //Use this array to show the board state on the screen
     std::vector<Move> move_list; //Store all the moves players have made so far
     std::vector<Move> undo_list; //Store all the undo moves for redo function
+    int captured_black,captured_white;
     Zobrist_hash zobrist_hash;
 
 public:
@@ -47,6 +48,20 @@ public:
     void redo_move(); //Need to check if we could redo the move
 
     uint64_t get_board_hash() const; //Return current board hash
+
+    /**
+     * @brief Get the number of captured black stone
+     * 
+     * @return int 
+     */
+    int get_captured_black() const;
+    
+    /**
+     * @brief Get the number of captured white stone
+     * 
+     * @return int 
+     */
+    int get_captured_white() const;
 
     bool check_existed_state() const; //Return true if the input state is already existed
 
