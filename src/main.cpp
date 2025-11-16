@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <string>
 #include <windows.h>
+#include "../include/test.h"
 
 #include "../include/game_logic.h"
 
@@ -12,11 +13,6 @@ void debug() {
     std::cerr << current_board.save_game();
 }
 
-/**
- * @brief Change input string to lowercase (using tolower)
- * 
- * @param s 
- */
 void to_lower_all(std::string &s) {
     for (int i=0;i<s.size();i++) s[i] = tolower(s[i]);
 }
@@ -56,7 +52,13 @@ void input_coord(int &pos_x,int &pos_y) {
     }
 }
 
+void main_game();
+
 int main() {
+    testing();
+}
+
+void main_game() {
     bool turn = 1;
 
     std::string prev_resp = "";
@@ -98,7 +100,7 @@ int main() {
         if (inp == "m") {
             int pos_x,pos_y;
             input_coord(pos_x,pos_y);
-            while (!check_vaild_move(Move(pos_x,pos_y, turn ? 'X' : 'O'))) {
+            while (!add_move(Move(pos_x,pos_y, turn ? 'X' : 'O'))) {
                 std::cout << "Invalid move. Please try another space." << std::endl;
                 input_coord(pos_x,pos_y);
             }
@@ -142,5 +144,4 @@ int main() {
 
         system("cls");
     }
-    return 0;
 }
