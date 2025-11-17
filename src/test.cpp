@@ -4,6 +4,20 @@
 #include <cassert>
 #include "../include/test.h"
 
+bool save_load_test();
+bool valid_move_test();
+bool invalid_move_test();
+
+void testing() {
+    if (save_load_test()) std::cerr << "Save load test succeeded\n";
+    else std::cerr << "Save load test failed\n";
+    if (valid_move_test()) std::cerr << "Valid move test succedded\n";
+    else std::cerr << "Valid move test failed\n";
+    if (invalid_move_test()) std::cerr << "Invalid test succeeded\n";
+    else std::cerr << "Invalid test failed\n";
+}
+
+
 bool save_load_test() {
     try
     {
@@ -99,13 +113,4 @@ bool invalid_move_test() {
         return false;
     }
     
-}
-
-void testing() {
-    if (save_load_test()) std::cerr << "Save load test succeeded\n";
-    else std::cerr << "Save load test failed\n";
-    if (valid_move_test()) std::cerr << "Valid move test succedded\n";
-    else std::cerr << "Valid move test failed\n";
-    if (invalid_move_test()) std::cerr << "Invalid test succeeded\n";
-    else std::cerr << "Invalid test failed\n";
 }
