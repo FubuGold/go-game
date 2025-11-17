@@ -22,10 +22,10 @@ bool save_load_test() {
     try
     {
         current_board.reset();
-        current_board.save_game();
+        bool flag = current_board.save_game();
         add_move(Move(2,3,'X'));
-        current_board.load_game();
-        return current_board.get_state(2,3) == '.';
+        flag |= current_board.load_game();
+        return current_board.get_state(2,3) == '.' && flag;
     }
     catch(const std::exception& e)
     {

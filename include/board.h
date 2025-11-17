@@ -2,6 +2,7 @@
 #define BOARD_H
 
 #include <vector>
+#include <filesystem>
 
 #include "zobrist_hash.h"
 
@@ -72,10 +73,12 @@ public:
      * 
      * Return if the process is success or not
      * 
+     * @param filepath Path to the destination (including the file)
+     * 
      * @return true 
      * @return false 
      */
-    bool save_game() const;
+    bool save_game(std::filesystem::path filepath = "data/saved_game.json") const;
 
     /**
      * @brief Load game from file
@@ -84,10 +87,12 @@ public:
      * 
      * Return if the process is success or not
      * 
+     * @param filepath Path to the save file
+     * 
      * @return true 
      * @return false 
      */
-    bool load_game();
+    bool load_game(std::filesystem::path filepath = "data/saved_game.json");
 };
 
 void to_json(json &j,const Move &move);

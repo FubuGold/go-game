@@ -135,7 +135,7 @@ void from_json(const json &j, Move &move) {
     j.at("captured_stones").get_to(move.captured_stones);
 }
 
-bool Board::save_game() const {
+bool Board::save_game(std::filesystem::path filepath = "data/saved_game.json") const {
     try {
         json j;
 
@@ -144,7 +144,7 @@ bool Board::save_game() const {
         j["undo_list"] = this->undo_list;
         j["zobrist_hash"] = this->zobrist_hash;
 
-        std::ofstream o("data/saved_game.json");
+        std::ofstream o(filepath);
         o << j << std::endl;
         o.close();
 
@@ -155,11 +155,15 @@ bool Board::save_game() const {
     }
 }
 
-bool Board::load_game() {
+bool Board::load_game(std::filesystem::path filepath = "data/saved_game.json") {
     try {
         json j;
 
-        std::ifstream i("data/saved_game.json");
+        std::ifstream i(filepath);
+        if (!i.is_open()) {
+            std::cerr << "Open file error. Check the path again\n";
+            return false;
+        }
         i >> j;
         i.close();
 

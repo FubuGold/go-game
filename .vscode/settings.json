@@ -80,7 +80,8 @@
         "forward_list": "cpp",
         "map": "cpp",
         "valarray": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "filesystem": "cpp"
     },
     "makefile.configureOnOpen": false
 }
