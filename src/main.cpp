@@ -3,8 +3,14 @@
 #include <string>
 #include <windows.h>
 #include "../include/test.h"
-
+#include "../include/game_scoring.h"
 #include "../include/game_logic.h"
+
+void main_game();
+
+int main() {
+    main_game();
+}
 
 void to_lower_all(std::string &s) {
     for (int i=0;i<s.size();i++) s[i] = tolower(s[i]);
@@ -45,16 +51,11 @@ void input_coord(int &pos_x,int &pos_y) {
     }
 }
 
-void main_game();
-
-int main() {
-    testing();
-}
-
 void main_game() {
     bool turn = 1;
 
     std::string prev_resp = "";
+    int pass_cnt = 0;
 
     while (true) {
         current_board.print_board();
@@ -98,10 +99,16 @@ void main_game() {
                 input_coord(pos_x,pos_y);
             }
             std::cin.ignore();
+            pass_cnt = 0;
             turn ^= 1;
         }
         else if (inp == "p") {
             current_board.add_move(Move());
+            pass_cnt++;
+            if (pass_cnt == 2) {
+                system("cls");
+                break;
+            }
             turn ^= 1;
         }
         else if (inp == "u") {
@@ -137,4 +144,12 @@ void main_game() {
 
         system("cls");
     }
+
+    current_board.print_board();
+    std::pair<int,int> score = scoring(current_board);
+    std::cout << "Score: ";
+    std::cout << "Black - " << score.first << ' ' << "White - " << score.second << '\n';
+    if (score.first > score.second) std::cout << "Black win";
+    else if (score.first < score.second) std::cout << "White win";
+    else std::cout << "Tie";
 }

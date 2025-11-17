@@ -5,3 +5,4 @@ env.*
 *.exe
 .vscode/settings.json
 data/*
+!data/config.json

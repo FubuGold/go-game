@@ -81,7 +81,8 @@
         "map": "cpp",
         "valarray": "cpp",
         "fstream": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "codecvt": "cpp"
     },
     "makefile.configureOnOpen": false
 }

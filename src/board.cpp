@@ -135,7 +135,7 @@ void from_json(const json &j, Move &move) {
     j.at("captured_stones").get_to(move.captured_stones);
 }
 
-bool Board::save_game(std::filesystem::path filepath = "data/saved_game.json") const {
+bool Board::save_game(std::filesystem::path filepath) const {
     try {
         json j;
 
@@ -155,7 +155,7 @@ bool Board::save_game(std::filesystem::path filepath = "data/saved_game.json") c
     }
 }
 
-bool Board::load_game(std::filesystem::path filepath = "data/saved_game.json") {
+bool Board::load_game(std::filesystem::path filepath) {
     try {
         json j;
 
