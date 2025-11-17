@@ -6,13 +6,6 @@
 
 #include "../include/game_logic.h"
 
-void debug() {
-    std::cerr << current_board.save_game() << std::endl;
-    std::cerr << current_board.load_game() << std::endl;
-    current_board.add_move(Move(0,0,'X'));
-    std::cerr << current_board.save_game();
-}
-
 void to_lower_all(std::string &s) {
     for (int i=0;i<s.size();i++) s[i] = tolower(s[i]);
 }
