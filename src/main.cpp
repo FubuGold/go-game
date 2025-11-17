@@ -48,6 +48,7 @@ void input_coord(int &pos_x,int &pos_y) {
 void main_game();
 
 int main() {
+    // main_game();
     testing();
 }
 

@@ -29,6 +29,7 @@ void Board::reset() {
     move_list.clear();
     undo_list.clear();
     zobrist_hash.reset();
+    captured_black = captured_white = 0;
 }
 
 char Board::get_state(const int &pos_x, const int &pos_y) const {
