@@ -43,6 +43,7 @@ void Zobrist_hash::update_hash(const int &pos_x, const int &pos_y, const char &s
 
 void to_json(json &j, const Zobrist_hash &hash) {
     uint64_t table[BOARD_SIZE][BOARD_SIZE][2];
+    hash.copy_zobrist(table);
     j["zobrist"] = table;
     j["current_hash"] = hash.get_hash();
 }
