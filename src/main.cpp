@@ -44,11 +44,12 @@ void input_coord(int &pos_x,int &pos_y) {
     std::cout << "Input coordinate: ";
     while (!(std::cin >> pos_x >> pos_y)) {
         std::cin.clear();
-        std::cin.ignore(10000, '\n');
+        std::cin.ignore();
         std::cout << "Invaild input. Please try again.\n";
         std::cout << "Input coordinate: ";
         std::cout.flush();
     }
+    std::cin.ignore();
 }
 
 void main_game() {
@@ -81,12 +82,9 @@ void main_game() {
         
         std::cin.ignore();
 
-        while (!validate_user_action_input(inp)) {
-            std::cin.ignore();
-            std::cout << "Invalid input. Please try again.\n";
-            std::cout << "Input: ";
-            std::cout.flush();
-            std::cin >> inp;
+        if (!validate_user_action_input(inp)) {
+            prev_resp = "Invalid input. Please try again.";
+            continue;
         }
 
         to_lower_all(inp);
@@ -152,4 +150,6 @@ void main_game() {
     if (score.first > score.second) std::cout << "Black win";
     else if (score.first < score.second) std::cout << "White win";
     else std::cout << "Tie";
+    std::cout << '\n';
+    system("pause");
 }
