@@ -7,7 +7,7 @@ bool check(int x,int y) {
     return x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE;
 }
 
-void dfs(int x,int y,int setter,int (&vst)[BOARD_SIZE][BOARD_SIZE], const Board &board) {
+void dfs(int x,int y,int setter,int vst[BOARD_SIZE][BOARD_SIZE], const Board &board) {
     vst[x][y] = setter;
     for (int i=0;i<4;i++) {
         int vx = x + direction_x[i], vy = y + direction_y[i];
