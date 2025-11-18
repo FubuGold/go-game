@@ -24,14 +24,13 @@ std::pair<int,int> scoring(const Board &board) {
             for (int d = 0; d < 4; d++) {
                 int vx = i + direction_x[d],
                     vy = j + direction_y[d];
+                if (!check(vx,vy) || board.get_state(vx,vy) != '.') continue;
                 if (board.get_state(i,j) == 'X') {
-                        if (!check(vx,vy)) continue;
                         if (vst[vx][vy] == 1 || vst[vx][vy] == 3) continue;
                         if (vst[vx][vy] == 2) dfs(i,j,3,vst,board);
                         else dfs(i,j,1,vst,board);
                 }
                 else if (board.get_state(i,j) == 'O') {
-                    if (!check(vx,vy) || board.get_state(vx,vy) != '.') continue;
                     if (vst[vx][vy] == 2 || vst[vx][vy] == 3) continue;
                     if (vst[vx][vy] == 1) dfs(i,j,3,vst,board);
                     else dfs(i,j,2,vst,board);
