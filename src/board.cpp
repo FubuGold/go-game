@@ -152,11 +152,20 @@ void from_json(const json &j, Move &move) {
 bool Board::save_game(std::filesystem::path filepath) const {
     try {
         json j;
+        std::string string_board[BOARD_SIZE];
 
-        j["board"] = this->board;
+        for (int i=0;i<BOARD_SIZE;i++) {
+            for (int j=0;j<BOARD_SIZE;j++) {
+                string_board[i].push_back(this->board[i][j]);
+            }
+        }
+    
+        j["board"] = string_board;
         j["move_list"] = this->move_list;
         j["undo_list"] = this->undo_list;
         j["zobrist_hash"] = this->zobrist_hash;
+        j["captured_black"] = this->captured_black;
+        j["captured_white"] = this->captured_white;
         j["turn"] = this->turn;
 
         std::ofstream o(filepath);
@@ -189,10 +198,12 @@ bool Board::load_game(std::filesystem::path filepath) {
         for (int i=0;i<BOARD_SIZE;i++) for (int j=0;j<BOARD_SIZE;j++) 
         this->board[i][j] = vec_board[i][j];
         
-        j.at("turn").get_to(this->turn);
         j.at("move_list").get_to(this->move_list);
         j.at("undo_list").get_to(this->undo_list);
         j.at("zobrist_hash").get_to(this->zobrist_hash);
+        j.at("turn").get_to(this->turn);
+        j.at("captured_black").get_to(this->captured_black);
+        j.at("captured_white").get_to(this->captured_white);
 
         return true;
     }

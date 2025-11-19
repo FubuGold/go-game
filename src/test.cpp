@@ -7,6 +7,7 @@
 bool save_load_test();
 bool valid_move_test();
 bool invalid_move_test();
+bool scoring_test();
 
 void testing() {
     if (save_load_test()) std::cerr << "Save load test succeeded\n";
@@ -15,6 +16,8 @@ void testing() {
     else std::cerr << "Valid move test failed\n";
     if (invalid_move_test()) std::cerr << "Invalid test succeeded\n";
     else std::cerr << "Invalid test failed\n";
+    if (scoring_test()) std::cerr << "Scoring test succeeded\n";
+    else std::cerr << "Scoring test failed\n";
 }
 
 
@@ -109,6 +112,30 @@ bool invalid_move_test() {
     catch(const std::exception& e)
     {
         std::cerr << "Invalid move test error\n";
+        std::cerr << e.what() << '\n';
+        return false;
+    }
+    
+}
+
+bool scoring_test() {
+    try
+    {
+        current_board.load_game("data/game1.json");
+        std::pair<int,int> result = scoring(current_board);
+        bool flag = result == std::pair<int,int>(3,6);
+        if (!flag) std::cerr << "Scoring game 1 failed\n";
+
+        current_board.load_game("data/game2.json");
+        result = scoring(current_board);
+        flag &= result == std::pair<int,int>(8,6);
+        if (!flag) std::cerr << "Scoring game 2 failed\n";
+
+        return flag;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Scoring test error\n";
         std::cerr << e.what() << '\n';
         return false;
     }

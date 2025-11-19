@@ -9,7 +9,8 @@
 void main_game();
 
 int main() {
-    main_game();
+    testing();
+    // main_game();
 }
 
 void to_lower_all(std::string &s) {
@@ -135,7 +136,7 @@ void main_game() {
             reset_game();
         }
         else if (inp == "e") {
-            break;
+            return;
         }
 
         system("cls");
