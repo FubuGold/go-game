@@ -132,7 +132,7 @@ void main_game() {
             else prev_resp = "Loaded game successfully";
         }
         else if (inp == "rs") {
-            current_board.reset();
+            reset_game();
         }
         else if (inp == "e") {
             break;
