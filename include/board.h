@@ -26,6 +26,7 @@ private:
     std::vector<Move> undo_list; //Store all the undo moves for redo function
     int captured_black,captured_white;
     Zobrist_hash zobrist_hash;
+    bool turn;
 
 public:
     Board();
@@ -33,6 +34,12 @@ public:
     void reset(); //Reset the entire board to its initial state
     
     char get_state(const int &pos_x, const int &pos_y) const; //Return the current state of cell (pos_x, pos_y)
+
+    bool get_turn() const;
+
+    void update_turn();
+
+    void set_turn(bool new_move);
 
     void print_board() const; //Print the board array to the screen
 

@@ -53,7 +53,6 @@ void input_coord(int &pos_x,int &pos_y) {
 }
 
 void main_game() {
-    bool turn = 1;
 
     std::string prev_resp = "";
     int pass_cnt = 0;
@@ -61,7 +60,7 @@ void main_game() {
     while (true) {
         current_board.print_board();
 
-        std::cout << "Current turn: " << (turn ? "Black" : "White") << std::endl;
+        std::cout << "Current turn: " << (current_board.get_turn() ? "Black" : "White") << std::endl;
         std::cout << "Enter one of the command below (lowercase or uppercase):\n";
         std::cout << "m: play move for current player\n";
         std::cout << "p: pass move\n";
@@ -92,13 +91,12 @@ void main_game() {
         if (inp == "m") {
             int pos_x,pos_y;
             input_coord(pos_x,pos_y);
-            while (!add_move(Move(pos_x,pos_y, turn ? 'X' : 'O'))) {
+            while (!add_move(Move(pos_x,pos_y, current_board.get_turn() ? 'X' : 'O'))) {
                 std::cout << "Invalid move. Please try another space." << std::endl;
                 input_coord(pos_x,pos_y);
             }
-            std::cin.ignore();
             pass_cnt = 0;
-            turn ^= 1;
+            current_board.update_turn();
         }
         else if (inp == "p") {
             current_board.add_move(Move());
@@ -107,7 +105,7 @@ void main_game() {
                 system("cls");
                 break;
             }
-            turn ^= 1;
+            current_board.update_turn();
         }
         else if (inp == "u") {
             if (current_board.check_empty_move_list()) {

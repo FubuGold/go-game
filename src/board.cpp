@@ -30,6 +30,19 @@ void Board::reset() {
     undo_list.clear();
     zobrist_hash.reset();
     captured_black = captured_white = 0;
+    turn = 1;
+}
+
+bool Board::get_turn() const {
+    return turn;
+}
+
+void Board::update_turn() {
+    turn = !turn;
+}
+
+void Board::set_turn(bool new_turn) {
+    turn = new_turn;
 }
 
 char Board::get_state(const int &pos_x, const int &pos_y) const {
@@ -144,6 +157,7 @@ bool Board::save_game(std::filesystem::path filepath) const {
         j["move_list"] = this->move_list;
         j["undo_list"] = this->undo_list;
         j["zobrist_hash"] = this->zobrist_hash;
+        j["turn"] = this->turn;
 
         std::ofstream o(filepath);
         o << j << std::endl;
@@ -175,13 +189,10 @@ bool Board::load_game(std::filesystem::path filepath) {
         for (int i=0;i<BOARD_SIZE;i++) for (int j=0;j<BOARD_SIZE;j++) 
         this->board[i][j] = vec_board[i][j];
         
-        std::cerr << "Board loaded" << std::endl;
+        j.at("turn").get_to(this->turn);
         j.at("move_list").get_to(this->move_list);
-        std::cerr << "Move list loaded" << std::endl;
         j.at("undo_list").get_to(this->undo_list);
-        std::cerr << "Undo list loaded" << std::endl;
         j.at("zobrist_hash").get_to(this->zobrist_hash);
-        std::cerr << "Hash loaded" << std::endl;
 
         return true;
     }
