@@ -1,5 +1,7 @@
 # go-game
 
+Version 0.1
+
 ## File tree
 
 ```bash
