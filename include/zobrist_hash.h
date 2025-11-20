@@ -52,8 +52,6 @@ public:
      */
     uint64_t get_hash() const;
 
-    
-
     void update_hash(const int &pos_x, const int &pos_y, const char &stone_type); //Update current_hash value after add/remove a stone
 };
 

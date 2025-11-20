@@ -9,8 +9,8 @@
 void main_game();
 
 int main() {
-    testing();
-    // main_game();
+    // testing();
+    main_game();
 }
 
 void to_lower_all(std::string &s) {
