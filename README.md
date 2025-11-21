@@ -1,6 +1,12 @@
-# go-game
-
+# Go game~
 Version 0.1
+
+This is a Go game recreation using C++. Japanese ruleset is used.
+
+## Instruction
+Currently, the game needs C++ and its library in PATH environment variable to correctly link to the .dll files.
+
+Run game.exe file to play.
 
 ## File tree
 
@@ -33,11 +39,12 @@ go-game
 
 ## Tech stack
 Language: C++
-Graphic: SFML
-AI:
+- Compiler: g++ (Rev8, Built by MSYS2 project) 15.2.0.
+- Build system: Makefile.
+
+Graphic (not implemented): SFML 
+
+AI (not implemented):
 - Random - No judgement 
 - Minimax - Shallow 
 - Minimax + Alpha-Beta Pruning
-
-## Extensions
-file-tree-generator
