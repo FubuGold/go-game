@@ -1,4 +1,4 @@
-# Go game~
+# Go game
 Version 0.1
 
 This is a Go game recreation using C++. Japanese ruleset is used.
