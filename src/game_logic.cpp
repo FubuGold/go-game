@@ -13,56 +13,49 @@ void reset_game() {
 
 CustomQueue q;
 
-void dfs(int x,int y,bool vst[BOARD_SIZE][BOARD_SIZE],bool &has_liberty) {
-    vst[x][y] = 1;
-    for (int i=0;i<4;i++) {
-        int vx = x + direction_x[i], vy = y + direction_y[i];
-        if (std::min(x, y) >= 0 && std::max(x, y) < BOARD_SIZE) {
-            char state = current_board.get_state(x, y);
-            
-        }
-    }
-}
-
 std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> find_captured_stone(int stx,int sty) {
     q.clear();
     std::vector<std::pair<int, int>> captured_stone[2]; //0 = white, 1 = black
     bool visited[BOARD_SIZE][BOARD_SIZE];
     std::memset(visited, false, sizeof visited);
 
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        for (int j = 0; j < BOARD_SIZE; j++) {
-            char current_stone_state = current_board.get_state(i, j);
-            if (!visited[i][j] && current_stone_state != '.') {
-                q.emplace(i, j);
-                visited[i][j] = true;
-                bool has_liberty = false;
-                std::vector<std::pair<int, int>> stone_list;
+    for (int k=0;k<=4;k++) {
+        int i = stx,j = sty;
 
-                while (!q.empty()) {
-                    auto cur = q.front();
-                    q.pop();
+        if (k < 4) i += direction_x[k], j += direction_y[k];
+        if (std::min(i, j) < 0 || std::max(i, j) >= BOARD_SIZE) continue;
 
-                    stone_list.push_back(cur);
-                    for (int x, y, k = 0; k < 4; k++) {
-                        x = cur.first + direction_x[k];
-                        y = cur.second + direction_y[k];
-                        if (std::min(x, y) >= 0 && std::max(x, y) < BOARD_SIZE) {
-                            char state = current_board.get_state(x, y);
-                            if (state == current_stone_state && !visited[x][y]) {
-                                visited[x][y] = true;
-                                q.emplace(x, y);
-                            }
-                            else if (state == '.') {
-                                has_liberty = true;
-                            }
+        char current_stone_state = current_board.get_state(i, j);
+        if (!visited[i][j] && current_stone_state != '.') {
+            visited[i][j] = true;
+            bool has_liberty = false;
+            std::vector<std::pair<int, int>> stone_list;
+
+            q.emplace(i,j);
+
+            while (!q.empty()) {
+                auto cur = q.front();
+                q.pop();
+
+                stone_list.push_back(cur);
+                for (int x, y, k = 0; k < 4; k++) {
+                    x = cur.first + direction_x[k];
+                    y = cur.second + direction_y[k];
+                    if (std::min(x, y) >= 0 && std::max(x, y) < BOARD_SIZE) {
+                        char state = current_board.get_state(x, y);
+                        if (state == current_stone_state && !visited[x][y]) {
+                            visited[x][y] = true;
+                            q.emplace(x, y);
+                        }
+                        else if (state == '.') {
+                            has_liberty = true;
                         }
                     }
                 }
+            }
 
-                if (!has_liberty) {
-                    captured_stone[current_stone_state == 'X'] = stone_list;
-                }
+            if (!has_liberty) {
+                captured_stone[current_stone_state == 'X'] = stone_list;
             }
         }
     }
@@ -77,9 +70,9 @@ bool add_move(Move new_move) {
     
     //Checking liberty
     current_board.add_move(new_move);
-    auto captured_list = find_captured_stone(); //.first = white, .second = black
+    auto captured_list = find_captured_stone(new_move.pos_x,new_move.pos_y); //.first = white, .second = black
     char current_stone_state = current_board.get_state(new_move.pos_x, new_move.pos_y);
-    
+
     if (current_stone_state == 'X') { //If the current move is black
         if (captured_list.first.empty() && !captured_list.second.empty()) { //Didn't capture any white stone and blocked liberty of the current black stone
             current_board.undo_move(false);

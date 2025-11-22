@@ -13,14 +13,14 @@ bool scoring_test();
 void testing() {
     add_move(Move(10,9,'X'));
     ai_move(Difficulty::MEDIUM);
-    // if (save_load_test()) std::cerr << "Save load test succeeded\n";
-    // else std::cerr << "Save load test failed\n";
-    // if (valid_move_test()) std::cerr << "Valid move test succedded\n";
-    // else std::cerr << "Valid move test failed\n";
-    // if (invalid_move_test()) std::cerr << "Invalid test succeeded\n";
-    // else std::cerr << "Invalid test failed\n";
-    // if (scoring_test()) std::cerr << "Scoring test succeeded\n";
-    // else std::cerr << "Scoring test failed\n";
+    if (save_load_test()) std::cerr << "Save load test succeeded\n";
+    else std::cerr << "Save load test failed\n";
+    if (valid_move_test()) std::cerr << "Valid move test succedded\n";
+    else std::cerr << "Valid move test failed\n";
+    if (invalid_move_test()) std::cerr << "Invalid test succeeded\n";
+    else std::cerr << "Invalid test failed\n";
+    if (scoring_test()) std::cerr << "Scoring test succeeded\n";
+    else std::cerr << "Scoring test failed\n";
 }
 
 
@@ -84,6 +84,8 @@ bool invalid_move_test() {
         combine_flag |= flag;
         if (flag) std::cerr << "Invalid move subtest - Out of bound: Failed\n";
         
+        std::cerr << "Begin suicide test\n";
+
         // Suicide 
         flag = 0;
         add_move(Move(0,1,'X'));
@@ -110,7 +112,7 @@ bool invalid_move_test() {
         combine_flag |= flag;
         if (flag) std::cerr << "Invalid move subtest - Ko rule: Failed\n";
         
-        return !flag;
+        return !combine_flag;
     }
     catch(const std::exception& e)
     {
