@@ -104,7 +104,7 @@ Move medium_ai() {
 
 // AI is minimizing black - white
 Node minimax_pruning(bool ai_move,int depth) {
-
+    
 }
 
 Move hard_ai() {
