@@ -3,6 +3,7 @@
 #include <iostream> //Added to debug
 
 #include "../include/game_logic.h"
+#include "../include/custom_util.h"
 
 Board current_board;
 
@@ -10,8 +11,21 @@ void reset_game() {
     current_board.reset();
 }
 
-std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> find_captured_stone() {
-    std::queue<std::pair<int, int>> q;
+CustomQueue q;
+
+void dfs(int x,int y,bool vst[BOARD_SIZE][BOARD_SIZE],bool &has_liberty) {
+    vst[x][y] = 1;
+    for (int i=0;i<4;i++) {
+        int vx = x + direction_x[i], vy = y + direction_y[i];
+        if (std::min(x, y) >= 0 && std::max(x, y) < BOARD_SIZE) {
+            char state = current_board.get_state(x, y);
+            
+        }
+    }
+}
+
+std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> find_captured_stone(int stx,int sty) {
+    q.clear();
     std::vector<std::pair<int, int>> captured_stone[2]; //0 = white, 1 = black
     bool visited[BOARD_SIZE][BOARD_SIZE];
     std::memset(visited, false, sizeof visited);

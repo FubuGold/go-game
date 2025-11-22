@@ -3,8 +3,7 @@
 
 #include <cstdint>
 #include "../lib/json.hpp"
-
-#define BOARD_SIZE 19
+#include "custom_util.h"
 
 using json = nlohmann::json;
 

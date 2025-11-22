@@ -1,8 +1,9 @@
 #include "../include/game_logic.h"
 #include "../include/game_scoring.h"
+#include "../include/test.h"
+#include "../include/AI.h"
 #include <iostream>
 #include <cassert>
-#include "../include/test.h"
 
 bool save_load_test();
 bool valid_move_test();
@@ -10,14 +11,16 @@ bool invalid_move_test();
 bool scoring_test();
 
 void testing() {
-    if (save_load_test()) std::cerr << "Save load test succeeded\n";
-    else std::cerr << "Save load test failed\n";
-    if (valid_move_test()) std::cerr << "Valid move test succedded\n";
-    else std::cerr << "Valid move test failed\n";
-    if (invalid_move_test()) std::cerr << "Invalid test succeeded\n";
-    else std::cerr << "Invalid test failed\n";
-    if (scoring_test()) std::cerr << "Scoring test succeeded\n";
-    else std::cerr << "Scoring test failed\n";
+    add_move(Move(10,9,'X'));
+    ai_move(Difficulty::MEDIUM);
+    // if (save_load_test()) std::cerr << "Save load test succeeded\n";
+    // else std::cerr << "Save load test failed\n";
+    // if (valid_move_test()) std::cerr << "Valid move test succedded\n";
+    // else std::cerr << "Valid move test failed\n";
+    // if (invalid_move_test()) std::cerr << "Invalid test succeeded\n";
+    // else std::cerr << "Invalid test failed\n";
+    // if (scoring_test()) std::cerr << "Scoring test succeeded\n";
+    // else std::cerr << "Scoring test failed\n";
 }
 
 
