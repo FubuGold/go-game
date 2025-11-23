@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <string>
 #include <windows.h>
+
+#include "../include/game_UI.h"
 #include "../include/test.h"
 #include "../include/game_scoring.h"
 #include "../include/game_logic.h"
@@ -9,7 +11,10 @@
 void main_game();
 
 int main() {
-    testing();
+    GameUI game;
+    game.run();
+    
+    // testing();
     // main_game();
 }
 
