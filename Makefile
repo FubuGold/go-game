@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Iinclude -IC:\SFML-3.0.2\include -DSFML_STATIC -static -static-libgcc -static-libstdc++
+CXXFLAGS = -std=c++17 -Iinclude -ID:\SFML-3.0.2\include -DSFML_STATIC -static -static-libgcc -static-libstdc++
 LDFLAGS = -LC:\SFML-3.0.2\lib
 LIBS = -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32 -lws2_32
 
