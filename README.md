@@ -57,6 +57,7 @@ AI (not implemented):
 - Minimax + Alpha-Beta Pruning
 
 ## Makefile
+```bash
 CXX = g++
 CXXFLAGS = -std=c++17 -Iinclude -ID:\SFML-3.0.2\include -DSFML_STATIC -static -static-libgcc -static-libstdc++
 LDFLAGS = -LD:\SFML-3.0.2\lib
@@ -76,3 +77,4 @@ $(TARGET): $(OBJ)
 
 clean:
 	rm -f src/*.o $(TARGET) $(TEST_TARGET)
+```
