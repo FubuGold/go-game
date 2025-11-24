@@ -1,18 +1,17 @@
-#include "../include/game_UI.h"
+#include "../include/game_handler.h"
 
-GameUI::GameUI(unsigned int window_height, unsigned int window_width, float button_height, float button_width) {
+GameHandler::GameHandler(unsigned int window_height, unsigned int window_width) {
     this->window_height = window_height;
     this->window_width = window_width;
-    game_menu = GameMenu(button_height, button_width);
 
     window = sf::RenderWindow(sf::VideoMode::getDesktopMode(), game_name, sf::Style::Default, sf::State::Fullscreen);
     game_state = GameState::Menu;
 }
 
-void GameUI::resize_window(sf::View &UI_view) {
+void GameHandler::resize_window(sf::View &UI_view) {
     auto window_size = window.getSize();
     float window_ratio = static_cast<float>(window_size.x) / window_size.y;
-    float UI_ratio = static_cast<float>(window_height) / window_width;
+    float UI_ratio = static_cast<float>(window_width) / window_height;
 
     float size_X = 1.f, size_Y = 1.f;
     float pos_X = 0.f, pos_Y = 0.f;
@@ -29,12 +28,12 @@ void GameUI::resize_window(sf::View &UI_view) {
     UI_view.setViewport(sf::FloatRect({pos_X, pos_Y}, {size_X, size_Y}));
 }
 
-void GameUI::run() {
+void GameHandler::run() {
     window.setFramerateLimit(60);
 
     sf::View UI_view;
-    UI_view.setCenter({static_cast<float>(window_height) / 2.f, static_cast<float>(window_width) / 2.f});
-    UI_view.setSize({static_cast<float>(window_height), static_cast<float>(window_width)});
+    UI_view.setCenter({static_cast<float>(window_width) / 2.f, static_cast<float>(window_height) / 2.f});
+    UI_view.setSize({static_cast<float>(window_width), static_cast<float>(window_height)});
     UI_view.setViewport(sf::FloatRect({0.f, 0.f}, {1.f, 1.f}));
     window.setView(UI_view);
 

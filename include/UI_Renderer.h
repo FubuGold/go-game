@@ -42,7 +42,7 @@ private:
 
 public:
 
-    GameMenu(float button_height = 103.f, float button_width = 377.f); //In case you want to change the default value, please change it in game_UI.h, not this
+    GameMenu(float button_height = 103.f, float button_width = 377.f);
     
     /**
      * @brief Set the initial value object

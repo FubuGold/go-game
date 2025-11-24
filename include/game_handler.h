@@ -1,5 +1,5 @@
-#ifndef GAME_UI_H
-#define GAME_UI_H
+#ifndef GAME_HANDLER_H
+#define GAME_HANDLER_H
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -11,7 +11,7 @@ enum class GameState {
     Setting
 };
 
-class GameUI {
+class GameHandler {
 private:
     sf::RenderWindow window;
     GameState game_state;
@@ -20,7 +20,7 @@ private:
     const std::string game_name = "Go game";
 
 public: 
-    GameUI(unsigned int window_height = 1920, unsigned int window_width = 1080, float button_height = 103.f, float button_width = 377.f);
+    GameHandler(unsigned int window_height = 1080, unsigned int window_width = 1920);
 
     /**
      * @brief Rescaling when window resize occurs
