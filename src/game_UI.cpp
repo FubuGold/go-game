@@ -1,4 +1,4 @@
-#include "game_UI.h"
+#include "../include/game_UI.h"
 
 GameUI::GameUI(unsigned int window_height, unsigned int window_width, float button_height, float button_width) {
     this->window_height = window_height;
