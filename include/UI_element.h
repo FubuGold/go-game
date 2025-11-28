@@ -19,26 +19,24 @@ namespace GUI {
     class Element {
     
     protected:
-        sf::RenderWindow *window;
+        // This is from the outside, created outside
         callback_t hover_callback, press_callback, release_callback;
-
-        State cur_state;
-    
+        
+        
         std::vector<sf::Drawable*> parts;
-
+        
         void press();
         void release();
-
-        void change_state(State state);
-
+        
         bool contain_pos(float x,float y);
         bool contain_pos(sf::Vector2f point);
-
+        
     public:
+        sf::RenderWindow *window = nullptr;
         sf::Vector2f pos;
         sf::FloatRect bound; // Global bounding box
 
-        ~Element();
+        virtual ~Element();
 
         /**
          * @brief Set callback function when hover on
@@ -90,6 +88,14 @@ namespace GUI {
          * @param window 
          */
         void set_window(sf::RenderWindow *render_win_ptr);
+
+        /**
+         * @brief Check if window is setted
+         * 
+         * @return true Existed
+         * @return false Existed
+         */
+        bool check_window();
         
         /**
          * @brief Draw the element
@@ -102,7 +108,7 @@ namespace GUI {
          * 
          * @param e 
          */
-        virtual void poll_event(const sf::Event &e);
+        virtual void poll_event(const std::optional<sf::Event> &e);
         
         /**
          * @brief Update bounding box (for event handling)
@@ -117,12 +123,31 @@ namespace GUI {
         sf::Text *text = new sf::Text(Config::font);
         
         Rectangle_Button(float button_width = 337.f,float button_height = 103.f);
+
+        ~Rectangle_Button();
+
+        /**
+         * @brief Set the text string object
+         * 
+         * @param str 
+         */
         void set_text_string(const std::string &str);
 
+        /**
+         * @brief Set the pos object
+         * 
+         * @param pos_x 
+         * @param pos_y 
+         */
         void set_pos(float pos_x,float pos_y) override;
+        /**
+         * @brief Set the pos object
+         * 
+         * @param new_pos 
+         */
         void set_pos(sf::Vector2f new_pos) override;
 
-        void poll_event(const sf::Event &e) override;
+        void poll_event(const std::optional<sf::Event> &e) override;
     };
 }
 

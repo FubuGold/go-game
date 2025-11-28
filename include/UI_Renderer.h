@@ -9,118 +9,80 @@ const sf::Font font = sf::Font("font/Jua-Regular.ttf");
 
 namespace GUI {
     class Canvas {
-    private: 
-        std::vector<Element*> element_p;
+    protected: 
+        std::vector<Element*> element_l;
+        sf::RenderWindow *window;
     public:
-        void add_element(Element *new_element) {
-            element_p.push_back(new_element);
-        }
-        
-        void draw() {
-            for (Element* ptr : element_p) {
-                ptr->draw();
-            }
-        }
+        virtual ~Canvas();
 
-        void poll_event(const sf::Event &e) {
-            for (Element* ptr : element_p) {
-                ptr->poll_event(e);
-            }
-        }
+        /**
+         * @brief Add a element to the canvas
+         * 
+         * @param new_element 
+         */
+        void add_element(Element *new_element);
+
+        /**
+         * @brief Set default window for all element inside
+         * 
+         * @param render_win_ptr address / pointer to the window
+         */
+        void set_window(sf::RenderWindow *render_win_ptr);
+        
+        /**
+         * @brief Draw object on to the setted window
+         * 
+         */
+        void draw();
+
+        /**
+         * @brief Update all component from event
+         * 
+         * This will clean all element and build up again
+         * 
+         * @param e 
+         */
+        void poll_event(const std::optional<sf::Event> &e);
+
+        /**
+         * @brief Clean up element
+         * 
+         */
+        void clean_element();
+
+        /**
+         * @brief Recalculate the boundary box of each element
+         * 
+         */
+        void recal_bound();
+
+        /**
+         * @brief Add all basic component of the current UI state.
+         * 
+         * The default does not add anything.
+         * 
+         * Need to override
+         * 
+         */
+        virtual void setup();
     };
 
-    
+    class Menu_Canvas : public Canvas {
+    private:
+        float button_width = 377.f, button_height = 103.f;
+    public:
+        /**
+         * @brief Reset the button size in menu (not recommend)
+         * 
+         * @param new_width 
+         * @param new_height 
+         */
+        void reset_button_size(float new_width,float new_height);
+
+        void setup() override;
+
+        Rectangle_Button* create_button(sf::Vector2f pos, const std::string &text);
+    };
 }
-
-class Rectangle_Button {
-public:
-    sf::RectangleShape rect;
-    sf::Text text = sf::Text(font);
-
-    /**
-     * @brief Set the text string object
-     * 
-     * @param str 
-     */
-    void set_text_string(const std::string &str);
-
-    /**
-     * @brief Check mouse hovering on the button
-     * 
-     * @param window 
-     * @return true 
-     * @return false 
-     */
-    bool isHover(const sf::RenderWindow &window) const;
-
-    /**
-     * @brief Check mouse clicking on the button
-     * 
-     * @param window 
-     * @return true 
-     * @return false 
-     */
-    bool isClicked(const sf::RenderWindow &window) const;
-};
-
-class GameMenu {
-private:
-    Rectangle_Button button_load_game, button_new_game, button_setting;
-    GUI::Rectangle_Button button_exit_text;
-    float button_height, button_width;
-
-    sf::RenderWindow *window;
-
-public:
-
-    GameMenu(float button_height = 103.f, float button_width = 377.f);
-    
-    /**
-     * @brief Set the initial value object
-     * 
-     * @param button 
-     * @param position 
-     */
-    void set_initial_value(Rectangle_Button &button, const sf::Vector2f &position);
-
-    /**
-     * @brief Set the window for elements
-     * 
-     * @param render_win 
-     */
-    void set_window(sf::RenderWindow *render_win);
-
-    /**
-     * @brief Check if the input button is clicked
-     * 
-     * @param button 
-     * @param window 
-     * @return true 
-     * @return false 
-     */
-    bool button_active(const Rectangle_Button &button, const sf::RenderWindow &window);
-
-    /**
-     * @brief Check if the exit button is clicked
-     * 
-     * @param e The event received
-     */
-    void exit_button_poll(const sf::Event &e);
-
-    /**
-     * @brief Draw the button to the window
-     * 
-     * @param button 
-     * @param window 
-     */
-    void draw_button(const Rectangle_Button &button, sf::RenderWindow &window);
-
-    /**
-     * @brief Responsible for drawing all necessary elements in the game menu
-     * 
-     * @param window 
-     */
-    void draw(sf::RenderWindow &window);
-};
 
 #endif

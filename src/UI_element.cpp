@@ -13,19 +13,6 @@ void Element::release() {
     if (release_callback) release_callback();
 }
 
-void Element::change_state(State state) {
-    if (cur_state == state || (state == ST_HOVERED)) return;
-    
-    if (state == ST_PRESSED) {
-        if (cur_state == ST_DEFAULT) press();
-    }
-    else {
-        if (cur_state == ST_PRESSED) release();
-    }
-
-    cur_state = state;
-}
-
 bool Element::contain_pos(float x,float y) {
     return bound.contains({x,y});
 }
@@ -72,6 +59,10 @@ void Element::set_window(sf::RenderWindow *render_win_ptr) {
     window = render_win_ptr;
 }
 
+bool Element::check_window() {
+    return window != nullptr;
+}
+
 void Element::draw() {
     for (sf::Drawable* ptr: parts) {
         if (!window) std::cerr << "Nullptr detected\n";
@@ -79,13 +70,13 @@ void Element::draw() {
     }
 }
 
-void Element::poll_event(const sf::Event &e) {}
+void Element::poll_event(const std::optional<sf::Event> &e) {}
 
 sf::FloatRect combine_rect(sf::FloatRect rect1,sf::FloatRect rect2) {
-    float mn_x = std::min(rect1.position.x, rect1.position.x);
+    float mn_x = std::min(rect1.position.x, rect2.position.x);
     float mn_y = std::min(rect1.position.y, rect2.position.y);
-    float mx_x = std::max(rect1.position.x, rect1.position.x);
-    float mx_y = std::max(rect1.position.y, rect2.position.y);
+    float mx_x = std::max(rect1.position.x + rect1.size.x, rect2.position.x + rect2.size.x);
+    float mx_y = std::max(rect1.position.y + rect1.size.y, rect2.position.y + rect2.size.y);
 
     return sf::FloatRect({mn_x,mn_y},{mx_x - mn_x, mx_y - mn_y});
 }
@@ -104,14 +95,21 @@ void Element::update_bound() {
         else if (auto shape = dynamic_cast<sf::Sprite*>(ptr)) {
             cur = shape->getGlobalBounds();
         }
-        
-        if (!first) rect = cur;
+        else continue;
+
+        if (!first) {
+            rect = cur;
+            first = true;
+        }
         else {
             rect = combine_rect(rect,cur);
         }
     }
     bound = rect;
 }
+
+
+// ----------------------------------------------
 
 // Rectangle button external
 
@@ -125,6 +123,11 @@ Rectangle_Button::Rectangle_Button(float button_width,float button_height) {
     parts.push_back(rect);
     parts.push_back(text);
     update_bound();
+}
+
+Rectangle_Button::~Rectangle_Button() {
+    delete rect;
+    delete text;
 }
 
 void Rectangle_Button::set_pos(float pos_x,float pos_y) {
@@ -150,11 +153,17 @@ void Rectangle_Button::set_text_string(const std::string &str) {
     update_bound();
 }
 
-void Rectangle_Button::poll_event(const sf::Event &e) {
-    sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-    if (contain_pos(mouse_pos)) {
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
+    if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>()) {
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             press();
+        }
+    }
+    else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        if (mouse_release->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
+            release();
         }
     }
 }
