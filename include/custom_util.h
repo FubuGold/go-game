@@ -2,6 +2,9 @@
 #define CUSTOM_UTIL_H
 
 #include <utility>
+#include "../lib/json.hpp"
+
+using json = nlohmann::json;
 
 #define BOARD_SIZE 19
 

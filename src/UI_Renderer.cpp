@@ -1,4 +1,6 @@
-#include "../include/UI_Renderer.h"
+#include "../include/UI_renderer.h"
+
+#include <iostream> // Testing only
 
 void Rectangle_Button::set_text_string(const std::string &str) {
     text.setString(str);
@@ -22,13 +24,22 @@ GameMenu::GameMenu(float button_height, float button_width) {
     button_load_game.set_text_string("LOAD GAME");
     button_new_game.set_text_string("NEW GAME");
     button_setting.set_text_string("SETTING");
-    button_exit.set_text_string("EXIT");
+    button_exit_text.set_text_string("EXIT");
 
     //Set other properties for all buttons
     set_initial_value(button_load_game, {102.f, 478.f});
     set_initial_value(button_new_game, {102.f, 627.f});
     set_initial_value(button_setting, {102.f, 776.f});
-    set_initial_value(button_exit, {102.f, 925.f});
+
+    button_exit_text.set_pos(102.f,925.f);
+    button_exit_text.set_press([this](){
+        window->close();
+    });
+}
+
+void GameMenu::set_window(sf::RenderWindow *render_win) {
+    button_exit_text.set_window(render_win);
+    window = render_win;
 }
 
 void GameMenu::set_initial_value(Rectangle_Button &button, const sf::Vector2f &position) {
@@ -48,8 +59,8 @@ bool GameMenu::button_active(const Rectangle_Button &button, const sf::RenderWin
     return button.isClicked(window);
 }
 
-bool GameMenu::exit_button_active(const sf::RenderWindow &window) {
-    return button_active(button_exit, window);
+void GameMenu::exit_button_poll(const sf::Event &e) {
+    button_exit_text.poll_event(e);
 }
 
 void GameMenu::draw_button(const Rectangle_Button &button, sf::RenderWindow &window) {
@@ -61,5 +72,6 @@ void GameMenu::draw(sf::RenderWindow &window) {
     draw_button(button_load_game, window);
     draw_button(button_new_game, window);
     draw_button(button_setting, window);
-    draw_button(button_exit, window);
+
+    button_exit_text.draw();
 }

@@ -2,10 +2,8 @@
 #define ZOBRIST_HASH_H
 
 #include <cstdint>
-#include "../lib/json.hpp"
 #include "custom_util.h"
 
-using json = nlohmann::json;
 
 class Zobrist_hash {
 private:

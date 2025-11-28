@@ -1,4 +1,5 @@
 #include "../include/game_handler.h"
+#include <iostream> // Testing only
 
 GameHandler::GameHandler(unsigned int window_height, unsigned int window_width) {
     this->window_height = window_height;
@@ -40,6 +41,8 @@ void GameHandler::run() {
     bool isFullscreen = true;
     sf::VideoMode video_mode = sf::VideoMode::getDesktopMode();
 
+    game_menu.set_window(&window);
+
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
@@ -59,9 +62,7 @@ void GameHandler::run() {
                     }
                 }
                 else if (event->is<sf::Event::MouseButtonPressed>()) {
-                    if (game_menu.exit_button_active(window)) {
-                        window.close();
-                    }
+                    game_menu.exit_button_poll(event.value());
                 }
             }
             else if (game_state == GameState::Playing) {
@@ -77,6 +78,7 @@ void GameHandler::run() {
         window.clear({255, 223, 128});
         window.setView(UI_view);
 
+        
         //Draw game
         if (game_state == GameState::Menu) {
             game_menu.draw(window);

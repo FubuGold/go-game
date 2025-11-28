@@ -2,10 +2,38 @@
 #define UI_RENDERER_H
 
 #include <SFML/Graphics.hpp>
+#include "UI_element.h"
+#include <vector>
 
 const sf::Font font = sf::Font("font/Jua-Regular.ttf");
 
-struct Rectangle_Button {
+namespace GUI {
+    class Canvas {
+    private: 
+        std::vector<Element*> element_p;
+    public:
+        void add_element(Element *new_element) {
+            element_p.push_back(new_element);
+        }
+        
+        void draw() {
+            for (Element* ptr : element_p) {
+                ptr->draw();
+            }
+        }
+
+        void poll_event(const sf::Event &e) {
+            for (Element* ptr : element_p) {
+                ptr->poll_event(e);
+            }
+        }
+    };
+
+    
+}
+
+class Rectangle_Button {
+public:
     sf::RectangleShape rect;
     sf::Text text = sf::Text(font);
 
@@ -37,8 +65,11 @@ struct Rectangle_Button {
 
 class GameMenu {
 private:
-    Rectangle_Button button_exit, button_load_game, button_new_game, button_setting;
+    Rectangle_Button button_load_game, button_new_game, button_setting;
+    GUI::Rectangle_Button button_exit_text;
     float button_height, button_width;
+
+    sf::RenderWindow *window;
 
 public:
 
@@ -53,6 +84,13 @@ public:
     void set_initial_value(Rectangle_Button &button, const sf::Vector2f &position);
 
     /**
+     * @brief Set the window for elements
+     * 
+     * @param render_win 
+     */
+    void set_window(sf::RenderWindow *render_win);
+
+    /**
      * @brief Check if the input button is clicked
      * 
      * @param button 
@@ -65,11 +103,9 @@ public:
     /**
      * @brief Check if the exit button is clicked
      * 
-     * @param window 
-     * @return true 
-     * @return false 
+     * @param e The event received
      */
-    bool exit_button_active(const sf::RenderWindow &window);
+    void exit_button_poll(const sf::Event &e);
 
     /**
      * @brief Draw the button to the window
