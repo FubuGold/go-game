@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <string>
 #include <windows.h>
+
+#include "../include/game_handler.h"
 #include "../include/test.h"
 #include "../include/game_scoring.h"
 #include "../include/game_logic.h"
@@ -9,8 +11,11 @@
 void main_game();
 
 int main() {
+    GameHandler game;
+    game.run();
+    
     // testing();
-    main_game();
+    // main_game();
 }
 
 void to_lower_all(std::string &s) {

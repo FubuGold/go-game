@@ -1,8 +1,9 @@
 #include "../include/game_logic.h"
 #include "../include/game_scoring.h"
+#include "../include/test.h"
+#include "../include/AI.h"
 #include <iostream>
 #include <cassert>
-#include "../include/test.h"
 
 bool save_load_test();
 bool valid_move_test();
@@ -10,6 +11,13 @@ bool invalid_move_test();
 bool scoring_test();
 
 void testing() {
+    add_move(Move(10,9,'X'));
+    std::cerr << "AI Hard timer: ";
+    ai_move(Difficulty::HARD);
+    std::cerr << '\n';
+    std::cerr << "AI Medium timer: ";
+    ai_move(Difficulty::MEDIUM);
+    std::cerr << '\n';
     if (save_load_test()) std::cerr << "Save load test succeeded\n";
     else std::cerr << "Save load test failed\n";
     if (valid_move_test()) std::cerr << "Valid move test succedded\n";
@@ -81,6 +89,8 @@ bool invalid_move_test() {
         combine_flag |= flag;
         if (flag) std::cerr << "Invalid move subtest - Out of bound: Failed\n";
         
+        std::cerr << "Begin suicide test\n";
+
         // Suicide 
         flag = 0;
         add_move(Move(0,1,'X'));
@@ -107,7 +117,7 @@ bool invalid_move_test() {
         combine_flag |= flag;
         if (flag) std::cerr << "Invalid move subtest - Ko rule: Failed\n";
         
-        return !flag;
+        return !combine_flag;
     }
     catch(const std::exception& e)
     {

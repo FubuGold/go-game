@@ -5,8 +5,9 @@
 #include <filesystem>
 
 #include "zobrist_hash.h"
+#include "custom_util.h"
 
-#define BOARD_SIZE 19
+
 
 char opposite_stone(const char &cur_stone); //Return the opposite stone of the current stone
 
@@ -51,6 +52,11 @@ public:
 
     bool check_empty_undo_list() const; //Return true/false if the undo_list array is empty
 
+    /**
+     * @brief Undo a move
+     * 
+     * @param player_make_undo true if the move is made by player (will move to undo_list for redo) 
+     */
     void undo_move(bool player_make_undo = true); //Need to check if we could undo the move
 
     void redo_move(); //Need to check if we could redo the move

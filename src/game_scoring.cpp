@@ -1,10 +1,32 @@
 #include "../include/game_scoring.h"
 #include <iostream>
+#include <string.h>
+
 
 const int KOMI = 6;
 
 bool check(int x,int y) {
     return x >= 0 && y >= 0 && x < BOARD_SIZE && y < BOARD_SIZE;
+}
+
+CustomQueue qu;
+
+void bfs(int x,int y,int setter,int vst[BOARD_SIZE][BOARD_SIZE], const Board &board) {
+    qu.clear();
+    qu.push({x,y});
+    vst[x][y] = setter;
+    while (qu.size()) {
+        int ux = qu.front().first, uy = qu.front().second;
+        qu.pop();
+        for (int i=0;i<4;i++) {
+            int vx = ux + direction_x[i],
+                vy = uy + direction_y[i];
+            if (check(vx,vy) && current_board.get_state(vx,vy) == '.' && vst[vx][vy] != setter) {
+                vst[vx][vy] = setter;
+                qu.push({vx,vy});
+            } 
+        }
+    }
 }
 
 void dfs(int x,int y,int setter,int vst[BOARD_SIZE][BOARD_SIZE], const Board &board) {
@@ -18,9 +40,10 @@ void dfs(int x,int y,int setter,int vst[BOARD_SIZE][BOARD_SIZE], const Board &bo
 std::pair<int,int> scoring(const Board &board) {
     int black_point = board.get_captured_white(), white_point = KOMI + board.get_captured_black();
     int vst[BOARD_SIZE][BOARD_SIZE];
-    for (int i=0;i<BOARD_SIZE;i++) for (int j=0;j<BOARD_SIZE;j++) vst[i][j] = 0;
+    std::memset(vst,0,sizeof vst);
     for (int i=0;i<BOARD_SIZE;i++) {
         for (int j=0;j<BOARD_SIZE;j++) {
+            if (board.get_state(i,j) == '.') continue;
             for (int d = 0; d < 4; d++) {
                 int vx = i + direction_x[d],
                     vy = j + direction_y[d];

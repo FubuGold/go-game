@@ -8,6 +8,13 @@ Currently, the game needs C++ and its library in PATH environment variable to co
 
 Run game.exe file to play.
 
+## Build
+Make use you have `makefile` to build.
+
+Change the SFML path (`CFLAGS` and `LDFLAGS`) before build.
+
+Run `make` (or `make all`) to build
+
 ## File tree
 
 ```bash
@@ -48,3 +55,26 @@ AI (not implemented):
 - Random - No judgement 
 - Minimax - Shallow 
 - Minimax + Alpha-Beta Pruning
+
+## Makefile
+```bash
+CXX = g++
+CXXFLAGS = -std=c++17 -Iinclude -ID:\SFML-3.0.2\include -DSFML_STATIC -static -static-libgcc -static-libstdc++
+LDFLAGS = -LD:\SFML-3.0.2\lib
+LIBS = -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32 -lws2_32
+
+SRC = $(wildcard src/*.cpp)
+OBJ = $(SRC:.cpp=.o)
+TARGET := game.exe
+
+all: $(TARGET)
+
+$(TARGET): $(OBJ)
+	$(CXX) $(OBJ) $(LDFLAGS) $(LIBS) -o $(TARGET)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -f src/*.o $(TARGET) $(TEST_TARGET)
+```
