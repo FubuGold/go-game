@@ -21,15 +21,9 @@ class GameHandler {
 private:
     sf::RenderWindow window;
     GameState game_state;
-    std::array<GUI::Canvas*, static_cast<size_t>(GameState::Count)> canvas;
+    GUI::Canvas* canvas[static_cast<size_t>(GameState::Count)];
     unsigned int window_height, window_width;
     const std::string game_name = "Go game";
-
-    /**
-     * @brief Add components to the menu
-     * 
-     */
-    void setup_menu();
 
 public: 
     GameHandler(unsigned int window_width = 1920, unsigned int window_height = 1080);

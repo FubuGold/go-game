@@ -61,7 +61,7 @@ AI (not implemented):
 CXX = g++
 CXXFLAGS = -std=c++17 -Iinclude -ID:\SFML-3.0.2\include -DSFML_STATIC -static -static-libgcc -static-libstdc++
 LDFLAGS = -LD:\SFML-3.0.2\lib
-LIBS = -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32 -lws2_32
+LIBS = -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-audio-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32 -lws2_32 -lopenal -lvorbis -lsfml-system -lflac -lvorbisenc -lvorbisfile -lvorbis -logg
 
 SRC = $(wildcard src/*.cpp)
 OBJ = $(SRC:.cpp=.o)

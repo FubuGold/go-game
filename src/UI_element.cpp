@@ -3,6 +3,16 @@
 
 namespace GUI {
 
+sf::FloatRect combine_rect(sf::FloatRect rect1,sf::FloatRect rect2) {
+    float mn_x = std::min(rect1.position.x, rect2.position.x);
+    float mn_y = std::min(rect1.position.y, rect2.position.y);
+    float mx_x = std::max(rect1.position.x + rect1.size.x, rect2.position.x + rect2.size.x);
+    float mx_y = std::max(rect1.position.y + rect1.size.y, rect2.position.y + rect2.size.y);
+
+    return sf::FloatRect({mn_x,mn_y},{mx_x - mn_x, mx_y - mn_y});
+}
+
+// ----------------------------------------------
 // Element protected
 
 void Element::press() {
@@ -72,15 +82,6 @@ void Element::draw() {
 
 void Element::poll_event(const std::optional<sf::Event> &e) {}
 
-sf::FloatRect combine_rect(sf::FloatRect rect1,sf::FloatRect rect2) {
-    float mn_x = std::min(rect1.position.x, rect2.position.x);
-    float mn_y = std::min(rect1.position.y, rect2.position.y);
-    float mx_x = std::max(rect1.position.x + rect1.size.x, rect2.position.x + rect2.size.x);
-    float mx_y = std::max(rect1.position.y + rect1.size.y, rect2.position.y + rect2.size.y);
-
-    return sf::FloatRect({mn_x,mn_y},{mx_x - mn_x, mx_y - mn_y});
-}
-
 void Element::update_bound() {
     sf::FloatRect rect;
     bool first = false;
@@ -108,9 +109,7 @@ void Element::update_bound() {
     bound = rect;
 }
 
-
 // ----------------------------------------------
-
 // Rectangle button external
 
 Rectangle_Button::Rectangle_Button(float button_width,float button_height) {
@@ -131,20 +130,16 @@ Rectangle_Button::~Rectangle_Button() {
 }
 
 void Rectangle_Button::set_pos(float pos_x,float pos_y) {
+    pos = {pos_x,pos_y};
     rect->setPosition({pos_x,pos_y});
-    text->setPosition({
-        rect->getPosition().x + 21,
-        rect->getPosition().y + 14
-    });
+    text->setPosition(rect->getPosition() + text_offset);
     update_bound();
 }
 
 void Rectangle_Button::set_pos(sf::Vector2f new_pos) {
+    pos = new_pos;
     rect->setPosition(new_pos);
-    text->setPosition({
-        rect->getPosition().x + 21,
-        rect->getPosition().y + 14
-    });
+    text->setPosition(rect->getPosition() + text_offset);
     update_bound();
 }
 
@@ -165,6 +160,108 @@ void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
         if (mouse_release->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             release();
         }
+    }
+}
+
+// ----------------------------------------------
+// Dropbox implementation
+
+Droplist::Droplist(float button_width, float button_height, const std::string &title_text) {
+    this->button_width = button_width;
+    this->button_height = button_height;
+    title_button = new Rectangle_Button(button_width, button_height);
+    title_button->set_text_string(title_text);
+    title_button->set_press([this](){
+        std::cerr << "Title pressed\n";
+        is_expanded = !is_expanded;
+    });
+    title_button->rect->setFillColor(sf::Color::Black);
+    title_button->text->setFillColor(sf::Color::White);
+}
+
+Droplist::~Droplist() {
+    for (Rectangle_Button *p: drop_list) {
+        delete p;
+    }
+    delete title_button;
+    drop_list.clear();
+}
+
+void Droplist::update_bound() {
+    title_button->update_bound();
+    bound = title_button->bound;
+    for (Rectangle_Button *p: drop_list) {
+        p->update_bound();
+        bound = combine_rect(bound,p->bound);
+    }
+}
+
+void Droplist::set_window(sf::RenderWindow *render_win_p) {
+    std::cerr << "Droplist set window called\n";
+    title_button->set_window(render_win_p);
+    for (Rectangle_Button *p: drop_list) {
+        p->set_window(render_win_p);
+    }
+    window = render_win_p;
+}
+
+void Droplist::add_element(const std::string &text, callback_t func) {
+    count++;
+    Rectangle_Button *tmp = new Rectangle_Button(button_width,button_height);
+    tmp->set_press([this,func](){
+        if (is_expanded) func();
+    });
+    tmp->set_text_string(text);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(-2);
+    sf::Vector2f prev_pos;
+    if (!drop_list.empty()) {
+        prev_pos = drop_list.back()->get_pos();
+    }
+    else {
+        prev_pos = title_button->get_pos();
+    }
+    prev_pos.y += button_height;
+    tmp->set_pos(prev_pos);
+    drop_list.push_back(tmp);
+    update_bound();
+}
+
+void Droplist::set_pos(float pos_x,float pos_y) {
+    pos = {pos_x,pos_y};
+    title_button->set_pos(pos);
+    sf::Vector2f prev_pos = {pos_x,pos_y};
+    for (Rectangle_Button *p: drop_list) {
+        prev_pos.y += button_height;
+        p->set_pos(prev_pos);
+    }
+    update_bound();
+}
+
+void Droplist::set_pos(sf::Vector2f new_pos) {
+    pos = new_pos;
+    title_button->set_pos(pos);
+    sf::Vector2f prev_pos = new_pos;
+    for (Rectangle_Button *p: drop_list) {
+        prev_pos.y += button_height;
+        p->set_pos(prev_pos);
+    }
+    update_bound();
+}
+
+void Droplist::draw() {
+    title_button->draw();
+    if (is_expanded) {
+        for (Rectangle_Button *p: drop_list) {
+            p->draw();
+        }
+    }
+}
+
+void Droplist::poll_event(const std::optional<sf::Event> &e) {
+    title_button->poll_event(e);
+    for (Rectangle_Button *p: drop_list) {
+        p->poll_event(e);
     }
 }
 

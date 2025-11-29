@@ -9,10 +9,26 @@ GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) 
     window = sf::RenderWindow(sf::VideoMode::getDesktopMode(), game_name, sf::Style::Default, sf::State::Fullscreen);
     game_state = GameState::Menu;
 
-    canvas[0] = new GUI::Menu_Canvas();
+    // Testing
+    // canvas[0] = new GUI::Menu_Canvas();
+    canvas[0] = new GUI::Canvas();
+    GUI::Droplist *droplist = new GUI::Droplist(450,100);
+    droplist->set_pos(100,100);
+    droplist->add_element("Test 1",[](){
+        std::cerr << "Test 1 pressed\n";
+    });
+    droplist->add_element("Test 2",[](){
+        std::cerr << "Test 2 pressed\n";
+    });
+    droplist->add_element("Test 3",[](){
+        std::cerr << "Test 3 pressed\n";
+    });
+
+    canvas[0]->add_element(droplist);
+
     canvas[1] = new GUI::Canvas();
     canvas[2] = new GUI::Canvas();
-    
+
     for (int i=0;i<state_to_int(GameState::Count);i++) {
         canvas[i]->set_window(&window);
         canvas[i]->setup();

@@ -66,6 +66,11 @@ namespace GUI {
          * @param pos_y 
          */
         virtual void set_pos(float pos_x,float pos_y);
+        /**
+         * @brief Set the pos object
+         * 
+         * @param new_pos 
+         */
         virtual void set_pos(sf::Vector2f new_pos);
         
         /**
@@ -85,9 +90,9 @@ namespace GUI {
         /**
          * @brief Set the window object
          * 
-         * @param window 
+         * @param render_win_ptr 
          */
-        void set_window(sf::RenderWindow *render_win_ptr);
+        virtual void set_window(sf::RenderWindow *render_win_ptr);
 
         /**
          * @brief Check if window is setted
@@ -121,6 +126,7 @@ namespace GUI {
     public:
         sf::RectangleShape *rect = new sf::RectangleShape();
         sf::Text *text = new sf::Text(Config::font);
+        sf::Vector2f text_offset = {21,14};
         
         Rectangle_Button(float button_width = 337.f,float button_height = 103.f);
 
@@ -148,6 +154,54 @@ namespace GUI {
         void set_pos(sf::Vector2f new_pos) override;
 
         void poll_event(const std::optional<sf::Event> &e) override;
+    };
+
+    class Droplist : public Element {
+    private:
+        std::vector<Rectangle_Button*> drop_list;
+        void update_bound();
+        float button_width,button_height;
+
+    public:
+        Rectangle_Button *title_button;
+        int count = 0;
+        bool is_expanded = 0;
+
+        Droplist(float button_width = 400, float button_height = 150,const std::string &title_text = "Droplist");
+        ~Droplist();
+
+        /**
+         * @brief Add a element to the list
+         * 
+         * @param text 
+         * @param func 
+         */
+        void add_element(const std::string &text, callback_t func);
+
+        void set_window(sf::RenderWindow *render_win_ptr) override;
+
+        /**
+         * @brief Set the pos object
+         * 
+         * @param pos_x 
+         * @param pos_y 
+         */
+        void set_pos(float pos_x,float pos_y) override;
+        /**
+         * @brief Set the pos object
+         * 
+         * @param new_pos 
+         */
+        void set_pos(sf::Vector2f new_pos) override;
+
+        /**
+         * @brief Draw the droplist. Does not draw the list element if is not expanded
+         * 
+         */
+        void draw() override;
+
+        void poll_event(const std::optional<sf::Event> &e) override;
+
     };
 }
 
