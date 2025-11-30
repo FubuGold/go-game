@@ -126,9 +126,15 @@ namespace GUI {
     public:
         sf::RectangleShape *rect = new sf::RectangleShape();
         sf::Text *text = new sf::Text(Config::font);
-        sf::Vector2f text_offset = {21,14};
+        sf::Vector2f text_offset = {0.f, 0.f};
+        sf::Texture texture;
+        sf::Sprite *sprite = nullptr;
         
-        Rectangle_Button(float button_width = 337.f,float button_height = 103.f);
+        Rectangle_Button(float button_width = 337.f, 
+            float button_height = 103.f, 
+            sf::Color background_color = sf::Color::White, 
+            sf::Color text_color = sf::Color::Black, 
+            unsigned int text_size = 60);
 
         ~Rectangle_Button();
 
@@ -138,6 +144,13 @@ namespace GUI {
          * @param str 
          */
         void set_text_string(const std::string &str);
+
+        /**
+         * @brief Set the texture object
+         * 
+         * @param filename 
+         */
+        void set_texture(const std::filesystem::path &filename);
 
         /**
          * @brief Set the pos object

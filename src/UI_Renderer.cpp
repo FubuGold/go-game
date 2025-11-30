@@ -65,13 +65,19 @@ void Menu_Canvas::reset_button_size(float new_width,float new_height) {
     setup();
 }
 
-Rectangle_Button* Menu_Canvas::create_button(sf::Vector2f pos, const std::string &text) {
-    Rectangle_Button *res = new Rectangle_Button;
+Rectangle_Button* Menu_Canvas::create_button(const sf::Vector2f &pos, const std::string &text) {
+    Rectangle_Button *res = new Rectangle_Button(button_width, button_height);
     res->set_window(window);
     res->set_pos(pos);
     res->set_text_string(text);
-    res->rect->setFillColor(sf::Color::White);
-    res->text->setFillColor(sf::Color::Black);
+    return res;
+}
+
+Rectangle_Button* Menu_Canvas::create_sprite(const sf::Vector2f &pos, const std::filesystem::path &filename) {
+    Rectangle_Button *res = new Rectangle_Button(button_width, button_height, sf::Color::Transparent);
+    res->set_window(window);
+    res->set_texture(filename);
+    res->set_pos(pos);
     return res;
 }
 
@@ -81,7 +87,7 @@ void debug_rect(sf::FloatRect rect,const std::string &message) {
 }
 
 void Menu_Canvas::setup() {
-    Rectangle_Button *tmp = create_button({102.f, 478.f}, "LOAD GAME");
+    Rectangle_Button *tmp = create_button({102.f, 377.f}, "LOAD GAME");
     tmp->set_press([tmp]() {
         std::cerr << "1. Load button pressed\n";
         // debug_rect(tmp->bound,"Bound");
@@ -89,23 +95,50 @@ void Menu_Canvas::setup() {
     });
     add_element(tmp);
 
-    tmp = create_button({102.f, 627.f}, "NEW GAME");
+    tmp = create_button({102.f, 528.f}, "NEW GAME");
     tmp->set_press([]() {
         std::cerr << "2. New button pressed\n";
     });
     add_element(tmp);
 
-    tmp = create_button({102.f, 776.f}, "SETTING");
+    tmp = create_button({102.f, 679.f}, "SETTING");
     tmp->set_press([]() {
         std::cerr << "3. Setting button pressed\n";
     });
     add_element(tmp);
 
-    tmp = create_button({102.f, 925.f}, "EXIT");
+    tmp = create_button({102.f, 830.f}, "EXIT");
     tmp->set_press([tmp]() {
         // std::cerr << "Exit pressed\n";
         if (tmp->window->isOpen()) tmp->window->close();
     });
+    add_element(tmp);
+
+    tmp = create_sprite({102, 119}, "assets/game_title.png");
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(468.f, 60.f, sf::Color::Transparent, sf::Color::Black, 36);
+    tmp->set_window(window);
+    tmp->set_pos({1452, 1020});
+    tmp->set_text_string("Game version: Sigma_7.2.7");
+    add_element(tmp);
+
+    tmp = create_sprite({1291, 261}, "assets/black_stone.png");
+    add_element(tmp);
+
+    tmp = create_sprite({851, 480}, "assets/black_stone.png");
+    add_element(tmp);
+
+    tmp = create_sprite({1511, 480}, "assets/black_stone.png");
+    add_element(tmp);
+
+    tmp = create_sprite({1291, 699}, "assets/black_stone.png");
+    add_element(tmp);
+
+    tmp = create_sprite({1291, 480}, "assets/white_stone.png");
+    add_element(tmp);
+
+    tmp = create_sprite({1071, 480}, "assets/white_stone.png");
     add_element(tmp);
 }
 

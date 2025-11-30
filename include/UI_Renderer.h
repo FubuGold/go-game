@@ -81,7 +81,26 @@ namespace GUI {
 
         void setup() override;
 
-        Rectangle_Button* create_button(sf::Vector2f pos, const std::string &text);
+        /**
+         * @brief Create a button object
+         * 
+         * @param pos 
+         * @param background_color 
+         * @param text_color 
+         * @param text 
+         * @param text_size 
+         * @return Rectangle_Button* 
+         */
+        Rectangle_Button* create_button(const sf::Vector2f &pos, const std::string &text);
+
+        /**
+         * @brief Create a sprite object
+         * 
+         * @param pos 
+         * @param filename 
+         * @return Rectangle_Button* 
+         */
+        Rectangle_Button* create_sprite(const sf::Vector2f &pos, const std::filesystem::path &filename);
     };
 }
 

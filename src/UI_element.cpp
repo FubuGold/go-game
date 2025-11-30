@@ -112,12 +112,12 @@ void Element::update_bound() {
 // ----------------------------------------------
 // Rectangle button external
 
-Rectangle_Button::Rectangle_Button(float button_width,float button_height) {
+Rectangle_Button::Rectangle_Button(float button_width,float button_height, sf::Color background_color, sf::Color text_color, unsigned int text_size) {
     rect->setSize({button_width,button_height});
-    rect->setFillColor(sf::Color::White);
+    rect->setFillColor(background_color);
     
-    text->setCharacterSize(60);
-    text->setFillColor(sf::Color::Black);
+    text->setCharacterSize(text_size);
+    text->setFillColor(text_color);
 
     parts.push_back(rect);
     parts.push_back(text);
@@ -127,25 +127,47 @@ Rectangle_Button::Rectangle_Button(float button_width,float button_height) {
 Rectangle_Button::~Rectangle_Button() {
     delete rect;
     delete text;
+    delete sprite;
 }
 
 void Rectangle_Button::set_pos(float pos_x,float pos_y) {
     pos = {pos_x,pos_y};
     rect->setPosition({pos_x,pos_y});
-    text->setPosition(rect->getPosition() + text_offset);
+    if (sprite) sprite->setPosition({pos_x, pos_y});
+    sf::Vector2f rect_center = rect->getPosition() + rect->getSize() / 2.f;
+    text->setPosition(rect_center + text_offset);
     update_bound();
 }
 
 void Rectangle_Button::set_pos(sf::Vector2f new_pos) {
     pos = new_pos;
     rect->setPosition(new_pos);
-    text->setPosition(rect->getPosition() + text_offset);
+    if (sprite) sprite->setPosition(new_pos);
+    sf::Vector2f rect_center = rect->getPosition() + rect->getSize() / 2.f;
+    text->setPosition(rect_center + text_offset);
     update_bound();
 }
 
 void Rectangle_Button::set_text_string(const std::string &str) {
     text->setString(str);
+
+    auto text_bound = text->getLocalBounds();
+    text->setOrigin({text_bound.position.x + text_bound.size.x / 2.f, text_bound.position.y + text_bound.size.y / 2.f});
+    sf::Vector2f rect_center = rect->getPosition() + rect->getSize() / 2.f;
+    text->setPosition(rect_center + text_offset);
+
     update_bound();
+}
+
+void Rectangle_Button::set_texture(const std::filesystem::path &filename) {
+    if (!texture.loadFromFile(filename)) {
+        std::cerr << "Failed to load texture of " << filename.filename() << '\n';
+    }
+    else {
+        texture.setSmooth(true);
+        sprite = new sf::Sprite(texture);
+        parts.push_back(sprite);
+    }
 }
 
 void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {

@@ -10,22 +10,22 @@ GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) 
     game_state = GameState::Menu;
 
     // Testing
-    // canvas[0] = new GUI::Menu_Canvas();
-    canvas[0] = new GUI::Canvas();
-    GUI::Droplist *droplist = new GUI::Droplist(450,100);
-    droplist->set_pos(100,100);
-    droplist->add_element("Test 1",[](){
-        std::cerr << "Test 1 pressed\n";
-    });
-    droplist->add_element("Test 2",[](){
-        std::cerr << "Test 2 pressed\n";
-    });
-    droplist->add_element("Test 3",[](){
-        std::cerr << "Test 3 pressed\n";
-    });
-
-    canvas[0]->add_element(droplist);
-
+    // canvas[0] = new GUI::Canvas();
+    // GUI::Droplist *droplist = new GUI::Droplist(450,100);
+    // droplist->set_pos(100,100);
+    // droplist->add_element("Test 1",[](){
+        //     std::cerr << "Test 1 pressed\n";
+        // });
+        // droplist->add_element("Test 2",[](){
+            //     std::cerr << "Test 2 pressed\n";
+            // });
+            // droplist->add_element("Test 3",[](){
+                //     std::cerr << "Test 3 pressed\n";
+                // });
+                
+                // canvas[0]->add_element(droplist);
+                
+    canvas[0] = new GUI::Menu_Canvas();
     canvas[1] = new GUI::Canvas();
     canvas[2] = new GUI::Canvas();
 
