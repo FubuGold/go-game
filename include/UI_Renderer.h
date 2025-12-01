@@ -126,7 +126,13 @@ namespace GUI {
     private:
 
     public:
+        void setup() override;
+    };
 
+    class AImode_Canvas : public Canvas {
+    private:
+
+    public:
         void setup() override;
     };
 }

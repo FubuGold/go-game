@@ -98,10 +98,10 @@ void debug_rect(sf::FloatRect rect,const std::string &message) {
 void Menu_Canvas::setup() {
     Rectangle_Button *tmp = new Rectangle_Button(button_width, button_height);
     tmp->rect->setOutlineColor(sf::Color::Black);
-    tmp->rect->setOutlineThickness(1.f);
+    tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 377.f}, "LOAD GAME", tmp);
     tmp->set_press([tmp]() {
-        std::cerr << "1. Load button pressed\n";
+        std::cerr << "MENU: Load button pressed\n";
         // debug_rect(tmp->bound,"Bound");
         // debug_rect(tmp->rect->getGlobalBounds(),"Out rect");
     });
@@ -109,29 +109,29 @@ void Menu_Canvas::setup() {
 
     tmp = new Rectangle_Button(button_width, button_height);
     tmp->rect->setOutlineColor(sf::Color::Black);
-    tmp->rect->setOutlineThickness(1.f);
+    tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 528.f}, "NEW GAME", tmp);
     tmp->set_press([&]() {
-        std::cerr << "2. New button pressed\n";
+        std::cerr << "MENU: New button pressed\n";
         if (gamestate) *gamestate = GameState::NewGame;
     });
     add_element(tmp);
 
     tmp = new Rectangle_Button(button_width, button_height);
     tmp->rect->setOutlineColor(sf::Color::Black);
-    tmp->rect->setOutlineThickness(1.f);
+    tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 679.f}, "SETTING", tmp);
     tmp->set_press([]() {
-        std::cerr << "3. Setting button pressed\n";
+        std::cerr << "MENU: Setting button pressed\n";
     });
     add_element(tmp);
 
     tmp = new Rectangle_Button(button_width, button_height);
     tmp->rect->setOutlineColor(sf::Color::Black);
-    tmp->rect->setOutlineThickness(1.f);
+    tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 830.f}, "EXIT", tmp);
     tmp->set_press([tmp]() {
-        // std::cerr << "Exit pressed\n";
+        std::cerr << "MENU: Exit button pressed\n";
         if (tmp->window->isOpen()) tmp->window->close();
     });
     add_element(tmp);
@@ -168,14 +168,46 @@ void Menu_Canvas::setup() {
 void NewGame_Canvas::setup() {
     Rectangle_Button *tmp = new Rectangle_Button(1920, 185, {248, 204, 75});
     tmp->rect->setOutlineColor(sf::Color::Black);
-    tmp->rect->setOutlineThickness(1.f);
+    tmp->rect->setOutlineThickness(4.f);
     create_button({0, 0}, "", tmp);
     add_element(tmp);
 
     tmp = new Rectangle_Button(494, 116, sf::Color::Transparent, sf::Color::Black, 96);
-    create_button({51, 41}, "New game", tmp);
+    tmp->text->setFont(Config::font[1]);
+    tmp->text->setStyle(sf::Text::Bold | sf::Text::Italic);
+    create_button({51, 41}, "NEW GAME", tmp);
+    add_element(tmp);
 
+    tmp = new Rectangle_Button(891, 120, sf::Color::Transparent, sf::Color::Black, 96);
+    create_button({51, 903}, "CHOOSE GAME MODE", tmp);
+    add_element(tmp);
 
+    tmp = new Rectangle_Button(377, 103, {255, 183, 106}, sf::Color::Black, 60);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({1487, 943}, "BACK", tmp);
+    tmp->set_press([&]() {
+        std::cerr << "NEW GAME: Back button pressed\n";
+        *gamestate = GameState::Menu;
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({86, 274}, "assets/2_players.png");
+    tmp->set_press([&]() {
+        std::cerr << "NEW GAME: 2 players button pressed\n";
+        *gamestate = GameState::Gameplay;
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({1001, 274}, "assets/vs_computer.png");
+    tmp->set_press([&]() {
+        std::cerr << "NEW GAME: VS computer button pressed\n";
+        *gamestate = GameState::AImode;
+    });
+    add_element(tmp);
 }
+
+// ---------------------------------------------------
+// AImode implementation
 
 }

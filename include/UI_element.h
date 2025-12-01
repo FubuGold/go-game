@@ -125,7 +125,7 @@ namespace GUI {
     class Rectangle_Button : public Element {
     public:
         sf::RectangleShape *rect = new sf::RectangleShape();
-        sf::Text *text = new sf::Text(Config::font);
+        sf::Text *text = new sf::Text(Config::font[0]);
         sf::Vector2f text_offset = {0.f, 0.f};
         sf::Texture texture;
         sf::Sprite *sprite = nullptr;

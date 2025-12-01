@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 namespace Config {
-    extern sf::Font font;
+    extern sf::Font font[2];
 
     void load_config();
     void save_config();
