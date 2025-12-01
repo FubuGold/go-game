@@ -6,12 +6,9 @@
 
 #include "UI_renderer.h"
 
-enum class GameState {
-    Menu,
-    Playing,
-    Setting,
-    Count
-};
+inline size_t state_to_int(GameState *state) {
+    return static_cast<size_t>(*state);
+}
 
 inline size_t state_to_int(GameState state) {
     return static_cast<size_t>(state);
@@ -27,6 +24,8 @@ private:
 
 public: 
     GameHandler(unsigned int window_width = 1920, unsigned int window_height = 1080);
+    
+    ~GameHandler();
 
     /**
      * @brief Rescaling when window resize occurs

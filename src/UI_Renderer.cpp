@@ -9,6 +9,7 @@ namespace GUI {
 
 Canvas::~Canvas() {
     window = nullptr;
+    gamestate = nullptr;
     for (Element *p: element_l) {
         delete p;
     }
@@ -25,6 +26,10 @@ void Canvas::set_window(sf::RenderWindow *render_win_ptr) {
     for (Element *p : element_l) {
         p->set_window(render_win_ptr);
     }
+}
+
+void Canvas::set_gamesate(GameState *gamestate_ptr) {
+    gamestate = gamestate_ptr;
 }
 
 void Canvas::draw() {
@@ -52,7 +57,27 @@ void Canvas::recal_bound() {
     }
 }
 
-void Canvas::setup() {};
+void Canvas::create_button(sf::Vector2f pos, const std::string &text, Rectangle_Button *rect) {
+    rect->set_pos(pos);
+    rect->set_text_string(text);
+}
+
+Rectangle_Button* Canvas::create_sprite(sf::Vector2f pos, const std::filesystem::path &filename) {
+    sf::Texture tmp;
+    if (!tmp.loadFromFile(filename)) {
+        std::cerr << "Failed to load texture of " << filename.filename() << '\n';
+        return nullptr;
+    }
+    
+    auto size_of_texture = tmp.getSize();
+
+    Rectangle_Button *res = new Rectangle_Button(size_of_texture.x, size_of_texture.y, sf::Color::Transparent);
+    res->set_texture(filename);
+    res->set_pos(pos);
+    return res;
+}
+
+void Canvas::setup() {}
 
 // ---------------------------------------------------
 // Menu implementation
@@ -65,29 +90,16 @@ void Menu_Canvas::reset_button_size(float new_width,float new_height) {
     setup();
 }
 
-Rectangle_Button* Menu_Canvas::create_button(const sf::Vector2f &pos, const std::string &text) {
-    Rectangle_Button *res = new Rectangle_Button(button_width, button_height);
-    res->set_window(window);
-    res->set_pos(pos);
-    res->set_text_string(text);
-    return res;
-}
-
-Rectangle_Button* Menu_Canvas::create_sprite(const sf::Vector2f &pos, const std::filesystem::path &filename) {
-    Rectangle_Button *res = new Rectangle_Button(button_width, button_height, sf::Color::Transparent);
-    res->set_window(window);
-    res->set_texture(filename);
-    res->set_pos(pos);
-    return res;
-}
-
 void debug_rect(sf::FloatRect rect,const std::string &message) {
     std::cerr << message << ' ' << rect.position.x << ' ' << rect.position.y << ' ';
     std::cerr << rect.size.x << ' ' << rect.size.y << '\n';
 }
 
 void Menu_Canvas::setup() {
-    Rectangle_Button *tmp = create_button({102.f, 377.f}, "LOAD GAME");
+    Rectangle_Button *tmp = new Rectangle_Button(button_width, button_height);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(1.f);
+    create_button({102.f, 377.f}, "LOAD GAME", tmp);
     tmp->set_press([tmp]() {
         std::cerr << "1. Load button pressed\n";
         // debug_rect(tmp->bound,"Bound");
@@ -95,19 +107,29 @@ void Menu_Canvas::setup() {
     });
     add_element(tmp);
 
-    tmp = create_button({102.f, 528.f}, "NEW GAME");
-    tmp->set_press([]() {
+    tmp = new Rectangle_Button(button_width, button_height);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(1.f);
+    create_button({102.f, 528.f}, "NEW GAME", tmp);
+    tmp->set_press([&]() {
         std::cerr << "2. New button pressed\n";
+        if (gamestate) *gamestate = GameState::NewGame;
     });
     add_element(tmp);
 
-    tmp = create_button({102.f, 679.f}, "SETTING");
+    tmp = new Rectangle_Button(button_width, button_height);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(1.f);
+    create_button({102.f, 679.f}, "SETTING", tmp);
     tmp->set_press([]() {
         std::cerr << "3. Setting button pressed\n";
     });
     add_element(tmp);
 
-    tmp = create_button({102.f, 830.f}, "EXIT");
+    tmp = new Rectangle_Button(button_width, button_height);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(1.f);
+    create_button({102.f, 830.f}, "EXIT", tmp);
     tmp->set_press([tmp]() {
         // std::cerr << "Exit pressed\n";
         if (tmp->window->isOpen()) tmp->window->close();
@@ -118,9 +140,7 @@ void Menu_Canvas::setup() {
     add_element(tmp);
 
     tmp = new Rectangle_Button(468.f, 60.f, sf::Color::Transparent, sf::Color::Black, 36);
-    tmp->set_window(window);
-    tmp->set_pos({1452, 1020});
-    tmp->set_text_string("Game version: Sigma_7.2.7");
+    create_button({1452, 1020}, "Game version: Sigma_7.2.7", tmp);
     add_element(tmp);
 
     tmp = create_sprite({1291, 261}, "assets/black_stone.png");
@@ -140,6 +160,22 @@ void Menu_Canvas::setup() {
 
     tmp = create_sprite({1071, 480}, "assets/white_stone.png");
     add_element(tmp);
+}
+
+// ---------------------------------------------------
+// NewGame implementation
+
+void NewGame_Canvas::setup() {
+    Rectangle_Button *tmp = new Rectangle_Button(1920, 185, {248, 204, 75});
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(1.f);
+    create_button({0, 0}, "", tmp);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(494, 116, sf::Color::Transparent, sf::Color::Black, 96);
+    create_button({51, 41}, "New game", tmp);
+
+
 }
 
 }

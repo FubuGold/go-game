@@ -7,11 +7,22 @@
 
 const sf::Font font = sf::Font("font/Jua-Regular.ttf");
 
+enum class GameState {
+    Menu,
+    NewGame,
+    AImode,
+    Gameplay,
+    Setting,
+    Count
+};
+
 namespace GUI {
     class Canvas {
     protected: 
         std::vector<Element*> element_l;
         sf::RenderWindow *window;
+        GameState *gamestate;
+
     public:
         virtual ~Canvas();
 
@@ -28,6 +39,13 @@ namespace GUI {
          * @param render_win_ptr address / pointer to the window
          */
         void set_window(sf::RenderWindow *render_win_ptr);
+
+        /**
+         * @brief Set the gamesate object
+         * 
+         * @param gamestate_ptr 
+         */
+        void set_gamesate(GameState *gamestate_ptr);
         
         /**
          * @brief Draw object on to the setted window
@@ -57,6 +75,28 @@ namespace GUI {
         void recal_bound();
 
         /**
+         * @brief Create a button object
+         * 
+         * Can be overrided if needed
+         * 
+         * @param pos 
+         * @param text 
+         * @param rect 
+         */
+        virtual void create_button(sf::Vector2f pos, const std::string &text, Rectangle_Button *rect);
+
+        /**
+         * @brief Create a sprite object
+         * 
+         * Can be overrideed if needed
+         * 
+         * @param pos 
+         * @param filename 
+         * @return Rectangle_Button* 
+         */
+
+        virtual Rectangle_Button* create_sprite(sf::Vector2f pos, const std::filesystem::path &filename);
+        /**
          * @brief Add all basic component of the current UI state.
          * 
          * The default does not add anything.
@@ -80,27 +120,14 @@ namespace GUI {
         void reset_button_size(float new_width,float new_height);
 
         void setup() override;
+    };
 
-        /**
-         * @brief Create a button object
-         * 
-         * @param pos 
-         * @param background_color 
-         * @param text_color 
-         * @param text 
-         * @param text_size 
-         * @return Rectangle_Button* 
-         */
-        Rectangle_Button* create_button(const sf::Vector2f &pos, const std::string &text);
+    class NewGame_Canvas : public Canvas {
+    private:
 
-        /**
-         * @brief Create a sprite object
-         * 
-         * @param pos 
-         * @param filename 
-         * @return Rectangle_Button* 
-         */
-        Rectangle_Button* create_sprite(const sf::Vector2f &pos, const std::filesystem::path &filename);
+    public:
+
+        void setup() override;
     };
 }
 

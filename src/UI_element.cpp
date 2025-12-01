@@ -166,6 +166,7 @@ void Rectangle_Button::set_texture(const std::filesystem::path &filename) {
     else {
         texture.setSmooth(true);
         sprite = new sf::Sprite(texture);
+        sprite->setPosition(pos);
         parts.push_back(sprite);
     }
 }
