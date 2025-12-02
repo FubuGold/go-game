@@ -121,8 +121,9 @@ void Menu_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 679.f}, "SETTING", tmp);
-    tmp->set_press([]() {
+    tmp->set_press([&]() {
         std::cerr << "MENU: Setting button pressed\n";
+        if (gamestate) *gamestate = GameState::Setting;
     });
     add_element(tmp);
 
@@ -309,6 +310,74 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([&]() {
         std::cerr << "Gameplay: Undo button pressed\n";
+    });
+    add_element(tmp);
+}
+
+// ---------------------------------------------------
+// Setting implementation
+
+void Setting_Canvas::setup() {
+    Rectangle_Button *tmp = new Rectangle_Button(1920, 185, sf::Color(0xF8,0xCC,0x4B), sf::Color::Black, 96);
+    add_element(tmp);
+    
+    tmp = new Rectangle_Button(312,116, sf::Color::Transparent, sf::Color::Black, 96);
+    tmp->text->setFont(Config::font[1]);
+    tmp->text->setStyle(sf::Text::Bold | sf::Text::Italic);
+    create_button({51,35},"Setting",tmp);
+    add_element(tmp);
+
+    // All setting. Position will calculated locally to the box
+    sf::Vector2f tmp_pos = {393,250};
+    // The box
+    tmp = new Rectangle_Button(1042, 731, sf::Color(0x94,0xCC,0x47));
+    tmp->set_pos(tmp_pos);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(143, 63, sf::Color::Transparent, sf::Color(0xBC,0x48,0x00), 50);
+    create_button(tmp_pos + sf::Vector2f(37,24),"AUDIO",tmp);
+    add_element(tmp);
+    
+    H_Slider *slider = new H_Slider(
+        512, 31, 100, 100, "General", sf::Color(0x7C,0x78,0x78), sf::Color::Red, 40
+    );
+    slider->set_pos(tmp_pos + sf::Vector2f(265,99));
+    slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,90));
+    slider->set_name_pos(tmp_pos + sf::Vector2f(104,90));
+    slider->set_change([slider](){
+        std::cerr << "Current general value is: " << slider->value << '\n';
+    });
+    add_element(slider);
+
+    slider = new H_Slider(
+        512, 31, 100, 100, "Music", sf::Color(0x7C,0x78,0x78), sf::Color::Red, 40
+    );
+    slider->set_pos(tmp_pos + sf::Vector2f(265,161));
+    slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,152));
+    slider->set_name_pos(tmp_pos + sf::Vector2f(145,152));
+    slider->set_change([slider](){
+        std::cerr << "Current music value is: " << slider->value << '\n';
+    });
+    add_element(slider);
+
+    slider = new H_Slider(
+        512, 31, 100, 100, "SFX", sf::Color(0x7C,0x78,0x78), sf::Color::Red, 40
+    );
+    slider->set_pos(tmp_pos + sf::Vector2f(265,223));
+    slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,214));
+    slider->set_name_pos(tmp_pos + sf::Vector2f(165,214));
+    slider->set_change([slider](){
+        std::cerr << "Current SFX value is: " << slider->value << '\n';
+    });
+    add_element(slider);
+
+    tmp = new Rectangle_Button(377, 103, {255, 183, 106}, sf::Color::Black, 60);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({1487, 943}, "BACK", tmp);
+    tmp->set_press([&]() {
+        std::cerr << "NEW GAME: Back button pressed\n";
+        *gamestate = GameState::Menu;
     });
     add_element(tmp);
 }

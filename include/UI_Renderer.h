@@ -144,6 +144,13 @@ namespace GUI {
     public:
         void setup() override;
     };
+
+    class Setting_Canvas : public Canvas {
+    private:
+
+    public:
+        void setup() override;
+    };
 }
 
 #endif

@@ -298,7 +298,17 @@ void Droplist::poll_event(const std::optional<sf::Event> &e) {
 // ----------------------------------------------
 // Horizontal Slider implementation
 
-H_Slider::H_Slider(float width,float height,int max_value, int steps, sf::Color main_color, sf::Color progress_color) {
+H_Slider::H_Slider(
+            float width,
+            float height,
+            int max_value, 
+            int steps,
+            const std::string &name,
+            sf::Color main_color, 
+            sf::Color progress_color,
+            int text_size,
+            sf::Color text_color
+        ){
     this->width = width;
     this->height = height;
     this->steps = steps;
@@ -316,8 +326,14 @@ H_Slider::H_Slider(float width,float height,int max_value, int steps, sf::Color 
     progress_bar->setFillColor(progress_color);
     parts.push_back(progress_bar);
 
+    slider_name->setString(name);
+    slider_name->setFillColor(text_color);
+    slider_name->setCharacterSize(text_size);
+    parts.push_back(slider_name);
+
     value_display->setString(int_to_string(max_value));
-    value_display->setFillColor(sf::Color::Black);
+    value_display->setFillColor(text_color);
+    value_display->setCharacterSize(text_size);
     parts.push_back(value_display);
 
     update_bound();
@@ -326,6 +342,7 @@ H_Slider::H_Slider(float width,float height,int max_value, int steps, sf::Color 
 void H_Slider::set_pos(float pos_x,float pos_y) {
     main_bar->setPosition({pos_x,pos_y});
     progress_bar->setPosition({pos_x,pos_y});
+    slider_name->setPosition({pos_x - 40, pos_y});
     value_display->setPosition({pos_x + width + 10, pos_y});
     pos = {pos_x,pos_y};
     update_bound();
@@ -333,9 +350,14 @@ void H_Slider::set_pos(float pos_x,float pos_y) {
 void H_Slider::set_pos(sf::Vector2f new_pos) {
     main_bar->setPosition(new_pos);
     progress_bar->setPosition(new_pos);
+    slider_name->setPosition(new_pos + sf::Vector2f(-40, 0));
     value_display->setPosition(new_pos + sf::Vector2f(width + 10, 0));
     pos = new_pos;
     update_bound();
+}
+
+void H_Slider::set_change(callback_t callback) {
+    change_callback = callback;
 }
 
 void H_Slider::press() {
@@ -355,6 +377,7 @@ void H_Slider::update_value() {
         cur_num_step = (mouse_pos_x - main_width.x) * steps / width;
         value = std::min(max_value,max_value * cur_num_step / steps);
     }
+    if (change_callback) change_callback();
 }
 
 void H_Slider::update_display() {
@@ -362,10 +385,12 @@ void H_Slider::update_display() {
     value_display->setString(int_to_string(value));
 }
 
-void H_Slider::reset_display_value(sf::Vector2f text_pos, sf::Color color) {
-    value_display->setPosition(text_pos);
-    value_display->setFillColor(color);
-    parts.push_back(value_display);
+void H_Slider::set_display_value_pos(sf::Vector2f new_pos) {
+    value_display->setPosition(new_pos);
+}
+
+void H_Slider::set_name_pos(sf::Vector2f new_pos) {
+    slider_name->setPosition(new_pos);
 }
 
 bool H_Slider::contain_pos(float x,float y) {

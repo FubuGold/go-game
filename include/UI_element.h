@@ -132,11 +132,13 @@ namespace GUI {
         sf::Texture texture;
         sf::Sprite *sprite = nullptr;
         
-        Rectangle_Button(float button_width = 337.f, 
+        Rectangle_Button(
+            float button_width = 337.f, 
             float button_height = 103.f, 
             sf::Color background_color = sf::Color::White, 
             sf::Color text_color = sf::Color::Black, 
-            unsigned int text_size = 60);
+            unsigned int text_size = 60
+        );
 
         /**
          * @brief Set the text string object
@@ -238,6 +240,8 @@ namespace GUI {
     public:
         sf::RectangleShape *main_bar, *progress_bar;
         sf::Text *value_display = new sf::Text(Config::font[0]);
+        sf::Text *slider_name = new sf::Text(Config::font[0]);
+        callback_t change_callback;
         int value = 0;
         int steps;
         int cur_num_step = 0;
@@ -245,7 +249,19 @@ namespace GUI {
         float steps_width;
         float width, height;
 
-        H_Slider(float width = 500.f, float height = 70.f,int max_value = 100, int steps = 100, sf::Color main_color = sf::Color::White, sf::Color progress_color = sf::Color::Cyan);
+        H_Slider(
+            float width = 500.f,
+            float height = 70.f,
+            int max_value = 100, 
+            int steps = 100,
+            const std::string &name = "",
+            sf::Color main_color = sf::Color::White, 
+            sf::Color progress_color = sf::Color::Cyan,
+            int text_size = 60,
+            sf::Color text_color = sf::Color::Black
+        );
+
+        void set_change(callback_t callback);
 
         /**
          * @brief Set the pos object
@@ -261,7 +277,17 @@ namespace GUI {
          */
         void set_pos(sf::Vector2f new_pos) override;
 
-        void reset_display_value(sf::Vector2f text_pos, sf::Color color = sf::Color::Black);
+        /**
+         * @brief Override the default text position
+         * 
+         */
+        void set_display_value_pos(sf::Vector2f new_pos);
+
+        /**
+         * @brief Override the default name position
+         * 
+         */
+        void set_name_pos(sf::Vector2f new_pos);
 
         void poll_event(const std::optional<sf::Event> &e) override;
     };

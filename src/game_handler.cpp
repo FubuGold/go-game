@@ -15,7 +15,7 @@ GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) 
     canvas[1] = new GUI::NewGame_Canvas();
     canvas[2] = new GUI::AImode_Canvas();
     canvas[3] = new GUI::Gameplay_Canvas();
-    canvas[4] = new GUI::Canvas();
+    canvas[4] = new GUI::Setting_Canvas();
 
     for (int i=0;i<state_to_int(GameState::Count);i++) {
         canvas[i]->set_window(&window);
@@ -46,17 +46,19 @@ void GameHandler::resize_window(sf::View &UI_view) {
 }
 
 void GameHandler::run() {
+    
     window.setFramerateLimit(60);
-
+    
     sf::View UI_view({static_cast<float>(window_width) / 2.f, static_cast<float>(window_height) / 2.f}, {static_cast<float>(window_width), static_cast<float>(window_height)});
     UI_view.setCenter({static_cast<float>(window_width) / 2.f, static_cast<float>(window_height) / 2.f});
     UI_view.setSize({static_cast<float>(window_width), static_cast<float>(window_height)});
     UI_view.setViewport(sf::FloatRect({0.f, 0.f}, {1.f, 1.f}));
     window.setView(UI_view);
-
+    
     bool isFullscreen = true;
     sf::VideoMode video_mode = sf::VideoMode::getDesktopMode();
-
+    Config::save_config();
+    
     while (window.isOpen()) {
         size_t cur_state = state_to_int(game_state);
         while (const std::optional event = window.pollEvent()) {
