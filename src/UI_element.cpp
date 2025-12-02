@@ -3,6 +3,9 @@
 
 namespace GUI {
 
+// ----------------------------------------------
+// Utility function
+
 sf::FloatRect combine_rect(sf::FloatRect rect1,sf::FloatRect rect2) {
     float mn_x = std::min(rect1.position.x, rect2.position.x);
     float mn_y = std::min(rect1.position.y, rect2.position.y);
@@ -10,6 +13,15 @@ sf::FloatRect combine_rect(sf::FloatRect rect1,sf::FloatRect rect2) {
     float mx_y = std::max(rect1.position.y + rect1.size.y, rect2.position.y + rect2.size.y);
 
     return sf::FloatRect({mn_x,mn_y},{mx_x - mn_x, mx_y - mn_y});
+}
+
+std::string int_to_string(int x) {
+    std::string tmp = "";
+    while (x > 0) {
+        tmp = char('0' + x % 10) + tmp; // O(n^2) but value is small enough to not impact performance
+        x /= 10;
+    }
+    return tmp;
 }
 
 // ----------------------------------------------
@@ -291,17 +303,22 @@ H_Slider::H_Slider(float width,float height,int max_value, int steps, sf::Color 
     this->height = height;
     this->steps = steps;
     this->max_value = max_value;
+    this->value = max_value;
 
     main_bar = new sf::RectangleShape();
     main_bar->setSize({width,height});
     main_bar->setFillColor(main_color);
-    parts.push_back(main_bar);
     main_bar->setOutlineThickness(1);
+    parts.push_back(main_bar);
 
     progress_bar = new sf::RectangleShape();
     progress_bar->setSize({width,height});
     progress_bar->setFillColor(progress_color);
     parts.push_back(progress_bar);
+
+    value_display->setString(int_to_string(max_value));
+    value_display->setFillColor(sf::Color::Black);
+    parts.push_back(value_display);
 
     update_bound();
 }
@@ -309,24 +326,26 @@ H_Slider::H_Slider(float width,float height,int max_value, int steps, sf::Color 
 void H_Slider::set_pos(float pos_x,float pos_y) {
     main_bar->setPosition({pos_x,pos_y});
     progress_bar->setPosition({pos_x,pos_y});
+    value_display->setPosition({pos_x + width + 10, pos_y});
     pos = {pos_x,pos_y};
     update_bound();
 }
 void H_Slider::set_pos(sf::Vector2f new_pos) {
     main_bar->setPosition(new_pos);
     progress_bar->setPosition(new_pos);
+    value_display->setPosition(new_pos + sf::Vector2f(width + 10, 0));
     pos = new_pos;
     update_bound();
 }
 
 void H_Slider::press() {
     is_pressed = true;
-    press_callback();
+    if (press_callback) press_callback();
 }
 
 void H_Slider::release() {
     is_pressed = false;
-    release_callback();
+    if (press_callback) release_callback();
 }
 
 void H_Slider::update_value() {
@@ -335,31 +354,43 @@ void H_Slider::update_value() {
     if (main_width.x <= mouse_pos_x && mouse_pos_x <= main_width.y + 10) {
         cur_num_step = (mouse_pos_x - main_width.x) * steps / width;
         value = std::min(max_value,max_value * cur_num_step / steps);
-        std::cerr << value << ' ' << mouse_pos_x << ' ' << main_width.x << '\n';
-        std::cerr << (mouse_pos_x - main_width.x + 0.5) << ' ' << 1.0 * steps / width << '\n';
     }
 }
 
-void H_Slider::update_slider() {
+void H_Slider::update_display() {
     progress_bar->setSize({width / steps * value,height});
+    value_display->setString(int_to_string(value));
 }
 
+void H_Slider::reset_display_value(sf::Vector2f text_pos, sf::Color color) {
+    value_display->setPosition(text_pos);
+    value_display->setFillColor(color);
+    parts.push_back(value_display);
+}
+
+bool H_Slider::contain_pos(float x,float y) {
+    return main_bar->getGlobalBounds().contains({x,y});
+}
+bool H_Slider::contain_pos(sf::Vector2f point) {
+    return main_bar->getGlobalBounds().contains(point);
+}
+// Use custom contain_pos to check only the slider
 void H_Slider::poll_event(const std::optional<sf::Event> &e) {
     if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>()) {
         sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
         if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             press();
             update_value();
-            update_slider();
+            update_display();
         }
     }
     else if (e->getIf<sf::Event::MouseMoved>() && is_pressed) {
         update_value();
-        update_slider();
+        update_display();
     }
     else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
         sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-        if (mouse_release->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
+        if (mouse_release->button == sf::Mouse::Button::Left) {
             release();
         }
     }

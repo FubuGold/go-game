@@ -28,8 +28,8 @@ namespace GUI {
         virtual void press();
         virtual void release();
         
-        bool contain_pos(float x,float y);
-        bool contain_pos(sf::Vector2f point);
+        virtual bool contain_pos(float x,float y);
+        virtual bool contain_pos(sf::Vector2f point);
         
     public:
         sf::RenderWindow *window = nullptr;
@@ -114,7 +114,8 @@ namespace GUI {
          * @param e 
          */
         virtual void poll_event(const std::optional<sf::Event> &e);
-        
+
+
         /**
          * @brief Update bounding box (for event handling)
          * 
@@ -228,11 +229,15 @@ namespace GUI {
 
         void press() override;
         void release() override;
+        
+        bool contain_pos(float x,float y) override;
+        bool contain_pos(sf::Vector2f point) override;
 
         void update_value();
-        void update_slider();
+        void update_display();
     public:
         sf::RectangleShape *main_bar, *progress_bar;
+        sf::Text *value_display = new sf::Text(Config::font[0]);
         int value = 0;
         int steps;
         int cur_num_step = 0;
@@ -255,6 +260,8 @@ namespace GUI {
          * @param new_pos 
          */
         void set_pos(sf::Vector2f new_pos) override;
+
+        void reset_display_value(sf::Vector2f text_pos, sf::Color color = sf::Color::Black);
 
         void poll_event(const std::optional<sf::Event> &e) override;
     };
