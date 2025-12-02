@@ -34,6 +34,7 @@ bool Element::contain_pos(sf::Vector2f point) {
 Element::~Element() {
     for (sf::Drawable* ptr: parts) {
         delete ptr;
+        ptr = nullptr;
     }
     parts.clear();
 }
@@ -124,11 +125,6 @@ Rectangle_Button::Rectangle_Button(float button_width,float button_height) {
     update_bound();
 }
 
-Rectangle_Button::~Rectangle_Button() {
-    delete rect;
-    delete text;
-}
-
 void Rectangle_Button::set_pos(float pos_x,float pos_y) {
     pos = {pos_x,pos_y};
     rect->setPosition({pos_x,pos_y});
@@ -164,7 +160,7 @@ void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
 }
 
 // ----------------------------------------------
-// Dropbox implementation
+// Droplist implementation
 
 Droplist::Droplist(float button_width, float button_height, const std::string &title_text) {
     this->button_width = button_width;
@@ -262,6 +258,88 @@ void Droplist::poll_event(const std::optional<sf::Event> &e) {
     title_button->poll_event(e);
     for (Rectangle_Button *p: drop_list) {
         p->poll_event(e);
+    }
+}
+
+// ----------------------------------------------
+// Horizontal Slider implementation
+
+H_Slider::H_Slider(float width,float height,int max_value, int steps, sf::Color main_color, sf::Color progress_color) {
+    this->width = width;
+    this->height = height;
+    this->steps = steps;
+    this->max_value = max_value;
+
+    main_bar = new sf::RectangleShape();
+    main_bar->setSize({width,height});
+    main_bar->setFillColor(main_color);
+    parts.push_back(main_bar);
+    main_bar->setOutlineThickness(1);
+
+    progress_bar = new sf::RectangleShape();
+    progress_bar->setSize({width,height});
+    progress_bar->setFillColor(progress_color);
+    parts.push_back(progress_bar);
+
+    update_bound();
+}
+
+void H_Slider::set_pos(float pos_x,float pos_y) {
+    main_bar->setPosition({pos_x,pos_y});
+    progress_bar->setPosition({pos_x,pos_y});
+    pos = {pos_x,pos_y};
+    update_bound();
+}
+void H_Slider::set_pos(sf::Vector2f new_pos) {
+    main_bar->setPosition(new_pos);
+    progress_bar->setPosition(new_pos);
+    pos = new_pos;
+    update_bound();
+}
+
+void H_Slider::press() {
+    is_pressed = true;
+    press_callback();
+}
+
+void H_Slider::release() {
+    is_pressed = false;
+    release_callback();
+}
+
+void H_Slider::update_value() {
+    float mouse_pos_x = (window->mapPixelToCoords(sf::Mouse::getPosition(*window))).x;
+    sf::Vector2f main_width = {pos.x,pos.x + width};
+    if (main_width.x <= mouse_pos_x && mouse_pos_x <= main_width.y + 10) {
+        cur_num_step = (mouse_pos_x - main_width.x) * steps / width;
+        value = std::min(max_value,max_value * cur_num_step / steps);
+        std::cerr << value << ' ' << mouse_pos_x << ' ' << main_width.x << '\n';
+        std::cerr << (mouse_pos_x - main_width.x + 0.5) << ' ' << 1.0 * steps / width << '\n';
+    }
+}
+
+void H_Slider::update_slider() {
+    progress_bar->setSize({width / steps * value,height});
+}
+
+void H_Slider::poll_event(const std::optional<sf::Event> &e) {
+    if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>()) {
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
+            press();
+            update_value();
+            update_slider();
+        }
+    }
+    else if (e->getIf<sf::Event::MouseMoved>() && is_pressed) {
+        update_value();
+        update_slider();
+    }
+    else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        if (mouse_release->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
+            release();
+        }
     }
 }
 

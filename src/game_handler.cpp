@@ -24,7 +24,17 @@ GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) 
         std::cerr << "Test 3 pressed\n";
     });
 
+    GUI::H_Slider *slider = new GUI::H_Slider();
+    slider->set_pos(300,300);
+    slider->set_press([](){
+        std::cerr << "Slider pressed\n";
+    });
+    slider->set_release([slider]() {
+        std::cerr << "Slider released. Value: " << slider->value << '\n';
+    });
+
     canvas[0]->add_element(droplist);
+    canvas[0]->add_element(slider);
 
     canvas[1] = new GUI::Canvas();
     canvas[2] = new GUI::Canvas();

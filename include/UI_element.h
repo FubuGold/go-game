@@ -25,8 +25,8 @@ namespace GUI {
         
         std::vector<sf::Drawable*> parts;
         
-        void press();
-        void release();
+        virtual void press();
+        virtual void release();
         
         bool contain_pos(float x,float y);
         bool contain_pos(sf::Vector2f point);
@@ -124,13 +124,12 @@ namespace GUI {
     
     class Rectangle_Button : public Element {
     public:
+        // Two pointer are deleted in the destructor of Element
         sf::RectangleShape *rect = new sf::RectangleShape();
         sf::Text *text = new sf::Text(Config::font);
         sf::Vector2f text_offset = {21,14};
         
         Rectangle_Button(float button_width = 337.f,float button_height = 103.f);
-
-        ~Rectangle_Button();
 
         /**
          * @brief Set the text string object
@@ -203,6 +202,50 @@ namespace GUI {
         void poll_event(const std::optional<sf::Event> &e) override;
 
     };
+
+    /**
+     * @brief Horizontal Slider with range [0,max value]
+     * 
+     * Horizontal slider with the range [0,max value]. This will sent the value when release
+     * 
+     */
+    class H_Slider : public Element {
+    private:
+        bool is_pressed = 0;
+
+        void press() override;
+        void release() override;
+
+        void update_value();
+        void update_slider();
+    public:
+        sf::RectangleShape *main_bar, *progress_bar;
+        int value = 0;
+        int steps;
+        int cur_num_step = 0;
+        int max_value;
+        float steps_width;
+        float width, height;
+
+        H_Slider(float width = 500.f, float height = 70.f,int max_value = 100, int steps = 100, sf::Color main_color = sf::Color::White, sf::Color progress_color = sf::Color::Cyan);
+
+        /**
+         * @brief Set the pos object
+         * 
+         * @param pos_x 
+         * @param pos_y 
+         */
+        void set_pos(float pos_x,float pos_y) override;
+        /**
+         * @brief Set the pos object
+         * 
+         * @param new_pos 
+         */
+        void set_pos(sf::Vector2f new_pos) override;
+
+        void poll_event(const std::optional<sf::Event> &e) override;
+    };
+
 }
 
 #endif // UI_ELEMENT_H
