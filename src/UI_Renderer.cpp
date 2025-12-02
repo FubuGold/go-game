@@ -371,6 +371,39 @@ void Setting_Canvas::setup() {
     });
     add_element(slider);
 
+    tmp = new Rectangle_Button(143, 63, sf::Color::Transparent, sf::Color(0xBC,0x48,0x00), 50);
+    create_button(tmp_pos + sf::Vector2f(37,285),"OTHER",tmp);
+    add_element(tmp);
+
+    Droplist *droplist = new Droplist(
+        406, 75, "Theme", sf::Color(0x68,0x68,0x68), sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
+    );
+    droplist->set_pos(tmp_pos + sf::Vector2f(84,379));
+    droplist->add_element("Theme 1",[](){
+        std::cerr << "Theme 1 selected\n";
+    });
+    droplist->add_element("Theme 2",[](){
+        std::cerr << "Theme 2 selected\n";
+    });
+    droplist->add_element("Theme 3",[](){
+        std::cerr << "Theme 3 selected\n";
+    });
+    add_element(droplist);
+    droplist = new Droplist(
+        406, 75, "Song", sf::Color(0x68,0x68,0x68), sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
+    );
+    droplist->set_pos(tmp_pos + sf::Vector2f(555,379));
+    droplist->add_element("Song 1",[](){
+        std::cerr << "Song 1 selected\n";
+    });
+    droplist->add_element("Song 2",[](){
+        std::cerr << "Song 2 selected\n";
+    });
+    droplist->add_element("Song 3",[](){
+        std::cerr << "Song 3 selected\n";
+    });
+    add_element(droplist);
+
     tmp = new Rectangle_Button(377, 103, {255, 183, 106}, sf::Color::Black, 60);
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);

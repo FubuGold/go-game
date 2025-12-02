@@ -196,17 +196,27 @@ void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
 // ----------------------------------------------
 // Droplist implementation
 
-Droplist::Droplist(float button_width, float button_height, const std::string &title_text) {
+Droplist::Droplist(
+            float button_width,
+            float button_height,
+            const std::string &title_text,
+            sf::Color main_color,
+            sf::Color main_text_color,
+            sf::Color sub_color,
+            sf::Color sub_text_color
+        ) {
     this->button_width = button_width;
     this->button_height = button_height;
+    this->sub_color = sub_color;
+    this->sub_text_color = sub_text_color;
+
     title_button = new Rectangle_Button(button_width, button_height);
     title_button->set_text_string(title_text);
     title_button->set_press([this](){
-        std::cerr << "Title pressed\n";
         is_expanded = !is_expanded;
     });
-    title_button->rect->setFillColor(sf::Color::Black);
-    title_button->text->setFillColor(sf::Color::White);
+    title_button->rect->setFillColor(main_color);
+    title_button->text->setFillColor(main_text_color);
 }
 
 Droplist::~Droplist() {
@@ -227,7 +237,6 @@ void Droplist::update_bound() {
 }
 
 void Droplist::set_window(sf::RenderWindow *render_win_p) {
-    std::cerr << "Droplist set window called\n";
     title_button->set_window(render_win_p);
     for (Rectangle_Button *p: drop_list) {
         p->set_window(render_win_p);
@@ -244,6 +253,8 @@ void Droplist::add_element(const std::string &text, callback_t func) {
     tmp->set_text_string(text);
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(-2);
+    tmp->rect->setFillColor(sub_color);
+    tmp->text->setFillColor(sub_text_color);
     sf::Vector2f prev_pos;
     if (!drop_list.empty()) {
         prev_pos = drop_list.back()->get_pos();

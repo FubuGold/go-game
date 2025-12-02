@@ -179,10 +179,19 @@ namespace GUI {
 
     public:
         Rectangle_Button *title_button;
+        sf::Color sub_color, sub_text_color;
         int count = 0;
         bool is_expanded = 0;
 
-        Droplist(float button_width = 400, float button_height = 150,const std::string &title_text = "Droplist");
+        Droplist(
+            float button_width = 400,
+            float button_height = 150,
+            const std::string &title_text = "Droplist",
+            sf::Color main_color = sf::Color::Black,
+            sf::Color main_text_color = sf::Color::White,
+            sf::Color sub_color = sf::Color::White,
+            sf::Color sub_text_color = sf::Color::Black
+        );
         ~Droplist();
 
         /**
