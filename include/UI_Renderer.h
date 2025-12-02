@@ -1,9 +1,11 @@
 #ifndef UI_RENDERER_H
 #define UI_RENDERER_H
 
-#include <SFML/Graphics.hpp>
-#include "UI_element.h"
 #include <vector>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
+#include "UI_element.h"
 
 const sf::Font font = sf::Font("font/Jua-Regular.ttf");
 
@@ -130,6 +132,13 @@ namespace GUI {
     };
 
     class AImode_Canvas : public Canvas {
+    private:
+
+    public:
+        void setup() override;
+    };
+
+    class Gameplay_Canvas : public Canvas {
     private:
 
     public:

@@ -210,4 +210,107 @@ void NewGame_Canvas::setup() {
 // ---------------------------------------------------
 // AImode implementation
 
+void AImode_Canvas::setup() {
+    Rectangle_Button *tmp = new Rectangle_Button(1920, 185, {248, 204, 75});
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({0, 0}, "", tmp);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(386, 116, sf::Color::Transparent, sf::Color::Black, 96);
+    tmp->text->setFont(Config::font[1]);
+    tmp->text->setStyle(sf::Text::Bold | sf::Text::Italic);
+    create_button({51, 41}, "AI MODE", tmp);
+    add_element(tmp);
+
+    
+    tmp = new Rectangle_Button(377, 103, {255, 183, 106}, sf::Color::Black, 60);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({1487, 943}, "BACK", tmp);
+    tmp->set_press([&]() {
+        std::cerr << "AI MODE: Back button pressed\n";
+        *gamestate = GameState::NewGame;
+    });
+    add_element(tmp);
+    
+    tmp = new Rectangle_Button(877, 120, sf::Color::Transparent, sf::Color::Black, 96);
+    create_button({51, 904}, "CHOOSE DIFFICULTY", tmp);
+    add_element(tmp);
+
+    tmp = create_sprite({94, 252}, "assets/easy.png");
+    tmp->set_press([]() {
+        std::cerr << "AI MODE: Easy button pressed\n";
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({718, 252}, "assets/normal.png");
+    tmp->set_press([]() {
+        std::cerr << "AI MODE: Normal button pressed\n";
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({1339, 252}, "assets/hard.png");
+    tmp->set_press([]() {
+        std::cerr << "AI MODE: Hard button pressed\n";
+    });
+    add_element(tmp);
+}
+
+// ---------------------------------------------------
+// Gameplay implementation
+
+void Gameplay_Canvas::setup() {
+    Rectangle_Button *tmp = create_sprite({38, 399}, "assets/save.png");
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->set_press([]() {
+        std::cerr << "Gameplay: Save button pressed\n";
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({38, 534}, "assets/back.png");
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->set_press([&]() {
+        //Should ask the user if they want to save before leaving
+        std::cerr << "Gameplay: Back button pressed\n";
+        *gamestate = GameState::Menu;
+    });
+    add_element(tmp);
+
+    //Will update this later, after we add music to the game
+    tmp = create_sprite({38, 669}, "assets/music_on.png");
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->set_press([&]() {
+        std::cerr << "Gameplay: Music button pressed\n";
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({38, 669}, "assets/music_off.png");
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->set_press([&]() {
+        std::cerr << "Gameplay: Music button pressed\n";
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({1785, 399}, "assets/redo.png");
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->set_press([&]() {
+        std::cerr << "Gameplay: Redo button pressed\n";
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({1785, 534}, "assets/undo.png");
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->set_press([&]() {
+        std::cerr << "Gameplay: Undo button pressed\n";
+    });
+    add_element(tmp);
+}
+
 }
