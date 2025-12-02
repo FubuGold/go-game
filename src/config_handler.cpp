@@ -3,7 +3,7 @@
 #include <fstream>
 
 namespace Config {
-    sf::Font font = sf::Font("font/Jua-Regular.ttf");
+    sf::Font font[] = {sf::Font("font/Jua-Regular.ttf"), sf::Font("font/Inter.ttf")};
 
     // TO IMPLEMENT
     void load_config() {

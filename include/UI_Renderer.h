@@ -1,17 +1,30 @@
 #ifndef UI_RENDERER_H
 #define UI_RENDERER_H
 
-#include <SFML/Graphics.hpp>
-#include "UI_element.h"
 #include <vector>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
+#include "UI_element.h"
 
 const sf::Font font = sf::Font("font/Jua-Regular.ttf");
+
+enum class GameState {
+    Menu,
+    NewGame,
+    AImode,
+    Gameplay,
+    Setting,
+    Count
+};
 
 namespace GUI {
     class Canvas {
     protected: 
         std::vector<Element*> element_l;
         sf::RenderWindow *window;
+        GameState *gamestate;
+
     public:
         virtual ~Canvas();
 
@@ -28,6 +41,13 @@ namespace GUI {
          * @param render_win_ptr address / pointer to the window
          */
         void set_window(sf::RenderWindow *render_win_ptr);
+
+        /**
+         * @brief Set the gamesate object
+         * 
+         * @param gamestate_ptr 
+         */
+        void set_gamesate(GameState *gamestate_ptr);
         
         /**
          * @brief Draw object on to the setted window
@@ -57,6 +77,28 @@ namespace GUI {
         void recal_bound();
 
         /**
+         * @brief Create a button object
+         * 
+         * Can be overrided if needed
+         * 
+         * @param pos 
+         * @param text 
+         * @param rect 
+         */
+        virtual void create_button(sf::Vector2f pos, const std::string &text, Rectangle_Button *rect);
+
+        /**
+         * @brief Create a sprite object
+         * 
+         * Can be overrideed if needed
+         * 
+         * @param pos 
+         * @param filename 
+         * @return Rectangle_Button* 
+         */
+
+        virtual Rectangle_Button* create_sprite(sf::Vector2f pos, const std::filesystem::path &filename);
+        /**
          * @brief Add all basic component of the current UI state.
          * 
          * The default does not add anything.
@@ -80,8 +122,27 @@ namespace GUI {
         void reset_button_size(float new_width,float new_height);
 
         void setup() override;
+    };
 
-        Rectangle_Button* create_button(sf::Vector2f pos, const std::string &text);
+    class NewGame_Canvas : public Canvas {
+    private:
+
+    public:
+        void setup() override;
+    };
+
+    class AImode_Canvas : public Canvas {
+    private:
+
+    public:
+        void setup() override;
+    };
+
+    class Gameplay_Canvas : public Canvas {
+    private:
+
+    public:
+        void setup() override;
     };
 }
 

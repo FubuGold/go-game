@@ -1,46 +1,41 @@
 #include "../include/game_handler.h"
 #include <iostream> // Testing only
 
+GameHandler::~GameHandler() {}
+
 GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) {
     std::cerr << "Game handler setup\n";
     this->window_width = window_width;
     this->window_height = window_height;
     
-    window = sf::RenderWindow(sf::VideoMode::getDesktopMode(), game_name, sf::Style::Default, sf::State::Fullscreen);
+    window = sf::RenderWindow(sf::VideoMode::getDesktopMode(), game_name, sf::Style::Close, sf::State::Fullscreen);
     game_state = GameState::Menu;
 
     // Testing
-    // canvas[0] = new GUI::Menu_Canvas();
-    canvas[0] = new GUI::Canvas();
-    GUI::Droplist *droplist = new GUI::Droplist(450,100);
-    droplist->set_pos(100,100);
-    droplist->add_element("Test 1",[](){
-        std::cerr << "Test 1 pressed\n";
-    });
-    droplist->add_element("Test 2",[](){
-        std::cerr << "Test 2 pressed\n";
-    });
-    droplist->add_element("Test 3",[](){
-        std::cerr << "Test 3 pressed\n";
-    });
-
-    GUI::H_Slider *slider = new GUI::H_Slider();
-    slider->set_pos(300,300);
-    slider->set_press([](){
-        std::cerr << "Slider pressed\n";
-    });
-    slider->set_release([slider]() {
-        std::cerr << "Slider released. Value: " << slider->value << '\n';
-    });
-
-    canvas[0]->add_element(droplist);
-    canvas[0]->add_element(slider);
-
-    canvas[1] = new GUI::Canvas();
-    canvas[2] = new GUI::Canvas();
+    // canvas[0] = new GUI::Canvas();
+    // GUI::Droplist *droplist = new GUI::Droplist(450,100);
+    // droplist->set_pos(100,100);
+    // droplist->add_element("Test 1",[](){
+        //     std::cerr << "Test 1 pressed\n";
+        // });
+        // droplist->add_element("Test 2",[](){
+            //     std::cerr << "Test 2 pressed\n";
+            // });
+            // droplist->add_element("Test 3",[](){
+                //     std::cerr << "Test 3 pressed\n";
+                // });
+                
+                // canvas[0]->add_element(droplist);
+                
+    canvas[0] = new GUI::Menu_Canvas();
+    canvas[1] = new GUI::NewGame_Canvas();
+    canvas[2] = new GUI::AImode_Canvas();
+    canvas[3] = new GUI::Gameplay_Canvas();
+    canvas[4] = new GUI::Canvas();
 
     for (int i=0;i<state_to_int(GameState::Count);i++) {
         canvas[i]->set_window(&window);
+        canvas[i]->set_gamesate(&game_state);
         canvas[i]->setup();
     }
 }
@@ -69,7 +64,7 @@ void GameHandler::resize_window(sf::View &UI_view) {
 void GameHandler::run() {
     window.setFramerateLimit(60);
 
-    sf::View UI_view;
+    sf::View UI_view({static_cast<float>(window_width) / 2.f, static_cast<float>(window_height) / 2.f}, {static_cast<float>(window_width), static_cast<float>(window_height)});
     UI_view.setCenter({static_cast<float>(window_width) / 2.f, static_cast<float>(window_height) / 2.f});
     UI_view.setSize({static_cast<float>(window_width), static_cast<float>(window_height)});
     UI_view.setViewport(sf::FloatRect({0.f, 0.f}, {1.f, 1.f}));
@@ -87,10 +82,10 @@ void GameHandler::run() {
             else if (event->is<sf::Event::KeyPressed>()
                     && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::F11) {
                 if (isFullscreen) {
-                    window.create(sf::VideoMode({800, 600}), game_name, sf::Style::Default, sf::State::Windowed);
+                    window.create(sf::VideoMode({1280, 720}), game_name, sf::Style::Close, sf::State::Windowed);
                 }
                 else {
-                    window.create(video_mode, game_name, sf::Style::Default, sf::State::Fullscreen);
+                    window.create(video_mode, game_name, sf::Style::Close, sf::State::Fullscreen);
                 }
                 isFullscreen ^= 1;
             }
