@@ -87,12 +87,16 @@ void GameHandler::run() {
         window.clear({255, 223, 128});
         window.setView(UI_view);
 
-        
+        cur_state = state_to_int(game_state);
+
         //Draw game
         canvas[cur_state]->draw();
 
         if (game_state == GameState::Gameplay) {
-            GUI::Gameplay_Canvas *tmp = static_cast<GUI::Gameplay_Canvas*>(canvas[cur_state]);
+            GUI::Gameplay_Canvas *tmp = dynamic_cast<GUI::Gameplay_Canvas*>(canvas[cur_state]);
+            if (!tmp) {
+                std::cerr << cur_state << " Error\n";
+            }
             tmp->draw_stone();
         }
 
