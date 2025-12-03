@@ -29,6 +29,7 @@ std::string int_to_string(int x) {
 
 void Element::press() {
     if (press_callback) press_callback();
+    else std::cerr << "NULL\n";
 }
 
 void Element::release() {
@@ -183,6 +184,7 @@ void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
         sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
         if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             press();
+            std::cerr << "ALO\n";
         }
     }
     else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
@@ -202,6 +204,8 @@ Board_Stone::~Board_Stone() {
 }
 
 Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button_height, sf::Color background_color) {
+    this->button_width = button_width;
+    this->button_height = button_height;
     rect->setSize({button_width,button_height});
     rect->setFillColor(background_color);
 

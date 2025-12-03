@@ -262,13 +262,7 @@ void AImode_Canvas::setup() {
 // Gameplay implementation
 
 void Gameplay_Canvas::draw_stone() {
-    std::cerr << stones.size() << '\n';
-    // std::cerr << stones.back()->cur_sprite << '\n';
-    Board_Stone *test = stones.back();
-    // test->draw();
-    return;
     for (Board_Stone *cur : stones) {
-        return;
         if (!cur) {
             std::cerr << "alo wtf\n";
             continue;
@@ -302,7 +296,7 @@ void Gameplay_Canvas::setup() {
     tmp = create_sprite({38, 669}, "assets/music_on.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([&]() {
+    tmp->set_press([]() {
         std::cerr << "Gameplay: Music button pressed\n";
     });
     add_element(tmp);
@@ -310,7 +304,7 @@ void Gameplay_Canvas::setup() {
     tmp = create_sprite({38, 669}, "assets/music_off.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([&]() {
+    tmp->set_press([]() {
         std::cerr << "Gameplay: Music button pressed\n";
     });
     add_element(tmp);
@@ -318,7 +312,7 @@ void Gameplay_Canvas::setup() {
     tmp = create_sprite({1785, 399}, "assets/redo.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([&]() {
+    tmp->set_press([]() {
         std::cerr << "Gameplay: Redo button pressed\n";
     });
     add_element(tmp);
@@ -326,7 +320,7 @@ void Gameplay_Canvas::setup() {
     tmp = create_sprite({1785, 534}, "assets/undo.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([&]() {
+    tmp->set_press([]() {
         std::cerr << "Gameplay: Undo button pressed\n";
     });
     add_element(tmp);
@@ -356,13 +350,14 @@ void Gameplay_Canvas::setup() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             Board_Stone *cur_stone = new Board_Stone({i, j});
+            cur_stone->set_pos({static_cast<float>(510 + 50 * j) - cur_stone->button_width / 2.f, static_cast<float>(90 + 50 * i) - cur_stone->button_height / 2.f});
+            cur_stone->set_window(window);
             cur_stone->set_press([i, j, cur_stone]() {
+                std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
                     cur_stone->cur_sprite = current_board.get_turn();
                 }
             });
-            cur_stone->set_pos({static_cast<float>(510 + 50 * j), static_cast<float>(90 + 50 * i)});
-            cur_stone->set_window(window);
             stones.push_back(cur_stone);
         }
     }

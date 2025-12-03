@@ -173,6 +173,7 @@ namespace GUI {
 
     class Board_Stone : public Rectangle_Button {
     public:
+        float button_width, button_height;
         sf::Vector2i board_pos; //The coordination of this button on the board
         sf::Texture textures[2];
         sf::Sprite *stone_sprite[2] = {nullptr, nullptr};
@@ -180,11 +181,10 @@ namespace GUI {
         
         ~Board_Stone();
 
-
         Board_Stone(
             sf::Vector2i board_pos = {},
-            float button_width = 10.f, 
-            float button_height = 10.f, 
+            float button_width = 20.f, 
+            float button_height = 20.f, 
             sf::Color background_color = sf::Color::Transparent
         );
     };

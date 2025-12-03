@@ -92,7 +92,7 @@ void GameHandler::run() {
         //Draw game
         canvas[cur_state]->draw();
 
-        if (game_state == GameState::Gameplay) {
+        if (cur_state == state_to_int(GameState::Gameplay)) {
             GUI::Gameplay_Canvas *tmp = dynamic_cast<GUI::Gameplay_Canvas*>(canvas[cur_state]);
             if (!tmp) {
                 std::cerr << cur_state << " Error\n";
