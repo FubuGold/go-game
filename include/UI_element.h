@@ -284,7 +284,8 @@ namespace GUI {
             sf::Color main_color = sf::Color::White, 
             sf::Color progress_color = sf::Color::Cyan,
             int text_size = 60,
-            sf::Color text_color = sf::Color::Black
+            sf::Color text_color = sf::Color::Black,
+            int start_value = 0
         );
 
         void set_change(callback_t callback);

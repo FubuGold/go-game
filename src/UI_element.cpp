@@ -29,7 +29,6 @@ std::string int_to_string(int x) {
 
 void Element::press() {
     if (press_callback) press_callback();
-    else std::cerr << "NULL\n";
 }
 
 void Element::release() {
@@ -184,7 +183,6 @@ void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
         sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
         if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             press();
-            std::cerr << "ALO\n";
         }
     }
     else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
@@ -348,13 +346,14 @@ H_Slider::H_Slider(
             sf::Color main_color, 
             sf::Color progress_color,
             int text_size,
-            sf::Color text_color
+            sf::Color text_color,
+            int start_value
         ){
     this->width = width;
     this->height = height;
     this->steps = steps;
     this->max_value = max_value;
-    this->value = max_value;
+    this->value = start_value;
 
     main_bar = new sf::RectangleShape();
     main_bar->setSize({width,height});
@@ -377,6 +376,7 @@ H_Slider::H_Slider(
     value_display->setCharacterSize(text_size);
     parts.push_back(value_display);
 
+    update_display();
     update_bound();
 }
 

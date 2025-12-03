@@ -388,35 +388,41 @@ void Setting_Canvas::setup() {
     add_element(tmp);
     
     H_Slider *slider = new H_Slider(
-        512, 31, 100, 100, "General", {255, 255, 255}, sf::Color::Red, 40
+        512, 31, 100, 100, "General", {255, 255, 255}, sf::Color::Red, 40, sf::Color::Black, Config::audio_volume[0]
     );
     slider->set_pos(tmp_pos + sf::Vector2f(265,99));
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,90));
     slider->set_name_pos(tmp_pos + sf::Vector2f(104,90));
     slider->set_change([slider](){
         std::cerr << "Current general value is: " << slider->value << '\n';
+        Config::audio_volume[0] = slider->value;
+        Config::update_volume();
     });
     add_element(slider);
 
     slider = new H_Slider(
-        512, 31, 100, 100, "Music", {255, 255, 255}, sf::Color::Red, 40
+        512, 31, 100, 100, "Music", {255, 255, 255}, sf::Color::Red, 40, sf::Color::Black, Config::audio_volume[1]
     );
     slider->set_pos(tmp_pos + sf::Vector2f(265,161));
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,152));
     slider->set_name_pos(tmp_pos + sf::Vector2f(145,152));
     slider->set_change([slider](){
         std::cerr << "Current music value is: " << slider->value << '\n';
+        Config::audio_volume[1] = slider->value;
+        Config::update_volume();
     });
     add_element(slider);
 
     slider = new H_Slider(
-        512, 31, 100, 100, "SFX", {255, 255, 255}, sf::Color::Red, 40
+        512, 31, 100, 100, "SFX", {255, 255, 255}, sf::Color::Red, 40, sf::Color::Black, Config::audio_volume[2]
     );
     slider->set_pos(tmp_pos + sf::Vector2f(265,223));
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,214));
     slider->set_name_pos(tmp_pos + sf::Vector2f(165,214));
     slider->set_change([slider](){
         std::cerr << "Current SFX value is: " << slider->value << '\n';
+        Config::audio_volume[2] = slider->value;
+        Config::update_volume();
     });
     add_element(slider);
 
@@ -448,12 +454,15 @@ void Setting_Canvas::setup() {
     droplist->set_pos(tmp_pos + sf::Vector2f(555,379));
     droplist->add_element("Song 1",[](){
         std::cerr << "Song 1 selected\n";
+        Config::change_music(0);
     });
     droplist->add_element("Song 2",[](){
         std::cerr << "Song 2 selected\n";
+        Config::change_music(1);
     });
     droplist->add_element("Song 3",[](){
         std::cerr << "Song 3 selected\n";
+        Config::change_music(2);
     });
     add_element(droplist);
 
