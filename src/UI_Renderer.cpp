@@ -312,6 +312,41 @@ void Gameplay_Canvas::setup() {
         std::cerr << "Gameplay: Undo button pressed\n";
     });
     add_element(tmp);
+
+    tmp = new Rectangle_Button(1000, 1000, {194, 113, 0});
+    create_button({460, 40}, "", tmp);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(900, 900, {255, 199, 46});
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({510, 90}, "", tmp);
+    add_element(tmp);
+
+    for (int i = 1; i <= 17; i++) { //Vertical lines
+        tmp = new Rectangle_Button(4, 900, sf::Color::Black);
+        create_button({static_cast<float>(510 + i * 50), 90}, "", tmp);
+        add_element(tmp);
+    }
+
+    for (int i = 1; i <= 17; i++) { //Horizontal lines
+        tmp = new Rectangle_Button(900, 4, sf::Color::Black);
+        create_button({510, static_cast<float>(90 + i * 50)}, "", tmp);
+        add_element(tmp);
+    }
+
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            Board_Stone *cur_stone = new Board_Stone({i, j});
+            cur_stone->set_press([&]() {
+                //In this function, we need to modify the stone's display
+                add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'));
+            });
+            cur_stone->set_pos({static_cast<float>(510 + 50 * j), static_cast<float>(90 + 50 * i)});
+            cur_stone->set_window(window);
+            stones.push_back(cur_stone);
+        }
+    }
 }
 
 // ---------------------------------------------------
@@ -339,7 +374,7 @@ void Setting_Canvas::setup() {
     add_element(tmp);
     
     H_Slider *slider = new H_Slider(
-        512, 31, 100, 100, "General", sf::Color(0x7C,0x78,0x78), sf::Color::Red, 40
+        512, 31, 100, 100, "General", {255, 255, 255}, sf::Color::Red, 40
     );
     slider->set_pos(tmp_pos + sf::Vector2f(265,99));
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,90));
@@ -350,7 +385,7 @@ void Setting_Canvas::setup() {
     add_element(slider);
 
     slider = new H_Slider(
-        512, 31, 100, 100, "Music", sf::Color(0x7C,0x78,0x78), sf::Color::Red, 40
+        512, 31, 100, 100, "Music", {255, 255, 255}, sf::Color::Red, 40
     );
     slider->set_pos(tmp_pos + sf::Vector2f(265,161));
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,152));
@@ -361,7 +396,7 @@ void Setting_Canvas::setup() {
     add_element(slider);
 
     slider = new H_Slider(
-        512, 31, 100, 100, "SFX", sf::Color(0x7C,0x78,0x78), sf::Color::Red, 40
+        512, 31, 100, 100, "SFX", {255, 255, 255}, sf::Color::Red, 40
     );
     slider->set_pos(tmp_pos + sf::Vector2f(265,223));
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,214));
@@ -376,8 +411,10 @@ void Setting_Canvas::setup() {
     add_element(tmp);
 
     Droplist *droplist = new Droplist(
-        406, 75, "Theme", sf::Color(0x68,0x68,0x68), sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
+        406, 75, "Theme", {247, 222, 57}, sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
     );
+    droplist->title_button->rect->setOutlineColor(sf::Color::Black);
+    droplist->title_button->rect->setOutlineThickness(-4);
     droplist->set_pos(tmp_pos + sf::Vector2f(84,379));
     droplist->add_element("Theme 1",[](){
         std::cerr << "Theme 1 selected\n";
@@ -390,8 +427,10 @@ void Setting_Canvas::setup() {
     });
     add_element(droplist);
     droplist = new Droplist(
-        406, 75, "Song", sf::Color(0x68,0x68,0x68), sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
+        406, 75, "Song", {247, 222, 57}, sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
     );
+    droplist->title_button->rect->setOutlineColor(sf::Color::Black);
+    droplist->title_button->rect->setOutlineThickness(-4);
     droplist->set_pos(tmp_pos + sf::Vector2f(555,379));
     droplist->add_element("Song 1",[](){
         std::cerr << "Song 1 selected\n";

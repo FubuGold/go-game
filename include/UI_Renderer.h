@@ -140,15 +140,22 @@ namespace GUI {
 
     class Gameplay_Canvas : public Canvas {
     private:
-
+        std::vector<Board_Stone*> stones;
+    
     public:
+        /**
+         * @brief draw the stone objects
+         * 
+         */
+        void draw_stone();
+
         void setup() override;
     };
 
     class Setting_Canvas : public Canvas {
     private:
 
-    public:
+    public:    
         void setup() override;
     };
 }

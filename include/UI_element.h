@@ -171,6 +171,19 @@ namespace GUI {
         void poll_event(const std::optional<sf::Event> &e) override;
     };
 
+    class Board_Stone : public Rectangle_Button {
+    public:
+        bool display = false; //Use this to know if we should display this stone or not
+        sf::Vector2i board_pos; //The coordination of this button on the board
+        
+        Board_Stone(
+            sf::Vector2i board_pos = {},
+            float button_width = 10.f, 
+            float button_height = 10.f, 
+            sf::Color background_color = sf::Color::Transparent
+        );
+    };
+
     class Droplist : public Element {
     private:
         std::vector<Rectangle_Button*> drop_list;
@@ -225,7 +238,6 @@ namespace GUI {
         void draw() override;
 
         void poll_event(const std::optional<sf::Event> &e) override;
-
     };
 
     /**

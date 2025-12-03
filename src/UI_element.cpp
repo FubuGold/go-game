@@ -194,6 +194,19 @@ void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
 }
 
 // ----------------------------------------------
+// Board_Stone implementation
+
+Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button_height, sf::Color background_color) {
+    rect->setSize({button_width,button_height});
+    rect->setFillColor(background_color);
+
+    this->board_pos = board_pos;
+
+    parts.push_back(rect);
+    update_bound();
+}
+
+// ----------------------------------------------
 // Droplist implementation
 
 Droplist::Droplist(
@@ -252,7 +265,7 @@ void Droplist::add_element(const std::string &text, callback_t func) {
     });
     tmp->set_text_string(text);
     tmp->rect->setOutlineColor(sf::Color::Black);
-    tmp->rect->setOutlineThickness(-2);
+    tmp->rect->setOutlineThickness(-4);
     tmp->rect->setFillColor(sub_color);
     tmp->text->setFillColor(sub_text_color);
     sf::Vector2f prev_pos;

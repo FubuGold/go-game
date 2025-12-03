@@ -1,6 +1,7 @@
 #if !defined(CONFIG_H)
 #define CONFIG_H
 
+#include "game_logic.h"
 #include "custom_util.h"
 #include <SFML/Graphics.hpp>
 
