@@ -175,6 +175,8 @@ namespace GUI {
     public:
         bool display = false; //Use this to know if we should display this stone or not
         sf::Vector2i board_pos; //The coordination of this button on the board
+        sf::Sprite *stone_sprite[2];
+        int cur_sprite = 0;
         
         Board_Stone(
             sf::Vector2i board_pos = {},

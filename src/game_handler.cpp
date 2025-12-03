@@ -5,6 +5,7 @@ GameHandler::~GameHandler() {}
 
 GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) {
     std::cerr << "Game handler setup\n";
+    Config::load_config();
     this->window_width = window_width;
     this->window_height = window_height;
     
@@ -57,7 +58,6 @@ void GameHandler::run() {
     
     bool isFullscreen = true;
     sf::VideoMode video_mode = sf::VideoMode::getDesktopMode();
-    Config::save_config();
     
     while (window.isOpen()) {
         size_t cur_state = state_to_int(game_state);
@@ -93,5 +93,7 @@ void GameHandler::run() {
 
         window.display();
     }
+
+    Config::save_config();
 
 }

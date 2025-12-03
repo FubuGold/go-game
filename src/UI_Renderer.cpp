@@ -341,6 +341,7 @@ void Gameplay_Canvas::setup() {
             cur_stone->set_press([&]() {
                 //In this function, we need to modify the stone's display
                 add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'));
+                cur_stone->cur_sprite = current_board.get_turn();
             });
             cur_stone->set_pos({static_cast<float>(510 + 50 * j), static_cast<float>(90 + 50 * i)});
             cur_stone->set_window(window);
