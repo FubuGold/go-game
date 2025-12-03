@@ -261,6 +261,24 @@ void AImode_Canvas::setup() {
 // ---------------------------------------------------
 // Gameplay implementation
 
+void Gameplay_Canvas::draw_stone() {
+    std::cerr << stones.size() << '\n';
+    // std::cerr << stones.back()->cur_sprite << '\n';
+    Board_Stone *test = stones.back();
+    // test->draw();
+    return;
+    for (Board_Stone *cur : stones) {
+        return;
+        if (!cur) {
+            std::cerr << "alo wtf\n";
+            continue;
+        }
+        if (current_board.get_state(cur->board_pos.x, cur->board_pos.y) != '.') {
+            window->draw(*cur->stone_sprite[cur->cur_sprite]);
+        }
+    }
+}
+
 void Gameplay_Canvas::setup() {
     Rectangle_Button *tmp = create_sprite({38, 399}, "assets/save.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
@@ -338,10 +356,10 @@ void Gameplay_Canvas::setup() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             Board_Stone *cur_stone = new Board_Stone({i, j});
-            cur_stone->set_press([&]() {
-                //In this function, we need to modify the stone's display
-                add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'));
-                cur_stone->cur_sprite = current_board.get_turn();
+            cur_stone->set_press([i, j, cur_stone]() {
+                if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
+                    cur_stone->cur_sprite = current_board.get_turn();
+                }
             });
             cur_stone->set_pos({static_cast<float>(510 + 50 * j), static_cast<float>(90 + 50 * i)});
             cur_stone->set_window(window);

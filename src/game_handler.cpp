@@ -91,6 +91,11 @@ void GameHandler::run() {
         //Draw game
         canvas[cur_state]->draw();
 
+        if (game_state == GameState::Gameplay) {
+            GUI::Gameplay_Canvas *tmp = static_cast<GUI::Gameplay_Canvas*>(canvas[cur_state]);
+            tmp->draw_stone();
+        }
+
         window.display();
     }
 

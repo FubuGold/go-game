@@ -173,11 +173,14 @@ namespace GUI {
 
     class Board_Stone : public Rectangle_Button {
     public:
-        bool display = false; //Use this to know if we should display this stone or not
         sf::Vector2i board_pos; //The coordination of this button on the board
-        sf::Sprite *stone_sprite[2];
+        sf::Texture textures[2];
+        sf::Sprite *stone_sprite[2] = {nullptr, nullptr};
         int cur_sprite = 0;
         
+        ~Board_Stone();
+
+
         Board_Stone(
             sf::Vector2i board_pos = {},
             float button_width = 10.f, 

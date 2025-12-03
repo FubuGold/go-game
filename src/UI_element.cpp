@@ -89,7 +89,7 @@ bool Element::check_window() {
 void Element::draw() {
     for (sf::Drawable* ptr: parts) {
         if (!window) std::cerr << "Nullptr detected\n";
-        window->draw(*ptr);
+        else window->draw(*ptr);
     }
 }
 
@@ -196,11 +196,24 @@ void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
 // ----------------------------------------------
 // Board_Stone implementation
 
+Board_Stone::~Board_Stone() {
+    delete stone_sprite[0];
+    delete stone_sprite[1];
+}
+
 Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button_height, sf::Color background_color) {
     rect->setSize({button_width,button_height});
     rect->setFillColor(background_color);
 
     this->board_pos = board_pos;
+    if (!textures[0].loadFromFile("assets/black_stone.png") || !textures[1].loadFromFile("assets/white_stone.png")) {
+        std::cerr << "Failed to load stone assets\n";
+    }
+    stone_sprite[0] = new sf::Sprite(textures[0]);
+    stone_sprite[1] = new sf::Sprite(textures[1]);
+
+    stone_sprite[0]->setScale({0.05f, 0.05f});
+    stone_sprite[1]->setScale({0.05f, 0.05f});
 
     parts.push_back(rect);
     update_bound();
