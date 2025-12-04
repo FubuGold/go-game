@@ -391,6 +391,25 @@ void Gameplay_Canvas::setup() {
     add_element(tmp);
 
     //Black score display
+    tmp = new Rectangle_Button(379, 235, {103, 55, 0});
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({1502, 804}, "", tmp);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(273, 97, sf::Color::Transparent, sf::Color::White, 80);
+    tmp->text->setFont(Config::font[1]);
+    tmp->text->setStyle(sf::Text::Bold);
+    create_button({53 + 1502, 13 + 804}, "BLACK", tmp);
+    add_element(tmp);
+
+    tmp = create_sprite({228 + 1502, 124 + 804}, "assets/white_stone.png");
+    tmp->sprite->setScale({0.375f, 0.375f});
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(130, 88, sf::Color::Transparent, {255, 7, 164}, 70);
+    create_button({92 + 1502, 118 + 804}, "666", tmp);
+    add_element(tmp);
 
     //Board setups below
     tmp = new Rectangle_Button(1000, 1000, {194, 113, 0});
