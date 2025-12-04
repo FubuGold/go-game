@@ -140,7 +140,7 @@ namespace GUI {
 
     class Gameplay_Canvas : public Canvas {
     private:
-        std::vector<Board_Stone*> stones = {};
+        std::vector<Board_Stone*> stones;
     
     public:
         /**

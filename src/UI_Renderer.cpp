@@ -263,10 +263,6 @@ void AImode_Canvas::setup() {
 
 void Gameplay_Canvas::draw_stone() {
     for (Board_Stone *cur : stones) {
-        if (!cur) {
-            std::cerr << "alo wtf\n";
-            continue;
-        }
         if (current_board.get_state(cur->board_pos.x, cur->board_pos.y) != '.') {
             window->draw(*cur->stone_sprite[cur->cur_sprite]);
         }
@@ -350,14 +346,18 @@ void Gameplay_Canvas::setup() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             Board_Stone *cur_stone = new Board_Stone({i, j});
+            cur_stone->rect->setOutlineThickness(-1); // Debug
+            element_l.push_back(cur_stone); // This will handle bound and events
             cur_stone->set_pos({static_cast<float>(510 + 50 * j) - cur_stone->button_width / 2.f, static_cast<float>(90 + 50 * i) - cur_stone->button_height / 2.f});
             cur_stone->set_window(window);
-            cur_stone->set_press([i, j, cur_stone]() {
+            cur_stone->set_press([i,j,cur_stone]() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
+                
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
-                    cur_stone->cur_sprite = current_board.get_turn();
-                }
-            });
+                        std::cerr << "Board add move\n";
+                        cur_stone->cur_sprite = current_board.get_turn();
+                    }
+                });
             stones.push_back(cur_stone);
         }
     }

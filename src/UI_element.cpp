@@ -29,6 +29,7 @@ std::string int_to_string(int x) {
 
 void Element::press() {
     if (press_callback) press_callback();
+    else std::cerr << "Press callback not implemented\n";
 }
 
 void Element::release() {
