@@ -168,6 +168,8 @@ namespace GUI {
          */
         void set_pos(sf::Vector2f new_pos) override;
 
+        void press_virtual();
+
         void poll_event(const std::optional<sf::Event> &e) override;
     };
 
@@ -187,6 +189,42 @@ namespace GUI {
             float button_height = 30.f, 
             sf::Color background_color = sf::Color::Transparent
         );
+    };
+
+    class Flip_State_Button : public Element {
+    public:
+        bool is_flipped;
+        Rectangle_Button *buttons[2];
+
+        Flip_State_Button(
+            bool init_state = 0,
+            Rectangle_Button *state_1 = nullptr,
+            Rectangle_Button *state_2 = nullptr
+        );
+
+        ~Flip_State_Button();
+
+        /**
+         * @brief Set the pos object
+         * 
+         * @param pos_x 
+         * @param pos_y 
+         */
+        void set_pos(float pos_x,float pos_y) override;
+        /**
+         * @brief Set the pos object
+         * 
+         * @param new_pos 
+         */
+        void set_pos(sf::Vector2f new_pos) override;
+
+        void add_state_1(Rectangle_Button *button);
+
+        void add_state_2(Rectangle_Button *button);
+
+        void draw() override;
+
+        void poll_event(const std::optional<sf::Event> &e) override;
     };
 
     class Droplist : public Element {

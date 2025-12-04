@@ -291,6 +291,8 @@ void Gameplay_Canvas::setup() {
     add_element(tmp);
 
     //Will update this later, after we add music to the game
+
+    Flip_State_Button *flip_button = new Flip_State_Button();
     
     tmp = create_sprite({38, 669}, "assets/music_off.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
@@ -298,7 +300,7 @@ void Gameplay_Canvas::setup() {
     tmp->set_press([]() {
         std::cerr << "Gameplay: Music button pressed\n";
     });
-    add_element(tmp);
+    flip_button->add_state_1(tmp);
     
     tmp = create_sprite({38, 669}, "assets/music_on.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
@@ -307,7 +309,8 @@ void Gameplay_Canvas::setup() {
         std::cerr << "Gameplay: Music button pressed\n";
         
     });
-    add_element(tmp);
+    flip_button->add_state_2(tmp);
+    add_element(flip_button);
 
     tmp = create_sprite({1785, 399}, "assets/redo.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
