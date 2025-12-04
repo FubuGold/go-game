@@ -10,8 +10,9 @@ namespace Config {
     extern sf::Font font[2];
     extern sf::Music bgm[3];
 
+    extern bool music_on;
+
     // Config
-    extern int prev_save;
     extern int selected_font;
     extern int selected_theme;
     extern int selected_bgm;

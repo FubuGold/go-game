@@ -100,11 +100,19 @@ void Menu_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 377.f}, "LOAD GAME", tmp);
-    tmp->set_press([tmp]() {
+    tmp->set_press([tmp, this]() {
         std::cerr << "MENU: Load button pressed\n";
-        // debug_rect(tmp->bound,"Bound");
-        // debug_rect(tmp->rect->getGlobalBounds(),"Out rect");
+        
+        try {
+            current_board.load_game();
+            *gamestate = GameState::Gameplay;
+        }
+        catch(const std::exception& e) {
+            //Pop up
+            std::cerr << e.what() << '\n';
+        }
     });
+
     add_element(tmp);
 
     tmp = new Rectangle_Button(button_width, button_height);
@@ -277,6 +285,8 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
         std::cerr << "Gameplay: Save button pressed\n";
+
+        current_board.save_game();
     });
     add_element(tmp);
 
@@ -287,6 +297,7 @@ void Gameplay_Canvas::setup() {
         //Should ask the user if they want to save before leaving
         std::cerr << "Gameplay: Back button pressed\n";
         *gamestate = GameState::Menu;
+        current_board.reset();
     });
     add_element(tmp);
 
@@ -297,17 +308,34 @@ void Gameplay_Canvas::setup() {
     tmp = create_sprite({38, 669}, "assets/music_off.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([]() {
-        std::cerr << "Gameplay: Music button pressed\n";
-    });
-    flip_button->add_state_1(tmp);
+    add_element(tmp);
     
     tmp = create_sprite({38, 669}, "assets/music_on.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([]() {
+    tmp->set_press([tmp]() {
         std::cerr << "Gameplay: Music button pressed\n";
-        
+
+        if (Config::music_on) {
+            Config::bgm[Config::selected_bgm].pause();
+            tmp->sprite->setScale({0.f, 0.f});
+        }
+        else {
+            Config::bgm[Config::selected_bgm].play();
+            tmp->sprite->setScale({1.f, 1.f});
+        }
+        Config::music_on ^= 1;
+    });
+    add_element(tmp);
+
+    tmp = create_sprite({1785, 264}, "assets/pass.png");
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->set_press([]() {
+        std::cerr << "Gameplay: Pass button pressed\n";
+
+        current_board.add_move(Move());
+        //Check pass and end the game
     });
     flip_button->add_state_2(tmp);
     add_element(flip_button);
@@ -317,6 +345,7 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
         std::cerr << "Gameplay: Redo button pressed\n";
+
         if (!current_board.check_empty_undo_list()) {
             current_board.redo_move();
         }
