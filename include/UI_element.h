@@ -389,6 +389,33 @@ namespace GUI {
         void poll_event(const std::optional<sf::Event> &e) override;
     };
 
+    class Dynamic_Text : public Element {
+    private:
+        int *linked_var = nullptr;
+        sf::Text *text = new sf::Text(Config::font[0]);
+    public:
+        Dynamic_Text(
+            int *link_var = nullptr,
+            sf::Color text_color = sf::Color::Black,
+            int text_size = 10
+        );
+
+        /**
+         * @brief Set the pos object
+         * 
+         * @param pos_x 
+         * @param pos_y 
+         */
+        void set_pos(float pos_x,float pos_y) override;
+        /**
+         * @brief Set the pos object
+         * 
+         * @param new_pos 
+         */
+        void set_pos(sf::Vector2f new_pos) override;
+
+        void draw() override;
+    };
 }
 
 #endif // UI_ELEMENT_H

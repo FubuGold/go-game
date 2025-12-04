@@ -22,6 +22,7 @@ Move::Move(int pos_x, int pos_y, char stone_type, uint64_t hash_val, std::vector
 
 Board::Board() {
     std::memset(board, '.', sizeof board);
+    turn = 1;
 }
 
 void Board::reset() {
@@ -123,14 +124,6 @@ void Board::redo_move() {
 
     turn = last_move.stone_type == 'X';
     move_list.push_back(last_move);
-}
-
-int Board::get_captured_black() const {
-    return captured_black;
-}
-    
-int Board::get_captured_white() const {
-    return captured_white;
 }
 
 uint64_t Board::get_board_hash() const {

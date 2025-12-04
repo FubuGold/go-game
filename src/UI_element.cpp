@@ -21,6 +21,7 @@ std::string int_to_string(int x) {
         tmp = char('0' + x % 10) + tmp; // O(n^2) but value is small enough to not impact performance
         x /= 10;
     }
+    if (tmp == "") tmp = "0";
     return tmp;
 }
 
@@ -216,7 +217,7 @@ Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button
     rect->setFillColor(background_color);
 
     this->board_pos = board_pos;
-    if (!textures[0].loadFromFile("assets/black_stone.png") || !textures[1].loadFromFile("assets/white_stone.png")) {
+    if (!textures[1].loadFromFile("assets/black_stone.png") || !textures[0].loadFromFile("assets/white_stone.png")) {
         std::cerr << "Failed to load stone assets\n";
     }
     else {
@@ -554,6 +555,30 @@ void H_Slider::poll_event(const std::optional<sf::Event> &e) {
             release();
         }
     }
+}
+
+// ----------------------------------------------
+// Dynamic Text implementation
+
+Dynamic_Text::Dynamic_Text(int *link_var, sf::Color text_color, int text_size) {
+    linked_var = link_var;
+    text->setFillColor(text_color);
+    text->setCharacterSize(text_size);
+    parts.push_back(text);
+}
+
+void Dynamic_Text::set_pos(float pos_x,float pos_y) {
+    pos = {pos_x,pos_y};
+    text->setPosition(pos);
+}
+void Dynamic_Text::set_pos(sf::Vector2f new_pos) {
+    pos = new_pos;
+    text->setPosition(pos);
+}
+
+void Dynamic_Text::draw() {
+    text->setString(int_to_string(*linked_var));
+    Element::draw();
 }
 
 }

@@ -38,7 +38,7 @@ void dfs(int x,int y,int setter,int vst[BOARD_SIZE][BOARD_SIZE], const Board &bo
 }
 
 std::pair<int,int> scoring(const Board &board) {
-    int black_point = board.get_captured_white(), white_point = KOMI + board.get_captured_black();
+    int black_point = board.captured_white, white_point = KOMI + board.captured_black;
     int vst[BOARD_SIZE][BOARD_SIZE];
     std::memset(vst,0,sizeof vst);
     for (int i=0;i<BOARD_SIZE;i++) {

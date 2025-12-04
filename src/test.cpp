@@ -88,8 +88,6 @@ bool invalid_move_test() {
         flag |= add_move(Move(19,19,'X'));
         combine_flag |= flag;
         if (flag) std::cerr << "Invalid move subtest - Out of bound: Failed\n";
-        
-        std::cerr << "Begin suicide test\n";
 
         // Suicide 
         flag = 0;

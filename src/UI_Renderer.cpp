@@ -395,9 +395,9 @@ void Gameplay_Canvas::setup() {
     tmp->sprite->setScale({0.375f, 0.375f});
     add_element(tmp);
 
-    tmp = new Rectangle_Button(126, 88, sf::Color::Transparent, sf::Color::Red, 70);
-    create_button({130, 158}, "727", tmp);
-    add_element(tmp);
+    Dynamic_Text *d_text = new Dynamic_Text(&current_board.captured_black, sf::Color::Red,70);
+    d_text->set_pos(130,158);
+    add_element(d_text);
 
     //Black score display
     tmp = new Rectangle_Button(379, 235, {103, 55, 0});
@@ -416,9 +416,9 @@ void Gameplay_Canvas::setup() {
     tmp->sprite->setScale({0.375f, 0.375f});
     add_element(tmp);
 
-    tmp = new Rectangle_Button(130, 88, sf::Color::Transparent, {255, 7, 164}, 70);
-    create_button({92 + 1502, 118 + 804}, "666", tmp);
-    add_element(tmp);
+    d_text = new Dynamic_Text(&current_board.captured_white, {255, 7, 164}, 70);
+    d_text->set_pos(92 + 1502, 118 + 804);
+    add_element(d_text);
 
     //Board setups below
     tmp = new Rectangle_Button(1000, 1000, {194, 113, 0});

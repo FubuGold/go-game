@@ -105,7 +105,7 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
         return {tmp.first - tmp.second,{-1,-1}};
     }
     // Speed up by trying to play move that capture stone
-    int pre = ai_turn ? current_board.get_captured_black() : current_board.get_captured_white();
+    int pre = ai_turn ? current_board.captured_black : current_board.captured_white;
     Node best_move = {ai_turn ? INT_MAX : INT_MIN, {BOARD_SIZE,BOARD_SIZE}};
     char op = opposite_stone(AI_STONE);
     for (int i=0;i<BOARD_SIZE;i++) {
