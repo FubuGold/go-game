@@ -344,7 +344,7 @@ void Gameplay_Canvas::setup() {
         current_board.update_turn();
         //Check pass and end the game
     });
-
+    add_element(tmp);
 
     tmp = create_sprite({1785, 399}, "assets/redo.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
@@ -405,13 +405,13 @@ void Gameplay_Canvas::setup() {
 
     for (int i = 1; i <= 17; i++) { //Vertical lines
         tmp = new Rectangle_Button(4, 900, sf::Color::Black);
-        create_button({static_cast<float>(510 + i * 50 - 2), 90}, "", tmp);
+        create_button({static_cast<float>(510 + i * 50), 90}, "", tmp);
         add_element(tmp);
     }
 
     for (int i = 1; i <= 17; i++) { //Horizontal lines
         tmp = new Rectangle_Button(900, 4, sf::Color::Black);
-        create_button({510, static_cast<float>(90 + i * 50 - 2)}, "", tmp);
+        create_button({510, static_cast<float>(90 + i * 50)}, "", tmp);
         add_element(tmp);
     }
 
