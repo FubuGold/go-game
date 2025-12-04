@@ -219,6 +219,11 @@ Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button
     if (!textures[0].loadFromFile("assets/black_stone.png") || !textures[1].loadFromFile("assets/white_stone.png")) {
         std::cerr << "Failed to load stone assets\n";
     }
+    else {
+        textures[0].setSmooth(true);
+        textures[1].setSmooth(true);
+    }
+
     stone_sprite[0] = new sf::Sprite(textures[0]);
     stone_sprite[1] = new sf::Sprite(textures[1]);
 

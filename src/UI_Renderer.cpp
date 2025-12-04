@@ -68,6 +68,7 @@ Rectangle_Button* Canvas::create_sprite(sf::Vector2f pos, const std::filesystem:
         std::cerr << "Failed to load texture of " << filename.filename() << '\n';
         return nullptr;
     }
+    tmp.setSmooth(true);
     
     auto size_of_texture = tmp.getSize();
 
@@ -310,8 +311,6 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
-    //Will update this later, after we add music to the game
-    
     tmp = create_sprite({38, 669}, "assets/music_off.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
@@ -342,9 +341,10 @@ void Gameplay_Canvas::setup() {
         std::cerr << "Gameplay: Pass button pressed\n";
 
         current_board.add_move(Move());
+        current_board.update_turn();
         //Check pass and end the game
     });
-
+    add_element(tmp);
 
     tmp = create_sprite({1785, 399}, "assets/redo.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
@@ -369,6 +369,30 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
+    //White score display
+    tmp = new Rectangle_Button(379, 235);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({38, 40}, "", tmp);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(268, 97, sf::Color::Transparent, sf::Color::Black, 80);
+    tmp->text->setFont(Config::font[1]);
+    tmp->text->setStyle(sf::Text::Bold);
+    create_button({94, 53}, "WHITE", tmp);
+    add_element(tmp);
+
+    tmp = create_sprite({266, 164}, "assets/black_stone.png");
+    tmp->sprite->setScale({0.375f, 0.375f});
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(126, 88, sf::Color::Transparent, sf::Color::Red, 70);
+    create_button({130, 158}, "727", tmp);
+    add_element(tmp);
+
+    //Black score display
+
+    //Board setups below
     tmp = new Rectangle_Button(1000, 1000, {194, 113, 0});
     create_button({460, 40}, "", tmp);
     add_element(tmp);
@@ -404,8 +428,8 @@ void Gameplay_Canvas::setup() {
             cur_bound = cur_stone->stone_sprite[1]->getLocalBounds();
             cur_stone->stone_sprite[1]->setOrigin({cur_bound.size.x / 2.f, cur_bound.size.y / 2.f});
 
-            cur_stone->stone_sprite[0]->setPosition({static_cast<float>(510 + 50 * j), static_cast<float>(90 + 50 * i)});
-            cur_stone->stone_sprite[1]->setPosition({static_cast<float>(510 + 50 * j), static_cast<float>(90 + 50 * i)});
+            cur_stone->stone_sprite[0]->setPosition({static_cast<float>(510 + 50 * j + 1), static_cast<float>(90 + 50 * i + 1)});
+            cur_stone->stone_sprite[1]->setPosition({static_cast<float>(510 + 50 * j + 1), static_cast<float>(90 + 50 * i + 1)});
             
             cur_stone->stone_sprite[0]->setScale({0.225, 0.225});
             cur_stone->stone_sprite[1]->setScale({0.225, 0.225});
