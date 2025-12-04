@@ -29,11 +29,14 @@ std::string int_to_string(int x) {
 
 void Element::press() {
     if (press_callback) press_callback();
-    else std::cerr << "Press callback not implemented\n";
 }
 
 void Element::release() {
     if (release_callback) release_callback();
+}
+
+void Element::hover() {
+    if (hover_callback) hover_callback();
 }
 
 bool Element::contain_pos(float x,float y) {
@@ -223,58 +226,23 @@ Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button
     update_bound();
 }
 
-// ----------------------------------------------
-// Flip Button implementation
-
-Flip_State_Button::Flip_State_Button(bool init_state = 0, Rectangle_Button *state_1 = nullptr, Rectangle_Button *state_2 = nullptr) {
-    is_flipped = init_state;
-    buttons[0] = state_1;
-    buttons[1] = state_2;
-}
-
-Flip_State_Button::~Flip_State_Button() {
-    delete buttons[0];
-    delete buttons[1];
-}
-
-void Flip_State_Button::add_state_1(Rectangle_Button *button) {
-    button->set_pos(pos);
-    buttons[0] = button;
-}
-
-void Flip_State_Button::add_state_2(Rectangle_Button *button) {
-    button->set_pos(pos);
-    buttons[1] = button;
-}
-
-void Flip_State_Button::set_pos(float pos_x,float pos_y) {
-    pos = {pos_x,pos_y};
-    if (buttons[0]) buttons[0]->set_pos(pos_x,pos_y);
-    if (buttons[1]) buttons[1]->set_pos(pos_x,pos_y);
-}
-
-void Flip_State_Button::set_pos(sf::Vector2f new_pos) {
-    pos = new_pos;
-    if (buttons[0]) buttons[0]->set_pos(new_pos);
-    if (buttons[1]) buttons[1]->set_pos(new_pos);
-}
-
-void Flip_State_Button::draw() {
-    buttons[is_flipped]->draw();
-}
-
-void Flip_State_Button::poll_event(const std::optional<sf::Event> &e) {
+void Board_Stone::poll_event(const std::optional<sf::Event> &e) {
     if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>()) {
         sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
         if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
-            buttons[is_flipped]->press_virtual();
-            is_flipped = !is_flipped;
+            press();
         }
     }
     else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
         sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
         if (mouse_release->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             release();
+        }
+    }
+    else {
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        if (contain_pos(mouse_pos)) {
+            hover();
         }
     }
 }

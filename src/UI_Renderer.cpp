@@ -277,9 +277,18 @@ void Gameplay_Canvas::draw_stone() {
             window->draw(*(cur->stone_sprite[cur->cur_sprite])); 
         }
     }
+    if (hover_x == -1 || hover_y == -1) return;
+    int new_id = hover_x * BOARD_SIZE + hover_y;
+    Board_Stone *cur = stones[new_id];
+    if (current_board.get_state(cur->board_pos.x, cur->board_pos.y) == '.') {
+        sf::Sprite tmp = *(cur->stone_sprite[current_board.get_turn()]);
+        tmp.setColor({255,255,255,127});
+        window->draw(tmp); 
+    }
 }
 
 void Gameplay_Canvas::setup() {
+    hover_x = -1, hover_y = -1;
     Rectangle_Button *tmp = create_sprite({38, 399}, "assets/save.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
@@ -302,8 +311,6 @@ void Gameplay_Canvas::setup() {
     add_element(tmp);
 
     //Will update this later, after we add music to the game
-
-    Flip_State_Button *flip_button = new Flip_State_Button();
     
     tmp = create_sprite({38, 669}, "assets/music_off.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
@@ -337,8 +344,7 @@ void Gameplay_Canvas::setup() {
         current_board.add_move(Move());
         //Check pass and end the game
     });
-    flip_button->add_state_2(tmp);
-    add_element(flip_button);
+
 
     tmp = create_sprite({1785, 399}, "assets/redo.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
@@ -389,7 +395,8 @@ void Gameplay_Canvas::setup() {
         for (int j = 0; j < BOARD_SIZE; j++) {
             Board_Stone *cur_stone = new Board_Stone({i, j});
             // cur_stone->rect->setOutlineThickness(-1); // Debug
-            element_l.push_back(cur_stone); // This will handle bound and events
+            // element_l.push_back(cur_stone); // This will handle bound and events
+            add_element(cur_stone);
             cur_stone->set_pos({static_cast<float>(510 + 50 * j) - cur_stone->button_width / 2.f, static_cast<float>(90 + 50 * i) - cur_stone->button_height / 2.f});
             
             sf::FloatRect cur_bound = cur_stone->stone_sprite[0]->getLocalBounds();
@@ -411,6 +418,10 @@ void Gameplay_Canvas::setup() {
                     cur_stone->cur_sprite = current_board.get_turn();
                     current_board.update_turn();
                 }
+            });
+
+            cur_stone->set_hover([this,i,j]() {
+                hover_x = i, hover_y = j;
             });
             stones.push_back(cur_stone);
         }

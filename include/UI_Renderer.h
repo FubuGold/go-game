@@ -141,7 +141,7 @@ namespace GUI {
     class Gameplay_Canvas : public Canvas {
     private:
         std::vector<Board_Stone*> stones;
-    
+        int hover_x,hover_y;
     public:
         /**
          * @brief draw the stone objects
