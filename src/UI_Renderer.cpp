@@ -113,6 +113,7 @@ void Menu_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 377.f}, "LOAD GAME", tmp);
     tmp->set_press([this, popup]() {
+        Config::sfx[0].play();
         std::cerr << "MENU: Load button pressed\n";
         if (current_board.load_game()) {
             *gamestate = GameState::Gameplay;
@@ -128,6 +129,7 @@ void Menu_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 528.f}, "NEW GAME", tmp);
     tmp->set_press([&]() {
+        Config::sfx[0].play();
         std::cerr << "MENU: New button pressed\n";
         if (gamestate) *gamestate = GameState::NewGame;
     });
@@ -138,6 +140,7 @@ void Menu_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 679.f}, "SETTING", tmp);
     tmp->set_press([&]() {
+        Config::sfx[0].play();
         std::cerr << "MENU: Setting button pressed\n";
         if (gamestate) *gamestate = GameState::Setting;
     });
@@ -148,6 +151,7 @@ void Menu_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 830.f}, "EXIT", tmp);
     tmp->set_press([tmp]() {
+        Config::sfx[0].play();
         std::cerr << "MENU: Exit button pressed\n";
         if (tmp->window->isOpen()) tmp->window->close();
     });
@@ -206,6 +210,7 @@ void NewGame_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({1487, 943}, "BACK", tmp);
     tmp->set_press([&]() {
+        Config::sfx[0].play();
         std::cerr << "NEW GAME: Back button pressed\n";
         *gamestate = GameState::Menu;
     });
@@ -213,6 +218,7 @@ void NewGame_Canvas::setup() {
 
     tmp = create_sprite({86, 274}, "assets/2_players.png");
     tmp->set_press([&]() {
+        Config::sfx[0].play();
         std::cerr << "NEW GAME: 2 players button pressed\n";
         *gamestate = GameState::Gameplay;
     });
@@ -220,6 +226,7 @@ void NewGame_Canvas::setup() {
 
     tmp = create_sprite({1001, 274}, "assets/vs_computer.png");
     tmp->set_press([&]() {
+        Config::sfx[0].play();
         std::cerr << "NEW GAME: VS computer button pressed\n";
         *gamestate = GameState::AImode;
     });
@@ -248,6 +255,7 @@ void AImode_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({1487, 943}, "BACK", tmp);
     tmp->set_press([&]() {
+        Config::sfx[0].play();
         std::cerr << "AI MODE: Back button pressed\n";
         *gamestate = GameState::NewGame;
     });
@@ -259,18 +267,21 @@ void AImode_Canvas::setup() {
 
     tmp = create_sprite({94, 252}, "assets/easy.png");
     tmp->set_press([]() {
+        Config::sfx[0].play();
         std::cerr << "AI MODE: Easy button pressed\n";
     });
     add_element(tmp);
 
     tmp = create_sprite({718, 252}, "assets/normal.png");
     tmp->set_press([]() {
+        Config::sfx[0].play();
         std::cerr << "AI MODE: Normal button pressed\n";
     });
     add_element(tmp);
 
     tmp = create_sprite({1339, 252}, "assets/hard.png");
     tmp->set_press([]() {
+        Config::sfx[0].play();
         std::cerr << "AI MODE: Hard button pressed\n";
     });
     add_element(tmp);
@@ -303,6 +314,7 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
+        Config::sfx[2].play();
         std::cerr << "Gameplay: Save button pressed\n";
 
         current_board.save_game();
@@ -314,6 +326,7 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([&]() {
         //Should ask the user if they want to save before leaving
+        Config::sfx[0].play();
         std::cerr << "Gameplay: Back button pressed\n";
         *gamestate = GameState::Menu;
         current_board.reset();
@@ -329,6 +342,7 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([tmp]() {
+        Config::sfx[0].play();
         std::cerr << "Gameplay: Music button pressed\n";
 
         if (Config::music_on) {
@@ -347,6 +361,7 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
+        Config::sfx[0].play();
         std::cerr << "Gameplay: Pass button pressed\n";
 
         current_board.add_move(Move());
@@ -359,6 +374,7 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
+        Config::sfx[0].play();
         std::cerr << "Gameplay: Redo button pressed\n";
 
         if (!current_board.check_empty_undo_list()) {
@@ -371,6 +387,7 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
+        Config::sfx[0].play();
         std::cerr << "Gameplay: Undo button pressed\n";
         if (!current_board.check_empty_move_list()) {
             current_board.undo_move();
@@ -466,6 +483,7 @@ void Gameplay_Canvas::setup() {
             cur_stone->set_press([i,j,cur_stone]() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
+                    Config::sfx[1].play();
                     std::cerr << "Board add move\n";
                     cur_stone->cur_sprite = current_board.get_turn();
                     current_board.update_turn();
@@ -511,6 +529,7 @@ void Setting_Canvas::setup() {
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,90));
     slider->set_name_pos(tmp_pos + sf::Vector2f(104,90));
     slider->set_change([slider](){
+        Config::sfx[0].play();
         std::cerr << "Current general value is: " << slider->value << '\n';
         Config::audio_volume[0] = slider->value;
         Config::update_volume();
@@ -524,6 +543,7 @@ void Setting_Canvas::setup() {
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,152));
     slider->set_name_pos(tmp_pos + sf::Vector2f(145,152));
     slider->set_change([slider](){
+        Config::sfx[0].play();
         std::cerr << "Current music value is: " << slider->value << '\n';
         Config::audio_volume[1] = slider->value;
         Config::update_volume();
@@ -537,6 +557,7 @@ void Setting_Canvas::setup() {
     slider->set_display_value_pos(tmp_pos + sf::Vector2f(804,214));
     slider->set_name_pos(tmp_pos + sf::Vector2f(165,214));
     slider->set_change([slider](){
+        Config::sfx[0].play();
         std::cerr << "Current SFX value is: " << slider->value << '\n';
         Config::audio_volume[2] = slider->value;
         Config::update_volume();
@@ -554,12 +575,15 @@ void Setting_Canvas::setup() {
     droplist->title_button->rect->setOutlineThickness(-4);
     droplist->set_pos(tmp_pos + sf::Vector2f(84,379));
     droplist->add_element("Theme 1",[](){
+        Config::sfx[0].play();
         std::cerr << "Theme 1 selected\n";
     });
     droplist->add_element("Theme 2",[](){
+        Config::sfx[0].play();
         std::cerr << "Theme 2 selected\n";
     });
     droplist->add_element("Theme 3",[](){
+        Config::sfx[0].play();
         std::cerr << "Theme 3 selected\n";
     });
     add_element(droplist);
@@ -570,14 +594,17 @@ void Setting_Canvas::setup() {
     droplist->title_button->rect->setOutlineThickness(-4);
     droplist->set_pos(tmp_pos + sf::Vector2f(555,379));
     droplist->add_element("Song 1",[](){
+        Config::sfx[0].play();
         std::cerr << "Song 1 selected\n";
         Config::change_music(0);
     });
     droplist->add_element("Song 2",[](){
+        Config::sfx[0].play();
         std::cerr << "Song 2 selected\n";
         Config::change_music(1);
     });
     droplist->add_element("Song 3",[](){
+        Config::sfx[0].play();
         std::cerr << "Song 3 selected\n";
         Config::change_music(2);
     });
@@ -588,6 +615,7 @@ void Setting_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({1487, 943}, "BACK", tmp);
     tmp->set_press([&]() {
+        Config::sfx[0].play();
         std::cerr << "NEW GAME: Back button pressed\n";
         *gamestate = GameState::Menu;
     });
