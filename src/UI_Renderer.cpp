@@ -97,23 +97,30 @@ void debug_rect(sf::FloatRect rect,const std::string &message) {
 }
 
 void Menu_Canvas::setup() {
+    // The duration is relative, not absolute at the exact moment
+    Popup *popup = new Popup(1000,626,127,{0xFD,0xD3,0x4B});
+    sf::Text *fail_load = new sf::Text(Config::font[0]);
+    popup->set_pos(647,457);
+    fail_load->setString("No saved game to load");
+    fail_load->setFillColor(sf::Color::Red);
+    fail_load->setPosition({647+33,457+49});
+    fail_load->setCharacterSize(55);
+    popup->add_drawable(fail_load);
+    // Added at the bottom (the last on to at) to render the highest layer
+
     Rectangle_Button *tmp = new Rectangle_Button(button_width, button_height);
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 377.f}, "LOAD GAME", tmp);
-    tmp->set_press([tmp, this]() {
+    tmp->set_press([this, popup]() {
         std::cerr << "MENU: Load button pressed\n";
-        
-        try {
-            current_board.load_game();
+        if (current_board.load_game()) {
             *gamestate = GameState::Gameplay;
         }
-        catch(const std::exception& e) {
-            //Pop up
-            std::cerr << e.what() << '\n';
+        else {
+            popup->enable_popup();
         }
     });
-
     add_element(tmp);
 
     tmp = new Rectangle_Button(button_width, button_height);
@@ -170,6 +177,8 @@ void Menu_Canvas::setup() {
 
     tmp = create_sprite({1071, 480}, "assets/white_stone.png");
     add_element(tmp);
+
+    add_element(popup);
 }
 
 // ---------------------------------------------------

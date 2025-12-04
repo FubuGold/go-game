@@ -13,7 +13,6 @@ namespace Config {
     extern bool music_on;
 
     // Config
-    extern int selected_font;
     extern int selected_theme;
     extern int selected_bgm;
     extern int audio_volume[3]; // General - Music - SFX

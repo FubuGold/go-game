@@ -253,6 +253,69 @@ void Board_Stone::poll_event(const std::optional<sf::Event> &e) {
 }
 
 // ----------------------------------------------
+// Popup implementation
+
+Popup::Popup(int duration, float rect_width, float rect_height, sf::Color background_color) {
+    rect->setFillColor(background_color);
+    rect->setSize({rect_width,rect_height});
+    rect->setOutlineThickness(-4);
+    rect->setOutlineColor(sf::Color::Black);
+    parts.push_back(rect);
+    disable = 1;
+    this->duration = duration;
+    update_bound();
+}
+
+Popup::~Popup() {
+    delete rect;
+    for (Element *p : element_l) {
+        delete p;
+    }
+    element_l.clear();
+}
+
+void Popup::enable_popup() {
+    if (duration > 0) enable_time = std::chrono::high_resolution_clock::now();
+    disable = 0;
+}
+
+void Popup::disable_popup() {
+    disable = 1;
+}
+
+void Popup::set_pos(float pos_x,float pos_y) {
+    rect->setPosition({pos_x,pos_y});
+    update_bound();
+}
+void Popup::set_pos(sf::Vector2f new_pos) {
+    rect->setPosition(new_pos);
+    update_bound();
+}
+
+void Popup::add_element(Element *element_p) {
+    element_l.push_back(element_p);
+}
+void Popup::add_drawable(sf::Drawable *drawable_p) {
+    parts.push_back(drawable_p);
+}
+
+void Popup::draw() {
+    if (disable) return;
+    Element::draw();
+    for (Element *p : element_l) p->draw();
+}
+
+void Popup::poll_event(const std::optional<sf::Event> &e) {
+    if (duration > 0) {
+        std::chrono::system_clock::time_point cur_time = std::chrono::high_resolution_clock::now();
+        milliseconds cur_d = duration_cast<milliseconds>(cur_time - enable_time);
+        if (cur_d.count() >= duration) disable_popup();
+    }
+    if (disable) return;
+    for (Element *p : element_l) p->poll_event(e);
+}
+
+// ----------------------------------------------
 // Droplist implementation
 
 Droplist::Droplist(

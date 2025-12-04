@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <functional>
 #include <vector>
+#include <chrono>
 #include "config_handler.h"
 
 namespace GUI {
@@ -191,6 +192,70 @@ namespace GUI {
             sf::Color background_color = sf::Color::Transparent
         );
 
+        void poll_event(const std::optional<sf::Event> &e) override;
+    };
+
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+
+    class Popup : public Element {
+    private:
+        std::chrono::system_clock::time_point enable_time;
+    public:
+        sf::RectangleShape *rect = new sf::RectangleShape();
+        bool disable;
+        int duration;
+        std::vector<Element*> element_l;
+
+        Popup(
+            int duration = -1, // ms
+            float rect_width = 300.f,
+            float rect_height = 300.f,
+            sf::Color background_color = sf::Color::White
+        );
+
+        ~Popup();
+
+        void enable_popup();
+
+        void disable_popup();
+
+        /**
+         * @brief Set the pos object
+         * 
+         * @param pos_x 
+         * @param pos_y 
+         */
+        void set_pos(float pos_x,float pos_y) override;
+        /**
+         * @brief Set the pos object
+         * 
+         * @param new_pos 
+         */
+        void set_pos(sf::Vector2f new_pos) override;
+
+        /**
+         * @brief Add new element to popup
+         * 
+         * DOES NOT set the position for the element. Please manually set the position.
+         * 
+         * @param drawable_p 
+         */
+        void add_element(Element *element_p);
+
+        /**
+         * @brief Add new sf::Drawable to popup
+         * 
+         * DOES NOT set the position for the element. Please manually set the position.
+         * 
+         * @param drawable_p 
+         */
+        void add_drawable(sf::Drawable *drawable_p);
+
+        void draw() override;
+        
         void poll_event(const std::optional<sf::Event> &e) override;
     };
 
