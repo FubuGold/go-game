@@ -31,9 +31,15 @@ private:
 
 public:
     Board();
-    
+
     void reset(); //Reset the entire board to its initial state
     
+    /**
+     * @brief clear vector undo_lost
+     * 
+     */
+    void clear_undo_list();
+
     char get_state(const int &pos_x, const int &pos_y) const; //Return the current state of cell (pos_x, pos_y)
 
     bool get_turn() const;

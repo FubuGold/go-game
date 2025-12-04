@@ -183,8 +183,8 @@ namespace GUI {
 
         Board_Stone(
             sf::Vector2i board_pos = {},
-            float button_width = 20.f, 
-            float button_height = 20.f, 
+            float button_width = 30.f, 
+            float button_height = 30.f, 
             sf::Color background_color = sf::Color::Transparent
         );
     };

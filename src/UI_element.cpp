@@ -215,9 +215,6 @@ Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button
     stone_sprite[0] = new sf::Sprite(textures[0]);
     stone_sprite[1] = new sf::Sprite(textures[1]);
 
-    stone_sprite[0]->setScale({0.05f, 0.05f});
-    stone_sprite[1]->setScale({0.05f, 0.05f});
-
     parts.push_back(rect);
     update_bound();
 }

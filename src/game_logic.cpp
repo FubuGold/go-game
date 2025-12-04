@@ -101,6 +101,8 @@ bool add_move(Move new_move) {
         current_board.undo_move(false);
         return false;
     }
+
+    current_board.clear_undo_list();
     
     return true;
 }

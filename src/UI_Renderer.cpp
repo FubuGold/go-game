@@ -263,8 +263,10 @@ void AImode_Canvas::setup() {
 
 void Gameplay_Canvas::draw_stone() {
     for (Board_Stone *cur : stones) {
+        // std::cerr << cur->board_pos.x << ' ' << cur->board_pos.y << ' ' << current_board.get_state(cur->board_pos.x, cur->board_pos.y) << '\n';
         if (current_board.get_state(cur->board_pos.x, cur->board_pos.y) != '.') {
-            window->draw(*cur->stone_sprite[cur->cur_sprite]);
+            // std::cerr << "drawing stone\n";
+            window->draw(*(cur->stone_sprite[cur->cur_sprite])); 
         }
     }
 }
@@ -289,19 +291,21 @@ void Gameplay_Canvas::setup() {
     add_element(tmp);
 
     //Will update this later, after we add music to the game
-    tmp = create_sprite({38, 669}, "assets/music_on.png");
+    
+    tmp = create_sprite({38, 669}, "assets/music_off.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
         std::cerr << "Gameplay: Music button pressed\n";
     });
     add_element(tmp);
-
-    tmp = create_sprite({38, 669}, "assets/music_off.png");
+    
+    tmp = create_sprite({38, 669}, "assets/music_on.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
         std::cerr << "Gameplay: Music button pressed\n";
+        
     });
     add_element(tmp);
 
@@ -310,6 +314,9 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
         std::cerr << "Gameplay: Redo button pressed\n";
+        if (!current_board.check_empty_undo_list()) {
+            current_board.redo_move();
+        }
     });
     add_element(tmp);
 
@@ -318,6 +325,9 @@ void Gameplay_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
         std::cerr << "Gameplay: Undo button pressed\n";
+        if (!current_board.check_empty_move_list()) {
+            current_board.undo_move();
+        }
     });
     add_element(tmp);
 
@@ -346,18 +356,30 @@ void Gameplay_Canvas::setup() {
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             Board_Stone *cur_stone = new Board_Stone({i, j});
-            cur_stone->rect->setOutlineThickness(-1); // Debug
+            // cur_stone->rect->setOutlineThickness(-1); // Debug
             element_l.push_back(cur_stone); // This will handle bound and events
             cur_stone->set_pos({static_cast<float>(510 + 50 * j) - cur_stone->button_width / 2.f, static_cast<float>(90 + 50 * i) - cur_stone->button_height / 2.f});
+            
+            sf::FloatRect cur_bound = cur_stone->stone_sprite[0]->getLocalBounds();
+            cur_stone->stone_sprite[0]->setOrigin({cur_bound.size.x / 2.f, cur_bound.size.y / 2.f});
+            cur_bound = cur_stone->stone_sprite[1]->getLocalBounds();
+            cur_stone->stone_sprite[1]->setOrigin({cur_bound.size.x / 2.f, cur_bound.size.y / 2.f});
+
+            cur_stone->stone_sprite[0]->setPosition({static_cast<float>(510 + 50 * j), static_cast<float>(90 + 50 * i)});
+            cur_stone->stone_sprite[1]->setPosition({static_cast<float>(510 + 50 * j), static_cast<float>(90 + 50 * i)});
+            
+            cur_stone->stone_sprite[0]->setScale({0.225, 0.225});
+            cur_stone->stone_sprite[1]->setScale({0.225, 0.225});
+
             cur_stone->set_window(window);
             cur_stone->set_press([i,j,cur_stone]() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
-                
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
-                        std::cerr << "Board add move\n";
-                        cur_stone->cur_sprite = current_board.get_turn();
-                    }
-                });
+                    std::cerr << "Board add move\n";
+                    cur_stone->cur_sprite = current_board.get_turn();
+                    current_board.update_turn();
+                }
+            });
             stones.push_back(cur_stone);
         }
     }

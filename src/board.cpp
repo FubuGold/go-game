@@ -33,6 +33,10 @@ void Board::reset() {
     turn = 1;
 }
 
+void Board::clear_undo_list() {
+    undo_list.clear();
+}
+
 bool Board::get_turn() const {
     return turn;
 }
@@ -101,7 +105,10 @@ void Board::undo_move(bool player_make_undo) {
         update_cell(pos_x, pos_y, '.', cur_opposite_stone);
     }
 
-    if (player_make_undo) undo_list.push_back(last_move); //Only redo-able if this undo action is made by player
+    if (player_make_undo) {
+        turn = last_move.stone_type == 'X';
+        undo_list.push_back(last_move); //Only redo-able if this undo action is made by player
+    }
 }
 
 void Board::redo_move() {
@@ -114,6 +121,7 @@ void Board::redo_move() {
         update_cell(pos_x, pos_y, board[pos_x][pos_y], '.');
     }
 
+    turn = last_move.stone_type == 'X';
     move_list.push_back(last_move);
 }
 
