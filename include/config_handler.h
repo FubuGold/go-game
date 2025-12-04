@@ -9,13 +9,16 @@
 namespace Config {
     extern sf::Font font[2];
     extern sf::Music bgm[3];
-
+    extern sf::SoundBuffer sfx_buffer[3];
+    extern sf::Sound sfx[3];
     extern bool music_on;
 
     // Config
     extern int selected_theme;
     extern int selected_bgm;
     extern int audio_volume[3]; // General - Music - SFX
+
+    float cal_music_vol(int id);
 
     void load_config();
     void save_config();
