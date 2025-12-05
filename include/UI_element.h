@@ -157,6 +157,13 @@ namespace GUI {
         void set_texture(const std::filesystem::path &filename);
 
         /**
+         * @brief Set the current sprite to another sprite pointer
+         * 
+         * @param other_sprite 
+         */
+        void set_sprite(sf::Sprite *other_sprite);
+
+        /**
          * @brief Set the pos object
          * 
          * @param pos_x 

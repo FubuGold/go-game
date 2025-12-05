@@ -147,6 +147,7 @@ namespace GUI {
         std::vector<Board_Stone*> stones;
         int hover_x,hover_y;
         int pass = 0;
+        
     public:
         /**
          * @brief draw the stone objects

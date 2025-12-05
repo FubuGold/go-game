@@ -183,6 +183,11 @@ void Rectangle_Button::set_texture(const std::filesystem::path &filename) {
     }
 }
 
+void Rectangle_Button::set_sprite(sf::Sprite *other_sprite) {
+    sprite = other_sprite;
+    parts.push_back(sprite);
+}
+
 void Rectangle_Button::press_virtual() {
     press();
 }

@@ -70,7 +70,6 @@ Rectangle_Button* Canvas::create_sprite(sf::Vector2f pos, const std::filesystem:
         std::cerr << "Failed to load texture of " << filename.filename() << '\n';
         return nullptr;
     }
-    tmp.setSmooth(true);
     
     auto size_of_texture = tmp.getSize();
 
@@ -509,9 +508,21 @@ void Gameplay_Canvas::setup() {
     create_button({460, 40}, "", tmp);
     add_element(tmp);
 
-    tmp = new Rectangle_Button(900, 900, {255, 199, 46});
+    for (auto &tex : Config::theme_texture) {
+        tex.setSmooth(true);
+    }
+
+    for (auto &p : Config::theme) {
+        p.setPosition({510, 90});
+    }
+
+    tmp = new Rectangle_Button(900, 900, sf::Color::Transparent);
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
+    tmp->set_sprite(&Config::selected_theme);
+    tmp->set_press([tmp]() {
+        // std::cerr << tmp->sprite << ' ' << &Config::selected_theme << '\n';
+    });
     create_button({510, 90}, "", tmp);
     add_element(tmp);
 
@@ -666,14 +677,17 @@ void Setting_Canvas::setup() {
     droplist->set_pos(tmp_pos + sf::Vector2f(84,379));
     droplist->add_element("Theme 1",[](){
         Config::sfx[0].play();
+        Config::selected_theme = Config::theme[0];
         std::cerr << "Theme 1 selected\n";
     });
     droplist->add_element("Theme 2",[](){
         Config::sfx[0].play();
+        Config::selected_theme = Config::theme[1];
         std::cerr << "Theme 2 selected\n";
     });
     droplist->add_element("Theme 3",[](){
         Config::sfx[0].play();
+        Config::selected_theme = Config::theme[2];
         std::cerr << "Theme 3 selected\n";
     });
     add_element(droplist);
