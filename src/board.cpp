@@ -106,6 +106,9 @@ void Board::undo_move(bool player_make_undo) {
         update_cell(pos_x, pos_y, '.', cur_opposite_stone);
     }
 
+    if (last_move.stone_type == 'X') captured_white -= last_move.captured_stones.size();
+    else if (last_move.stone_type == 'O') captured_black -= last_move.captured_stones.size();
+
     if (player_make_undo) {
         turn = last_move.stone_type == 'X';
         undo_list.push_back(last_move); //Only redo-able if this undo action is made by player
@@ -121,6 +124,9 @@ void Board::redo_move() {
     for (auto &[pos_x, pos_y] : last_move.captured_stones) {
         update_cell(pos_x, pos_y, board[pos_x][pos_y], '.');
     }
+
+    if (last_move.stone_type == 'X') captured_white + last_move.captured_stones.size();
+    else if (last_move.stone_type == 'O') captured_black += last_move.captured_stones.size();
 
     turn = last_move.stone_type == 'X';
     move_list.push_back(last_move);
