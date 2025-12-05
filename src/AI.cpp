@@ -67,7 +67,7 @@ Node minimax(bool ai_turn,int depth) {
         for (int j=0;j<BOARD_SIZE;j++) {
             if (add_move(Move(i,j,ai_turn ? AI_STONE : op))) {
                 Node cur = minimax(!ai_turn,depth-1);
-                
+                cur.second = {i,j};
                 if (ai_turn) { // minimize
                     best_move = std::min(best_move,cur);
                 }
@@ -112,6 +112,7 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
         for (int j=0;j<BOARD_SIZE;j++) {
             if (add_move(Move(i,j,ai_turn ? AI_STONE : op))) {
                 Node cur = minimax_pruning(!ai_turn,depth-1,alpha,beta);
+                cur.second = {i,j};
                 if (ai_turn) {
                     best_move = std::min(best_move,cur);
                     beta = std::min(beta,cur.first);
