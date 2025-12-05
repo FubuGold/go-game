@@ -36,9 +36,12 @@ Move medium_ai();
 Move hard_ai();
 
 Move ai_move(Difficulty difficulty) {
-    if (difficulty == Difficulty::EASY) return easy_ai();
-    if (difficulty == Difficulty::MEDIUM) return medium_ai();
-    return hard_ai();
+    Move tmp;
+    if (difficulty == Difficulty::EASY) tmp = easy_ai();
+    else if (difficulty == Difficulty::MEDIUM) tmp = medium_ai();
+    else tmp = hard_ai();
+    if (tmp.pos_x >= BOARD_SIZE || tmp.pos_y >= BOARD_SIZE || tmp.stone_type == '.') tmp = Move();
+    return tmp;
 }
 
 Move easy_ai() {
@@ -46,11 +49,12 @@ Move easy_ai() {
     for (int i=0;i<BOARD_SIZE;i++) {
         for (int j=0;j<BOARD_SIZE;j++) {
             if (add_move(Move(i,j,AI_STONE))) {
-                current_board.undo_move();
+                current_board.undo_move(false);
                 vec.push_back({i,j});
             }
         }
     }
+    if (vec.size() == 0) return Move();
     int rnd = rng(0,vec.size()-1);
     return Move(vec[rnd].first,vec[rnd].second,AI_STONE);
 }

@@ -81,7 +81,7 @@ void GameHandler::run() {
         }
 
         if (!window.isOpen()) break;
-
+        
         resize_window(UI_view);
 
         window.clear({255, 223, 128});
