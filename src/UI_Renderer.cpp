@@ -4,6 +4,8 @@
 
 namespace GUI {
 
+Difficulty AI_diff = Difficulty::NONE;
+
 // ---------------------------------------------------
 // Canvas implementation
 
@@ -128,7 +130,7 @@ void Menu_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 528.f}, "NEW GAME", tmp);
-    tmp->set_press([&]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "MENU: New button pressed\n";
         if (gamestate) *gamestate = GameState::NewGame;
@@ -139,7 +141,7 @@ void Menu_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 679.f}, "SETTING", tmp);
-    tmp->set_press([&]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "MENU: Setting button pressed\n";
         if (gamestate) *gamestate = GameState::Setting;
@@ -209,7 +211,7 @@ void NewGame_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     create_button({1487, 943}, "BACK", tmp);
-    tmp->set_press([&]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "NEW GAME: Back button pressed\n";
         *gamestate = GameState::Menu;
@@ -217,7 +219,7 @@ void NewGame_Canvas::setup() {
     add_element(tmp);
 
     tmp = create_sprite({86, 274}, "assets/2_players.png");
-    tmp->set_press([&]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "NEW GAME: 2 players button pressed\n";
         *gamestate = GameState::Gameplay;
@@ -225,7 +227,7 @@ void NewGame_Canvas::setup() {
     add_element(tmp);
 
     tmp = create_sprite({1001, 274}, "assets/vs_computer.png");
-    tmp->set_press([&]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "NEW GAME: VS computer button pressed\n";
         *gamestate = GameState::AImode;
@@ -254,7 +256,7 @@ void AImode_Canvas::setup() {
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     create_button({1487, 943}, "BACK", tmp);
-    tmp->set_press([&]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "AI MODE: Back button pressed\n";
         *gamestate = GameState::NewGame;
@@ -266,23 +268,29 @@ void AImode_Canvas::setup() {
     add_element(tmp);
 
     tmp = create_sprite({94, 252}, "assets/easy.png");
-    tmp->set_press([]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "AI MODE: Easy button pressed\n";
+        AI_diff = Difficulty::EASY;
+        *gamestate = GameState::Gameplay;
     });
     add_element(tmp);
 
     tmp = create_sprite({718, 252}, "assets/normal.png");
-    tmp->set_press([]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "AI MODE: Normal button pressed\n";
+        AI_diff = Difficulty::MEDIUM;
+        *gamestate = GameState::Gameplay;
     });
     add_element(tmp);
 
     tmp = create_sprite({1339, 252}, "assets/hard.png");
-    tmp->set_press([]() {
+    tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "AI MODE: Hard button pressed\n";
+        AI_diff = Difficulty::HARD;
+        *gamestate = GameState::Gameplay;
     });
     add_element(tmp);
 }
@@ -295,7 +303,9 @@ void Gameplay_Canvas::draw_stone() {
         // std::cerr << cur->board_pos.x << ' ' << cur->board_pos.y << ' ' << current_board.get_state(cur->board_pos.x, cur->board_pos.y) << '\n';
         if (current_board.get_state(cur->board_pos.x, cur->board_pos.y) != '.') {
             // std::cerr << "drawing stone\n";
-            window->draw(*(cur->stone_sprite[cur->cur_sprite])); 
+            char tmp = current_board.get_state(cur->board_pos.x, cur->board_pos.y);
+            // std::cerr << tmp << '\n';
+            window->draw(*(cur->stone_sprite[tmp == 'X']));
         }
     }
     if (hover_x == -1 || hover_y == -1) return;
@@ -328,8 +338,9 @@ void Gameplay_Canvas::setup() {
         //Should ask the user if they want to save before leaving
         Config::sfx[0].play();
         std::cerr << "Gameplay: Back button pressed\n";
-        *gamestate = GameState::Menu;
         current_board.reset();
+        AI_diff = Difficulty::NONE;
+        *gamestate = GameState::Menu;
     });
     add_element(tmp);
 
@@ -484,9 +495,15 @@ void Gameplay_Canvas::setup() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
                     Config::sfx[1].play();
-                    std::cerr << "Board add move\n";
-                    cur_stone->cur_sprite = current_board.get_turn();
+                    std::cerr << "GAMEPLAY: Board add move\n";
                     current_board.update_turn();
+
+                    if (AI_diff != Difficulty::NONE) {
+                        auto new_move = ai_move(AI_diff); //For debugging if needed
+                        std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")";
+                        current_board.add_move(new_move);
+                        current_board.update_turn();
+                    }
                 }
             });
 

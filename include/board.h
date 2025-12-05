@@ -7,8 +7,6 @@
 #include "zobrist_hash.h"
 #include "custom_util.h"
 
-
-
 char opposite_stone(const char &cur_stone); //Return the opposite stone of the current stone
 
 struct Move {

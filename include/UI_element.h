@@ -181,7 +181,6 @@ namespace GUI {
         sf::Vector2i board_pos; //The coordination of this button on the board
         sf::Texture textures[2];
         sf::Sprite *stone_sprite[2] = {nullptr, nullptr};
-        int cur_sprite = 0;
         
         ~Board_Stone();
 

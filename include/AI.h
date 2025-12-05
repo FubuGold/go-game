@@ -7,7 +7,8 @@
 enum class Difficulty {
     EASY,
     MEDIUM,
-    HARD
+    HARD,
+    NONE
 };
 
 /**

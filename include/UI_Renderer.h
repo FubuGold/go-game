@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+#include "AI.h"
 #include "UI_element.h"
 
 const sf::Font font = sf::Font("font/Jua-Regular.ttf");
@@ -19,8 +20,10 @@ enum class GameState {
 };
 
 namespace GUI {
+    extern Difficulty AI_diff;
+
     class Canvas {
-    protected: 
+    protected:
         std::vector<Element*> element_l;
         sf::RenderWindow *window;
         GameState *gamestate;

@@ -73,7 +73,6 @@ Node minimax(bool ai_turn,int depth) {
                 }
                 else {
                     best_move = std::max(best_move,cur);
-                    
                 }
 
                 current_board.undo_move(false);
@@ -93,7 +92,7 @@ Move medium_ai() {
 
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
-    std::cerr << ms_double.count() << "ms\n";
+    std::cerr << "AI have thought for: " << ms_double.count() << "ms\n";
     return Move(res.second.first,res.second.second,AI_STONE);
 }
 
@@ -149,7 +148,7 @@ Move hard_ai() {
 
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
-    std::cerr << ms_double.count() << "ms\n";
+    std::cerr << "AI have thought for: " << ms_double.count() << "ms\n";
 
     return Move(res.second.first,res.second.second,AI_STONE);
 }
