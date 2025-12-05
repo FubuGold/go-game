@@ -6,6 +6,7 @@
 #include <SFML/Audio.hpp>
 
 #include "AI.h"
+#include "game_scoring.h"
 #include "UI_element.h"
 
 const sf::Font font = sf::Font("font/Jua-Regular.ttf");
@@ -145,6 +146,7 @@ namespace GUI {
     private:
         std::vector<Board_Stone*> stones;
         int hover_x,hover_y;
+        int pass = 0;
     public:
         /**
          * @brief draw the stone objects

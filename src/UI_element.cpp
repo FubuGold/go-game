@@ -284,6 +284,13 @@ void Popup::disable_popup() {
     disable = 1;
 }
 
+void Popup::set_window(sf::RenderWindow *render_win_ptr) {
+    window = render_win_ptr;
+    for (Element *p : element_l) {
+        p->set_window(window);
+    }
+}
+
 void Popup::set_pos(float pos_x,float pos_y) {
     rect->setPosition({pos_x,pos_y});
     update_bound();

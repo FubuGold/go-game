@@ -13,11 +13,13 @@ bool scoring_test();
 void testing() {
     add_move(Move(10,9,'X'));
     std::cerr << "AI Hard timer: ";
-    ai_move(Difficulty::HARD);
+    Move tmp = ai_move(Difficulty::HARD);
     std::cerr << '\n';
+    std::cerr << tmp.pos_x << ' ' << tmp.pos_y << '\n';
     std::cerr << "AI Medium timer: ";
-    ai_move(Difficulty::MEDIUM);
+    tmp = ai_move(Difficulty::MEDIUM);
     std::cerr << '\n';
+    std::cerr << tmp.pos_x << ' ' << tmp.pos_y << '\n';
     if (save_load_test()) std::cerr << "Save load test succeeded\n";
     else std::cerr << "Save load test failed\n";
     if (valid_move_test()) std::cerr << "Valid move test succedded\n";

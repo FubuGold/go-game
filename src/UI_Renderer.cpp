@@ -320,6 +320,7 @@ void Gameplay_Canvas::draw_stone() {
 
 void Gameplay_Canvas::setup() {
     hover_x = -1, hover_y = -1;
+    pass = 0;
     Rectangle_Button *tmp = create_sprite({38, 399}, "assets/save.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
@@ -368,16 +369,62 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
+    Popup *end_game = new Popup(-1,1170,540,{0xFF,0xF9,0xB7});
+    sf::Vector2f local_pos = {375,265};
+    end_game->set_pos(local_pos);
+    tmp = new Rectangle_Button(668,120,sf::Color::Transparent,sf::Color::Red,96);
+    create_button(local_pos + sf::Vector2f(251,41),"GAME FINISHED",tmp);
+    end_game->add_element(tmp);
+    tmp = new Rectangle_Button(221,75,sf::Color::Transparent,{0,0xB3,0x0C},60);
+    create_button(local_pos + sf::Vector2f(309,161),"RESULT:",tmp);
+    end_game->add_element(tmp);
+    tmp = new Rectangle_Button(168,75,sf::Color::Transparent,{0x52,0x44,0xA2},60);
+    create_button(local_pos + sf::Vector2f(177,293),"Score:",tmp);
+    end_game->add_element(tmp);
+    tmp = new Rectangle_Button(180,75,sf::Color::Transparent,sf::Color::Black,60);
+    create_button(local_pos + sf::Vector2f(421,293),"BLACK",tmp);
+    end_game->add_element(tmp);
+    tmp = new Rectangle_Button(171,75,sf::Color::Transparent,sf::Color::Black,60);
+    create_button(local_pos + sf::Vector2f(421,373),"WHITE",tmp);
+    end_game->add_element(tmp);
+    sf::Text *result_string = new sf::Text(Config::font[0]);
+    result_string->setPosition(local_pos + sf::Vector2f(546,157));
+    result_string->setFillColor({0x14,0x3B,0xFF});
+    result_string->setCharacterSize(60);
+    end_game->add_drawable(result_string);
+    int *black_score = new int(0), *white_score = new int(0);
+    Dynamic_Text *score_text = new Dynamic_Text(black_score,{0xBF,0,0xFF},60);
+    score_text->set_pos(local_pos + sf::Vector2f(665,293));
+    end_game->add_element(score_text);
+    score_text = new Dynamic_Text(white_score,{0xBF,0,0xFF},60);
+    score_text->set_pos(local_pos + sf::Vector2f(665,373));
+    end_game->add_element(score_text);
+
     tmp = create_sprite({1785, 264}, "assets/pass.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([]() {
+    tmp->set_press([=]() {
         Config::sfx[0].play();
         std::cerr << "Gameplay: Pass button pressed\n";
-
         current_board.add_move(Move());
         current_board.update_turn();
-        //Check pass and end the game
+        pass++;
+        if (pass == 2) {
+            int black,white;
+            std::tie(black,white) = scoring(current_board);
+            *black_score = black;
+            *white_score = white;
+            if (black > white) {
+                result_string->setString("BLACK WON");
+            }
+            else if (black < white) {
+                result_string->setString("WHITE WON");
+            }
+            else {
+                result_string->setString("TIE");
+            }
+            end_game->enable_popup();
+        }
     });
     add_element(tmp);
 
@@ -471,6 +518,15 @@ void Gameplay_Canvas::setup() {
         add_element(tmp);
     }
 
+    Popup *invalid_move = new Popup(1000,420,83, {0xFF,0xB4,0x4c});
+    invalid_move->set_pos(1480,140);
+    sf::Text *invalid_text = new sf::Text(Config::font[0]);
+    invalid_text->setString("You can't make this action");
+    invalid_text->setFillColor(sf::Color::Red);
+    invalid_text->setPosition({1480+25,140+22});
+    invalid_move->add_drawable(invalid_text);
+    add_element(invalid_move);
+
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             Board_Stone *cur_stone = new Board_Stone({i, j});
@@ -491,7 +547,7 @@ void Gameplay_Canvas::setup() {
             cur_stone->stone_sprite[1]->setScale({0.225, 0.225});
 
             cur_stone->set_window(window);
-            cur_stone->set_press([i,j,cur_stone]() {
+            cur_stone->set_press([this,i,j,cur_stone,invalid_move]() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
                     Config::sfx[1].play();
@@ -504,6 +560,10 @@ void Gameplay_Canvas::setup() {
                         current_board.add_move(new_move);
                         current_board.update_turn();
                     }
+                    pass = 0;
+                }
+                else {
+                    invalid_move->enable_popup();
                 }
             });
 
@@ -513,6 +573,7 @@ void Gameplay_Canvas::setup() {
             stones.push_back(cur_stone);
         }
     }
+    add_element(end_game);
 }
 
 // ---------------------------------------------------

@@ -221,6 +221,8 @@ namespace GUI {
 
         void disable_popup();
 
+        void set_window(sf::RenderWindow *render_win_ptr) override;
+
         /**
          * @brief Set the pos object
          * 
@@ -234,7 +236,7 @@ namespace GUI {
          * @param new_pos 
          */
         void set_pos(sf::Vector2f new_pos) override;
-
+        
         /**
          * @brief Add new element to popup
          * 
