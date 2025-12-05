@@ -202,6 +202,7 @@ namespace GUI {
     class Popup : public Element {
     private:
         std::chrono::system_clock::time_point enable_time;
+        void update_disable();
     public:
         sf::RectangleShape *rect = new sf::RectangleShape();
         bool disable;

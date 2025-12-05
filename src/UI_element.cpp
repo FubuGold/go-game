@@ -275,6 +275,14 @@ Popup::~Popup() {
     element_l.clear();
 }
 
+void Popup::update_disable() {
+    if (duration > 0) {
+        std::chrono::system_clock::time_point cur_time = std::chrono::high_resolution_clock::now();
+        milliseconds cur_d = duration_cast<milliseconds>(cur_time - enable_time);
+        if (cur_d.count() >= duration) disable_popup();
+    }
+}
+
 void Popup::enable_popup() {
     if (duration > 0) enable_time = std::chrono::high_resolution_clock::now();
     disable = 0;
@@ -308,17 +316,14 @@ void Popup::add_drawable(sf::Drawable *drawable_p) {
 }
 
 void Popup::draw() {
+    update_disable();
     if (disable) return;
     Element::draw();
     for (Element *p : element_l) p->draw();
 }
 
 void Popup::poll_event(const std::optional<sf::Event> &e) {
-    if (duration > 0) {
-        std::chrono::system_clock::time_point cur_time = std::chrono::high_resolution_clock::now();
-        milliseconds cur_d = duration_cast<milliseconds>(cur_time - enable_time);
-        if (cur_d.count() >= duration) disable_popup();
-    }
+    update_disable();
     if (disable) return;
     for (Element *p : element_l) p->poll_event(e);
 }

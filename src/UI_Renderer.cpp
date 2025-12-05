@@ -99,18 +99,17 @@ void debug_rect(sf::FloatRect rect,const std::string &message) {
 }
 
 void Menu_Canvas::setup() {
-    // The duration is relative, not absolute at the exact moment
-    Popup *popup = new Popup(1000,626,127,{0xFD,0xD3,0x4B});
+    Rectangle_Button *tmp = new Rectangle_Button(626, 127, {0xFD,0xD3,0x4B}, sf::Color::Red,55);
+    Popup *popup = new Popup(1000,626,127,sf::Color::Transparent);
     sf::Text *fail_load = new sf::Text(Config::font[0]);
     popup->set_pos(647,457);
-    fail_load->setString("No saved game to load");
-    fail_load->setFillColor(sf::Color::Red);
-    fail_load->setPosition({647+33,457+49});
-    fail_load->setCharacterSize(55);
-    popup->add_drawable(fail_load);
+    create_button({647,457},"No saved game to load",tmp);
+    tmp->rect->setOutlineThickness(-4);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    popup->add_element(tmp);
     // Added at the bottom (the last on to at) to render the highest layer
 
-    Rectangle_Button *tmp = new Rectangle_Button(button_width, button_height);
+    tmp = new Rectangle_Button(button_width, button_height);
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     create_button({102.f, 377.f}, "LOAD GAME", tmp);
@@ -321,13 +320,23 @@ void Gameplay_Canvas::draw_stone() {
 void Gameplay_Canvas::setup() {
     hover_x = -1, hover_y = -1;
     pass = 0;
+
+    Popup *save_popup = new Popup(1000,218,82, {0xFF,0xB4,0x4c});
+    save_popup->set_pos(38,297);
+    sf::Text *save_text = new sf::Text(Config::font[0]);
+    save_text->setString("Game saved");
+    save_text->setFillColor(sf::Color::Red);
+    save_text->setPosition({38+25,297+22});
+    save_popup->add_drawable(save_text);
+    add_element(save_popup);
+
     Rectangle_Button *tmp = create_sprite({38, 399}, "assets/save.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([]() {
+    tmp->set_press([save_popup]() {
         Config::sfx[2].play();
         std::cerr << "Gameplay: Save button pressed\n";
-
+        save_popup->enable_popup();
         current_board.save_game();
     });
     add_element(tmp);
@@ -552,12 +561,15 @@ void Gameplay_Canvas::setup() {
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
                     Config::sfx[1].play();
                     std::cerr << "GAMEPLAY: Board add move\n";
+
+                    window->draw(*(cur_stone->stone_sprite[current_board.get_turn()]));
+                    
                     current_board.update_turn();
 
                     if (AI_diff != Difficulty::NONE) {
                         auto new_move = ai_move(AI_diff); //For debugging if needed
                         std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")";
-                        current_board.add_move(new_move);
+                        add_move(new_move);
                         current_board.update_turn();
                     }
                     pass = 0;

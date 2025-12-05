@@ -27,6 +27,7 @@ std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> fi
 
         char current_stone_state = current_board.get_state(i, j);
         if (!visited[i][j] && current_stone_state != '.') {
+            // std::cerr << i << ' ' << j << '\n';
             visited[i][j] = true;
             bool has_liberty = false;
             std::vector<std::pair<int, int>> stone_list;
@@ -38,9 +39,9 @@ std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> fi
                 q.pop();
 
                 stone_list.push_back(cur);
-                for (int x, y, k = 0; k < 4; k++) {
-                    x = cur.first + direction_x[k];
-                    y = cur.second + direction_y[k];
+                for (int x, y, t = 0; t < 4; t++) {
+                    x = cur.first + direction_x[t];
+                    y = cur.second + direction_y[t];
                     if (std::min(x, y) >= 0 && std::max(x, y) < BOARD_SIZE) {
                         char state = current_board.get_state(x, y);
                         if (state == current_stone_state && !visited[x][y]) {
@@ -55,7 +56,10 @@ std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> fi
             }
 
             if (!has_liberty) {
-                captured_stone[current_stone_state == 'X'] = stone_list;
+                captured_stone[current_stone_state == 'X'].insert(
+                    captured_stone[current_stone_state == 'X'].end(),
+                    stone_list.begin(),stone_list.end()
+                );
             }
         }
     }
