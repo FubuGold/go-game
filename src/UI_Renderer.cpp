@@ -313,6 +313,7 @@ void Gameplay_Canvas::draw_stone() {
     if (current_board.pass >= 2) {
         end_game->enable_popup();
         end_game->draw();
+        return;
     }
     if (hover_x == -1 || hover_y == -1) return;
     int new_id = hover_x * BOARD_SIZE + hover_y;
@@ -414,13 +415,13 @@ void Gameplay_Canvas::setup() {
     create_button(local_pos + sf::Vector2f(309,161),"RESULT:",tmp);
     end_game->add_element(tmp);
     tmp = new Rectangle_Button(168,75,sf::Color::Transparent,{0x52,0x44,0xA2},60);
-    create_button(local_pos + sf::Vector2f(177,293),"Score:",tmp);
+    create_button(local_pos + sf::Vector2f(177,252),"Score:",tmp);
     end_game->add_element(tmp);
     tmp = new Rectangle_Button(180,75,sf::Color::Transparent,sf::Color::Black,60);
-    create_button(local_pos + sf::Vector2f(421,293),"BLACK",tmp);
+    create_button(local_pos + sf::Vector2f(421,252),"BLACK",tmp);
     end_game->add_element(tmp);
     tmp = new Rectangle_Button(171,75,sf::Color::Transparent,sf::Color::Black,60);
-    create_button(local_pos + sf::Vector2f(421,373),"WHITE",tmp);
+    create_button(local_pos + sf::Vector2f(421,332),"WHITE",tmp);
     end_game->add_element(tmp);
 
     sf::Text *result_string = new sf::Text(Config::font[0]);
@@ -431,10 +432,10 @@ void Gameplay_Canvas::setup() {
     int *black_score = new int(0), *white_score = new int(0);
 
     Dynamic_Text *score_text = new Dynamic_Text(black_score,{0xBF,0,0xFF},60);
-    score_text->set_pos(local_pos + sf::Vector2f(665,293));
+    score_text->set_pos(local_pos + sf::Vector2f(665,252));
     end_game->add_element(score_text);
     score_text = new Dynamic_Text(white_score,{0xBF,0,0xFF},60);
-    score_text->set_pos(local_pos + sf::Vector2f(665,373));
+    score_text->set_pos(local_pos + sf::Vector2f(665,332));
     end_game->add_element(score_text);
     
     tmp = new Rectangle_Button(292, 85, {255, 183, 106}, sf::Color::Black, 60);
@@ -445,6 +446,18 @@ void Gameplay_Canvas::setup() {
         Config::sfx[0].play();
         std::cerr << "GAMEPLAY: Back button pressed\n";
         *gamestate = GameState::Menu;
+        end_game->disable_popup();
+    });
+    end_game->add_element(tmp);
+
+    tmp = new Rectangle_Button(292, 85, {255, 183, 106}, sf::Color::Black, 60);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button(local_pos + sf::Vector2f(24,432), "NEW GAME", tmp);
+    tmp->set_press([this]() {
+        Config::sfx[0].play();
+        std::cerr << "GAMEPLAY: New game button pressed\n";
+        *gamestate = GameState::NewGame;
         end_game->disable_popup();
     });
     end_game->add_element(tmp);
@@ -484,8 +497,10 @@ void Gameplay_Canvas::setup() {
     tmp->set_press([]() {
         Config::sfx[0].play();
         std::cerr << "Gameplay: Redo button pressed\n";
-
         if (!current_board.check_empty_undo_list()) {
+            current_board.redo_move();
+        }
+        if (!current_board.check_empty_undo_list() && current_board.board_diff != Difficulty::NONE) {
             current_board.redo_move();
         }
     });
@@ -498,6 +513,9 @@ void Gameplay_Canvas::setup() {
         Config::sfx[0].play();
         std::cerr << "Gameplay: Undo button pressed\n";
         if (!current_board.check_empty_move_list()) {
+            current_board.undo_move();
+        }
+        if (!current_board.check_empty_move_list() && current_board.board_diff != Difficulty::NONE) {
             current_board.undo_move();
         }
     });
