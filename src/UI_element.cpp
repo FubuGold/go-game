@@ -183,6 +183,11 @@ void Rectangle_Button::set_texture(const std::filesystem::path &filename) {
     }
 }
 
+void Rectangle_Button::set_sprite(sf::Sprite *other_sprite) {
+    sprite = other_sprite;
+    parts.push_back(sprite);
+}
+
 void Rectangle_Button::press_virtual() {
     press();
 }
@@ -190,6 +195,9 @@ void Rectangle_Button::press_virtual() {
 void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
     if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>()) {
         sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        std::cerr << mouse_pos.x << ' ' << mouse_pos.y << '\n';
+        sf::Vector2f tmp = window->mapPixelToCoords(mouse_pressed->position);
+        std::cerr << tmp.x << ' ' << tmp.y << '\n';
         if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             press();
         }

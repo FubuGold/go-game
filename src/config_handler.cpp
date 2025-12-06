@@ -25,7 +25,20 @@ namespace Config {
 
     bool music_on = true;
 
-    int selected_theme = 0;
+    sf::Texture theme_texture[] = {
+        sf::Texture("assets/theme/theme_1.png"),
+        sf::Texture("assets/theme/theme_2.png"),
+        sf::Texture("assets/theme/theme_1.png")
+    };
+
+    sf::Sprite theme[] = {
+        sf::Sprite(theme_texture[0]),
+        sf::Sprite(theme_texture[1]),
+        sf::Sprite(theme_texture[2])
+    };
+
+    sf::Sprite selected_theme = theme[1];
+
     int selected_bgm = 0;
     int audio_volume[] = {100, 100, 100};
 
@@ -38,7 +51,7 @@ namespace Config {
         std::ifstream inp("data/config.json");
         inp >> j;
 
-        j.at("theme").get_to(selected_theme);
+        // j.at("theme").get_to(selected_theme);
         j.at("bgm").get_to(selected_bgm);
         j.at("audio_volume").get_to(audio_volume);
 
@@ -52,7 +65,7 @@ namespace Config {
     void save_config() {
         json j;
 
-        j["theme"] = selected_theme;
+        // j["theme"] = selected_theme;
         j["bgm"] = selected_bgm;
         j["audio_volume"] = audio_volume;
 

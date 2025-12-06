@@ -104,5 +104,4 @@ void GameHandler::run() {
     }
 
     Config::save_config();
-
 }
