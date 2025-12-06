@@ -65,7 +65,8 @@ Node minimax(bool ai_turn,int depth) {
         std::pair<int,int> tmp = scoring(current_board);
         return {tmp.first - tmp.second,{-1,-1}};
     }
-    Node best_move = {ai_turn ? INT_MAX : INT_MIN, {BOARD_SIZE,BOARD_SIZE}};
+    int best_move = ai_turn ? INT_MAX : INT_MIN;
+    std::vector<std::pair<int,int>> vec;
     char op = opposite_stone(AI_STONE);
     for (int i=0;i<BOARD_SIZE;i++) {
         for (int j=0;j<BOARD_SIZE;j++) {
@@ -73,17 +74,30 @@ Node minimax(bool ai_turn,int depth) {
                 Node cur = minimax(!ai_turn,depth-1);
                 cur.second = {i,j};
                 if (ai_turn) { // minimize
-                    best_move = std::min(best_move,cur);
+                    if (best_move > cur.first) {
+                        vec.clear();
+                        best_move = cur.first;
+                    }
+                    if (best_move >= cur.first) {
+                        vec.push_back(cur.second);
+                    }
                 }
                 else {
-                    best_move = std::max(best_move,cur);
+                    if (best_move < cur.first) {
+                        vec.clear();
+                        best_move = cur.first;
+                    }
+                    if (best_move <= cur.first) {
+                        vec.push_back(cur.second);
+                    }
                 }
 
                 current_board.undo_move(false);
             }
         }
     }
-    return best_move;
+    if (vec.size() == 0) return Node(best_move,{BOARD_SIZE,BOARD_SIZE});
+    return Node(best_move,vec[rng(0,std::min(19*4,(int)vec.size()-1))]);
 }
 
 Move medium_ai() {
@@ -92,7 +106,7 @@ Move medium_ai() {
     using std::chrono::milliseconds;
     auto t1 = high_resolution_clock::now();
 
-    Node res = minimax(1,2);
+    Node res = minimax(1,1);
 
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
@@ -149,7 +163,7 @@ Move hard_ai() {
     using std::chrono::milliseconds;
     auto t1 = high_resolution_clock::now();
 
-    Node res = minimax_pruning(1,3,INT_MIN,INT_MAX);
+    Node res = minimax_pruning(1,2,INT_MIN,INT_MAX);
 
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;

@@ -620,6 +620,7 @@ void Gameplay_Canvas::setup() {
                             current_board.update_turn();
                             return;
                         }
+                        Config::sfx[1].play();
                         std::cerr << "Adding AI move\n";
                         add_move(new_move);
                         std::cerr << "Complete adding AI move\n";
