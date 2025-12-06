@@ -28,7 +28,7 @@ namespace Config {
     sf::Texture theme_texture[] = {
         sf::Texture("assets/theme/theme_1.png"),
         sf::Texture("assets/theme/theme_2.png"),
-        sf::Texture("assets/theme/theme_1.png")
+        sf::Texture("assets/theme/theme_3.png")
     };
 
     sf::Sprite theme[] = {
