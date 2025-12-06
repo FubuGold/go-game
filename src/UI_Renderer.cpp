@@ -624,6 +624,7 @@ void Gameplay_Canvas::setup() {
                         add_move(new_move);
                         std::cerr << "Complete adding AI move\n";
                         current_board.update_turn();
+                        while(window->pollEvent()) {}
                     }
                 }
                 else {
