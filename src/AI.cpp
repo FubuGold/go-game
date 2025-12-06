@@ -125,35 +125,54 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
     int pre = ai_turn ? current_board.captured_black : current_board.captured_white;
     Node best_move = {ai_turn ? INT_MAX : INT_MIN, {BOARD_SIZE,BOARD_SIZE}};
     char op = opposite_stone(AI_STONE);
+    std::vector<Node> vec;
     for (int i=0;i<BOARD_SIZE;i++) {
         for (int j=0;j<BOARD_SIZE;j++) {
             if (add_move(Move(i,j,ai_turn ? AI_STONE : op))) {
-                Node cur = minimax_pruning(!ai_turn,depth-1,alpha,beta);
-                cur.second = {i,j};
                 if (ai_turn) {
-                    best_move = std::min(best_move,cur);
-                    beta = std::min(beta,cur.first);
-                    // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
-                    if (beta <= alpha) {
-                        // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
-                        current_board.undo_move(false);
-                        return best_move;
-                    }
+                    vec.push_back({pre - current_board.captured_black, {i,j}});
                 }
                 else {
-                    best_move = std::max(best_move,cur);
-                    alpha = std::max(alpha,cur.first);
-                    // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
-                    if (beta <= alpha) {
-                        // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
-                        current_board.undo_move(false);
-                        return best_move;
-                    }
+                    vec.push_back({pre - current_board.captured_white, {i,j}});
                 }
                 current_board.undo_move(false);
             }
         }
     }
+    sort(vec.begin(),vec.end());
+    for (const Node &p : vec) {
+        int i = p.second.first, j = p.second.second;
+        if (add_move(Move(i,j,ai_turn ? AI_STONE : op))) {
+            Node cur = minimax_pruning(!ai_turn,depth-1,alpha,beta);
+            cur.second = {i,j};
+            if (ai_turn) {
+                best_move = std::min(best_move,cur);
+                beta = std::min(beta,cur.first);
+                // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
+                if (beta <= alpha) {
+                    // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
+                    current_board.undo_move(false);
+                    return best_move;
+                }
+            }
+            else {
+                best_move = std::max(best_move,cur);
+                alpha = std::max(alpha,cur.first);
+                // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
+                if (beta <= alpha) {
+                    // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
+                    current_board.undo_move(false);
+                    return best_move;
+                }
+            }
+            current_board.undo_move(false);
+        }
+    }
+    // for (int i=0;i<BOARD_SIZE;i++) {
+    //     for (int j=0;j<BOARD_SIZE;j++) {
+
+    //     }
+    // }
     return best_move;
 }
 
