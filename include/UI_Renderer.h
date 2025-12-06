@@ -8,6 +8,7 @@
 #include "AI.h"
 #include "game_scoring.h"
 #include "UI_element.h"
+#include "game_logic.h"
 
 const sf::Font font = sf::Font("font/Jua-Regular.ttf");
 
@@ -21,7 +22,8 @@ enum class GameState {
 };
 
 namespace GUI {
-    extern Difficulty AI_diff;
+
+    void game_reset();
 
     class Canvas {
     protected:
@@ -66,7 +68,8 @@ namespace GUI {
          * 
          * @param e 
          */
-        void poll_event(const std::optional<sf::Event> &e);
+        virtual void poll_event(const std::optional<sf::Event> &e);
+        // Virtual specifically for gameplay
 
         /**
          * @brief Clean up element
@@ -146,14 +149,15 @@ namespace GUI {
     private:
         std::vector<Board_Stone*> stones;
         int hover_x,hover_y;
-        int pass = 0;
-        
+        Popup *end_game = nullptr;
     public:
         /**
          * @brief draw the stone objects
          * 
          */
         void draw_stone();
+
+        void poll_event(const std::optional<sf::Event> &e) override;
 
         void setup() override;
     };

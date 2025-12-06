@@ -194,13 +194,13 @@ void Rectangle_Button::press_virtual() {
 
 void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
     if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>()) {
-        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(mouse_pressed->position);
         if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             press();
         }
     }
     else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
-        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(mouse_release->position);
         if (mouse_release->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             release();
         }
@@ -239,13 +239,13 @@ Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button
 
 void Board_Stone::poll_event(const std::optional<sf::Event> &e) {
     if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>()) {
-        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(mouse_pressed->position);
         if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             press();
         }
     }
     else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
-        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(mouse_release->position);
         if (mouse_release->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             release();
         }
@@ -555,7 +555,7 @@ bool H_Slider::contain_pos(sf::Vector2f point) {
 // Use custom contain_pos to check only the slider
 void H_Slider::poll_event(const std::optional<sf::Event> &e) {
     if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>()) {
-        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(mouse_pressed->position);
         if (mouse_pressed->button == sf::Mouse::Button::Left && contain_pos(mouse_pos)) {
             press();
             update_value();
@@ -567,7 +567,7 @@ void H_Slider::poll_event(const std::optional<sf::Event> &e) {
         update_display();
     }
     else if (const sf::Event::MouseButtonReleased* mouse_release = e->getIf<sf::Event::MouseButtonReleased>()) {
-        sf::Vector2f mouse_pos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+        sf::Vector2f mouse_pos = window->mapPixelToCoords(mouse_release->position);
         if (mouse_release->button == sf::Mouse::Button::Left) {
             release();
         }

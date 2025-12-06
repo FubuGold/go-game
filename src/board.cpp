@@ -32,6 +32,8 @@ void Board::reset() {
     zobrist_hash.reset();
     captured_black = captured_white = 0;
     turn = 1;
+    pass = 0;
+    board_diff = Difficulty::NONE;
 }
 
 void Board::clear_undo_list() {
@@ -166,7 +168,7 @@ bool Board::save_game(std::filesystem::path filepath) const {
                 string_board[i].push_back(this->board[i][j]);
             }
         }
-    
+        
         j["board"] = string_board;
         j["move_list"] = this->move_list;
         j["undo_list"] = this->undo_list;
@@ -174,6 +176,8 @@ bool Board::save_game(std::filesystem::path filepath) const {
         j["captured_black"] = this->captured_black;
         j["captured_white"] = this->captured_white;
         j["turn"] = this->turn;
+        j["pass"] = this->pass;
+        j["diff"] = this->board_diff;
 
         std::ofstream o(filepath);
         o << j << std::endl;
@@ -211,6 +215,8 @@ bool Board::load_game(std::filesystem::path filepath) {
         j.at("turn").get_to(this->turn);
         j.at("captured_black").get_to(this->captured_black);
         j.at("captured_white").get_to(this->captured_white);
+        j.at("pass").get_to(this->pass);
+        j.at("diff").get_to(this->board_diff);
 
         return true;
     }

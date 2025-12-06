@@ -4,8 +4,6 @@
 
 namespace GUI {
 
-Difficulty AI_diff = Difficulty::NONE;
-
 // ---------------------------------------------------
 // Canvas implementation
 
@@ -44,6 +42,8 @@ void Canvas::poll_event(const std::optional<sf::Event> &e) {
     for (Element *p : element_l) {
         p->poll_event(e);
     }
+    if (const sf::Event::MouseButtonPressed* mouse_pressed = e->getIf<sf::Event::MouseButtonPressed>())
+        std::cerr << "Poll event complete\n";
 }
 
 void Canvas::clean_element() {
@@ -221,6 +221,7 @@ void NewGame_Canvas::setup() {
         Config::sfx[0].play();
         std::cerr << "NEW GAME: 2 players button pressed\n";
         *gamestate = GameState::Gameplay;
+        current_board.reset();
     });
     add_element(tmp);
 
@@ -269,8 +270,9 @@ void AImode_Canvas::setup() {
     tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "AI MODE: Easy button pressed\n";
-        AI_diff = Difficulty::EASY;
         *gamestate = GameState::Gameplay;
+        current_board.reset();
+        current_board.board_diff = Difficulty::EASY;
     });
     add_element(tmp);
 
@@ -278,8 +280,9 @@ void AImode_Canvas::setup() {
     tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "AI MODE: Normal button pressed\n";
-        AI_diff = Difficulty::MEDIUM;
         *gamestate = GameState::Gameplay;
+        current_board.reset();
+        current_board.board_diff = Difficulty::MEDIUM;
     });
     add_element(tmp);
 
@@ -287,8 +290,9 @@ void AImode_Canvas::setup() {
     tmp->set_press([this]() {
         Config::sfx[0].play();
         std::cerr << "AI MODE: Hard button pressed\n";
-        AI_diff = Difficulty::HARD;
         *gamestate = GameState::Gameplay;
+        current_board.reset();
+        current_board.board_diff = Difficulty::HARD;
     });
     add_element(tmp);
 }
@@ -306,6 +310,10 @@ void Gameplay_Canvas::draw_stone() {
             window->draw(*(cur->stone_sprite[tmp == 'X']));
         }
     }
+    if (current_board.pass >= 2) {
+        end_game->enable_popup();
+        end_game->draw();
+    }
     if (hover_x == -1 || hover_y == -1) return;
     int new_id = hover_x * BOARD_SIZE + hover_y;
     Board_Stone *cur = stones[new_id];
@@ -316,9 +324,17 @@ void Gameplay_Canvas::draw_stone() {
     }
 }
 
+void Gameplay_Canvas::poll_event(const std::optional<sf::Event> &e) {
+    if (current_board.pass >= 2) {
+        end_game->poll_event(e);
+    }
+    else Canvas::poll_event(e);
+    
+}
+
 void Gameplay_Canvas::setup() {
     hover_x = -1, hover_y = -1;
-    pass = 0;
+    current_board.pass = 0;
 
     Popup *save_popup = new Popup(1000,218,82, {0xFF,0xB4,0x4c});
     save_popup->set_pos(38,297);
@@ -348,8 +364,8 @@ void Gameplay_Canvas::setup() {
         Config::sfx[0].play();
         std::cerr << "Gameplay: Back button pressed\n";
         current_board.reset();
-        AI_diff = Difficulty::NONE;
         *gamestate = GameState::Menu;
+        current_board.board_diff = Difficulty::NONE;
     });
     add_element(tmp);
 
@@ -377,9 +393,10 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
-    Popup *end_game = new Popup(-1,1170,540,{0xFF,0xF9,0xB7});
+    end_game = new Popup(-1,1170,540,{0xFF,0xF9,0xB7});
     sf::Vector2f local_pos = {375,265};
     end_game->set_pos(local_pos);
+
     tmp = new Rectangle_Button(668,120,sf::Color::Transparent,sf::Color::Red,96);
     create_button(local_pos + sf::Vector2f(251,41),"GAME FINISHED",tmp);
     end_game->add_element(tmp);
@@ -395,18 +412,33 @@ void Gameplay_Canvas::setup() {
     tmp = new Rectangle_Button(171,75,sf::Color::Transparent,sf::Color::Black,60);
     create_button(local_pos + sf::Vector2f(421,373),"WHITE",tmp);
     end_game->add_element(tmp);
+
     sf::Text *result_string = new sf::Text(Config::font[0]);
     result_string->setPosition(local_pos + sf::Vector2f(546,157));
     result_string->setFillColor({0x14,0x3B,0xFF});
     result_string->setCharacterSize(60);
     end_game->add_drawable(result_string);
     int *black_score = new int(0), *white_score = new int(0);
+
     Dynamic_Text *score_text = new Dynamic_Text(black_score,{0xBF,0,0xFF},60);
     score_text->set_pos(local_pos + sf::Vector2f(665,293));
     end_game->add_element(score_text);
     score_text = new Dynamic_Text(white_score,{0xBF,0,0xFF},60);
     score_text->set_pos(local_pos + sf::Vector2f(665,373));
     end_game->add_element(score_text);
+    
+    tmp = new Rectangle_Button(292, 85, {255, 183, 106}, sf::Color::Black, 60);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button(local_pos + sf::Vector2f(858,432), "BACK", tmp);
+    tmp->set_press([this]() {
+        Config::sfx[0].play();
+        std::cerr << "GAMEPLAY: Back button pressed\n";
+        *gamestate = GameState::Menu;
+        end_game->disable_popup();
+    });
+    end_game->add_element(tmp);
+    // Add to the list at the end to draw it on the top layer
 
     tmp = create_sprite({1785, 264}, "assets/pass.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
@@ -416,8 +448,8 @@ void Gameplay_Canvas::setup() {
         std::cerr << "Gameplay: Pass button pressed\n";
         current_board.add_move(Move());
         current_board.update_turn();
-        pass++;
-        if (pass == 2) {
+        current_board.pass++;
+        if (current_board.pass == 2) {
             int black,white;
             std::tie(black,white) = scoring(current_board);
             *black_score = black;
@@ -431,7 +463,7 @@ void Gameplay_Canvas::setup() {
             else {
                 result_string->setString("TIE");
             }
-            end_game->enable_popup();
+            // end_game->enable_popup();
         }
     });
     add_element(tmp);
@@ -574,16 +606,27 @@ void Gameplay_Canvas::setup() {
                     std::cerr << "GAMEPLAY: Board add move\n";
 
                     window->draw(*(cur_stone->stone_sprite[current_board.get_turn()]));
+                    window->display();
                     
                     current_board.update_turn();
+                    current_board.pass = 0;
 
-                    if (AI_diff != Difficulty::NONE) {
-                        auto new_move = ai_move(AI_diff); //For debugging if needed
-                        std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")";
+                    if (current_board.board_diff != Difficulty::NONE) {
+                        auto new_move = ai_move(current_board.board_diff); //For debugging if needed
+                        std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")\n";
+                        if (new_move.stone_type == '.') {
+                            std::cerr << "Out of valid move\n";
+                            current_board.pass++;
+                            current_board.update_turn();
+                            return;
+                        }
+                        Config::sfx[1].play();
+                        std::cerr << "Adding AI move\n";
                         add_move(new_move);
+                        std::cerr << "Complete adding AI move\n";
                         current_board.update_turn();
+                        while(window->pollEvent()) {}
                     }
-                    pass = 0;
                 }
                 else {
                     invalid_move->enable_popup();

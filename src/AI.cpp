@@ -36,9 +36,12 @@ Move medium_ai();
 Move hard_ai();
 
 Move ai_move(Difficulty difficulty) {
-    if (difficulty == Difficulty::EASY) return easy_ai();
-    if (difficulty == Difficulty::MEDIUM) return medium_ai();
-    return hard_ai();
+    Move tmp;
+    if (difficulty == Difficulty::EASY) tmp = easy_ai();
+    else if (difficulty == Difficulty::MEDIUM) tmp = medium_ai();
+    else tmp = hard_ai();
+    if (tmp.pos_x >= BOARD_SIZE || tmp.pos_y >= BOARD_SIZE || tmp.stone_type == '.') tmp = Move();
+    return tmp;
 }
 
 Move easy_ai() {
@@ -46,11 +49,12 @@ Move easy_ai() {
     for (int i=0;i<BOARD_SIZE;i++) {
         for (int j=0;j<BOARD_SIZE;j++) {
             if (add_move(Move(i,j,AI_STONE))) {
-                current_board.undo_move();
+                current_board.undo_move(false);
                 vec.push_back({i,j});
             }
         }
     }
+    if (vec.size() == 0) return Move();
     int rnd = rng(0,vec.size()-1);
     return Move(vec[rnd].first,vec[rnd].second,AI_STONE);
 }
@@ -61,7 +65,8 @@ Node minimax(bool ai_turn,int depth) {
         std::pair<int,int> tmp = scoring(current_board);
         return {tmp.first - tmp.second,{-1,-1}};
     }
-    Node best_move = {ai_turn ? INT_MAX : INT_MIN, {BOARD_SIZE,BOARD_SIZE}};
+    int best_move = ai_turn ? INT_MAX : INT_MIN;
+    std::vector<std::pair<int,int>> vec;
     char op = opposite_stone(AI_STONE);
     for (int i=0;i<BOARD_SIZE;i++) {
         for (int j=0;j<BOARD_SIZE;j++) {
@@ -69,17 +74,30 @@ Node minimax(bool ai_turn,int depth) {
                 Node cur = minimax(!ai_turn,depth-1);
                 cur.second = {i,j};
                 if (ai_turn) { // minimize
-                    best_move = std::min(best_move,cur);
+                    if (best_move > cur.first) {
+                        vec.clear();
+                        best_move = cur.first;
+                    }
+                    if (best_move >= cur.first) {
+                        vec.push_back(cur.second);
+                    }
                 }
                 else {
-                    best_move = std::max(best_move,cur);
+                    if (best_move < cur.first) {
+                        vec.clear();
+                        best_move = cur.first;
+                    }
+                    if (best_move <= cur.first) {
+                        vec.push_back(cur.second);
+                    }
                 }
 
                 current_board.undo_move(false);
             }
         }
     }
-    return best_move;
+    if (vec.size() == 0) return Node(best_move,{BOARD_SIZE,BOARD_SIZE});
+    return Node(best_move,vec[rng(0,std::min(19*4,(int)vec.size()-1))]);
 }
 
 Move medium_ai() {
@@ -88,7 +106,7 @@ Move medium_ai() {
     using std::chrono::milliseconds;
     auto t1 = high_resolution_clock::now();
 
-    Node res = minimax(1,2);
+    Node res = minimax(1,1);
 
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
@@ -107,35 +125,54 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
     int pre = ai_turn ? current_board.captured_black : current_board.captured_white;
     Node best_move = {ai_turn ? INT_MAX : INT_MIN, {BOARD_SIZE,BOARD_SIZE}};
     char op = opposite_stone(AI_STONE);
+    std::vector<Node> vec;
     for (int i=0;i<BOARD_SIZE;i++) {
         for (int j=0;j<BOARD_SIZE;j++) {
             if (add_move(Move(i,j,ai_turn ? AI_STONE : op))) {
-                Node cur = minimax_pruning(!ai_turn,depth-1,alpha,beta);
-                cur.second = {i,j};
                 if (ai_turn) {
-                    best_move = std::min(best_move,cur);
-                    beta = std::min(beta,cur.first);
-                    // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
-                    if (beta <= alpha) {
-                        // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
-                        current_board.undo_move(false);
-                        return best_move;
-                    }
+                    vec.push_back({pre - current_board.captured_black, {i,j}});
                 }
                 else {
-                    best_move = std::max(best_move,cur);
-                    alpha = std::max(alpha,cur.first);
-                    // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
-                    if (beta <= alpha) {
-                        // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
-                        current_board.undo_move(false);
-                        return best_move;
-                    }
+                    vec.push_back({pre - current_board.captured_white, {i,j}});
                 }
                 current_board.undo_move(false);
             }
         }
     }
+    sort(vec.begin(),vec.end());
+    for (const Node &p : vec) {
+        int i = p.second.first, j = p.second.second;
+        if (add_move(Move(i,j,ai_turn ? AI_STONE : op))) {
+            Node cur = minimax_pruning(!ai_turn,depth-1,alpha,beta);
+            cur.second = {i,j};
+            if (ai_turn) {
+                best_move = std::min(best_move,cur);
+                beta = std::min(beta,cur.first);
+                // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
+                if (beta <= alpha) {
+                    // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
+                    current_board.undo_move(false);
+                    return best_move;
+                }
+            }
+            else {
+                best_move = std::max(best_move,cur);
+                alpha = std::max(alpha,cur.first);
+                // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
+                if (beta <= alpha) {
+                    // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
+                    current_board.undo_move(false);
+                    return best_move;
+                }
+            }
+            current_board.undo_move(false);
+        }
+    }
+    // for (int i=0;i<BOARD_SIZE;i++) {
+    //     for (int j=0;j<BOARD_SIZE;j++) {
+
+    //     }
+    // }
     return best_move;
 }
 
@@ -145,7 +182,7 @@ Move hard_ai() {
     using std::chrono::milliseconds;
     auto t1 = high_resolution_clock::now();
 
-    Node res = minimax_pruning(1,3,INT_MIN,INT_MAX);
+    Node res = minimax_pruning(1,2,INT_MIN,INT_MAX);
 
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;

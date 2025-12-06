@@ -1,11 +1,17 @@
 #if !defined(CONFIG_H)
 #define CONFIG_H
 
-#include "game_logic.h"
 #include "custom_util.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
+enum class Difficulty {
+    EASY,
+    MEDIUM,
+    HARD,
+    NONE
+};
 
 namespace Config {
     extern sf::Font font[2];
