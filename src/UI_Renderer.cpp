@@ -393,6 +393,16 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
+    tmp = create_sprite({38, 804}, "assets/reset.png");
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->set_press([&]() {
+        Config::sfx[0].play();
+        std::cerr << "Gameplay: Reset button pressed\n";
+        current_board.reset();
+    });
+    add_element(tmp);
+
     end_game = new Popup(-1,1170,540,{0xFF,0xF9,0xB7});
     sf::Vector2f local_pos = {375,265};
     end_game->set_pos(local_pos);
