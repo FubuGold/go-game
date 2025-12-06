@@ -3,13 +3,7 @@
 
 #include "board.h"
 #include "game_scoring.h"
-
-enum class Difficulty {
-    EASY,
-    MEDIUM,
-    HARD,
-    NONE
-};
+#include "config_handler.h"
 
 /**
  * @brief Return AI move. AI depends on the difficulty.

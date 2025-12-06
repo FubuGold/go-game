@@ -6,6 +6,7 @@
 
 #include "zobrist_hash.h"
 #include "custom_util.h"
+#include "config_handler.h"
 
 char opposite_stone(const char &cur_stone); //Return the opposite stone of the current stone
 
@@ -28,7 +29,9 @@ private:
     bool turn;
 
 public:
+    Difficulty board_diff;
     int captured_black,captured_white;
+    int pass = 0;
     Board();
 
     void reset(); //Reset the entire board to its initial state
@@ -38,6 +41,8 @@ public:
      * 
      */
     void clear_undo_list();
+
+    Difficulty get_difficulty() const;
 
     char get_state(const int &pos_x, const int &pos_y) const; //Return the current state of cell (pos_x, pos_y)
 
