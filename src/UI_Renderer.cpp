@@ -487,8 +487,10 @@ void Gameplay_Canvas::setup() {
     tmp->set_press([]() {
         Config::sfx[0].play();
         std::cerr << "Gameplay: Redo button pressed\n";
-
         if (!current_board.check_empty_undo_list()) {
+            current_board.redo_move();
+        }
+        if (!current_board.check_empty_undo_list() && current_board.board_diff != Difficulty::NONE) {
             current_board.redo_move();
         }
     });
@@ -501,6 +503,9 @@ void Gameplay_Canvas::setup() {
         Config::sfx[0].play();
         std::cerr << "Gameplay: Undo button pressed\n";
         if (!current_board.check_empty_move_list()) {
+            current_board.undo_move();
+        }
+        if (!current_board.check_empty_move_list() && current_board.board_diff != Difficulty::NONE) {
             current_board.undo_move();
         }
     });
