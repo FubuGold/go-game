@@ -31,7 +31,7 @@ public:
      * 
      * @param zobrist_table 
      */
-    void set_zobrist(uint64_t zobrist_table[BOARD_SIZE][BOARD_SIZE][2]);
+    void set_zobrist(std::vector<std::vector<std::vector<uint64_t>>> &table);
 
     /**
      * @brief Copy zobrist table to another
@@ -40,7 +40,7 @@ public:
      * 
      * @param table 
      */
-    void copy_zobrist(uint64_t table[BOARD_SIZE][BOARD_SIZE][2]) const;
+    void copy_zobrist(std::vector<std::vector<std::vector<uint64_t>>> &table) const;
 
     /**
      * @brief Get the hash object

@@ -647,6 +647,19 @@ void Gameplay_Canvas::setup() {
     capture_popup->add_drawable(text);
     add_element(capture_popup);
 
+    tmp = new Rectangle_Button(229,114,{0xFF,0xB4,0x4c});
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->set_pos(182,715);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(186,40,sf::Color::Transparent,sf::Color::Red,32);
+    create_button({182 + 22, 715 + 17},"Current turn",tmp);
+    add_element(tmp);
+
+    Rectangle_Button *turn_text = new Rectangle_Button(79,40,sf::Color::Transparent,sf::Color::Black,32);
+    create_button({182 + 75, 715 + 57},"Black",turn_text);
+    add_element(turn_text);
 
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
@@ -670,21 +683,25 @@ void Gameplay_Canvas::setup() {
             }
 
             cur_stone->set_window(window);
-            cur_stone->set_press([this,i,j,cur_stone,invalid_move,capture_popup,ko_threat_popup]() {
+            cur_stone->set_press([this,i,j,cur_stone,invalid_move,capture_popup,ko_threat_popup,turn_text]() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
                 bool ko_threat = check_ko_threat(Move(i, j, current_board.get_turn() ? 'X' : 'O'));
                 int tmp1 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
+                    int tmp2 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
                     if (ko_threat) Config::sfx[3].play();
+                    else if (tmp2 > tmp1) {
+                        capture_popup->enable_popup();
+                        Config::sfx[4].play();
+                    }
                     else {
                         Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
                     }
+                    
                     std::cerr << "Ko threat: " << ko_threat << '\n';
                     std::cerr << "GAMEPLAY: Board add move\n";
                     
                     // Move pop-up
-                    int tmp2 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
-                    if (tmp2 > tmp1) capture_popup->enable_popup();
                     if (ko_threat) ko_threat_popup->enable_popup();
                     
 
@@ -693,6 +710,17 @@ void Gameplay_Canvas::setup() {
                     
                     current_board.update_turn();
                     current_board.pass = 0;
+
+                    if (current_board.get_turn()) {
+                        turn_text->text->setString("Black");
+                        turn_text->text->setFillColor(sf::Color::Black);
+                        turn_text->set_pos({182 + 75, 715 + 57});
+                    }
+                    else {
+                        turn_text->text->setString("White");
+                        turn_text->text->setFillColor(sf::Color::White);
+                        turn_text->set_pos({182 + 75, 715 + 57});
+                    }
 
                     if (current_board.board_diff != Difficulty::NONE) {
                         auto new_move = ai_move(current_board.board_diff); //For debugging if needed
@@ -703,12 +731,38 @@ void Gameplay_Canvas::setup() {
                             current_board.update_turn();
                             return;
                         }
-                        Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
+
+                        ko_threat = check_ko_threat(Move(new_move));
+
                         std::cerr << "Adding AI move\n";
+                        tmp1 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
                         add_move(new_move);
+                        tmp2 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
                         std::cerr << "Complete adding AI move\n";
+                        
+                        if (ko_threat) Config::sfx[3].play();
+                        else if (tmp2 > tmp1) {
+                            capture_popup->enable_popup();
+                            Config::sfx[4].play();
+                        }
+                        else {
+                            Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
+                        }
+                        
+
                         current_board.update_turn();
                         while(window->pollEvent()) {}
+
+                        if (current_board.get_turn()) {
+                            turn_text->text->setString("Black");
+                            turn_text->text->setFillColor(sf::Color::Black);
+                            turn_text->set_pos({182 + 75, 715 + 57});
+                        }
+                        else {
+                            turn_text->text->setString("White");
+                            turn_text->text->setFillColor(sf::Color::White);
+                            turn_text->set_pos({182 + 75, 715 + 57});
+                        }
                     }
                 }
                 else {

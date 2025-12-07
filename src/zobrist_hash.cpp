@@ -23,12 +23,23 @@ void Zobrist_hash::set_hash(uint64_t hash) {
     this->current_hash = hash;
 }
 
-void Zobrist_hash::set_zobrist(uint64_t zobrist_table[BOARD_SIZE][BOARD_SIZE][2]) {
-    std::copy(&(zobrist_table[0][0][0]),&(zobrist_table[0][0][0])+BOARD_SIZE*BOARD_SIZE*2,&(this->zobrist[0][0][0]));
+void Zobrist_hash::set_zobrist(std::vector<std::vector<std::vector<uint64_t>>> &table) {
+    for (int i=0;i<BOARD_SIZE;i++) {
+        for (int j=0;j<BOARD_SIZE;j++) {
+            this->zobrist[i][j][0] = table[i][j][0];
+            this->zobrist[i][j][1] = table[i][j][1];
+        }
+    }
 }
 
-void Zobrist_hash::copy_zobrist(uint64_t table[BOARD_SIZE][BOARD_SIZE][2]) const {
-    std::copy(&(this->zobrist[0][0][0]),&(this->zobrist[0][0][0])+BOARD_SIZE*BOARD_SIZE*2,&(table[0][0][0]));
+void Zobrist_hash::copy_zobrist(std::vector<std::vector<std::vector<uint64_t>>> &table) const {
+    table.assign(BOARD_SIZE,std::vector<std::vector<uint64_t>>(BOARD_SIZE,std::vector<uint64_t>(2)));
+    for (int i=0;i<BOARD_SIZE;i++) {
+        for (int j=0;j<BOARD_SIZE;j++) {
+            table[i][j][0] = this->zobrist[i][j][0];
+            table[i][j][1] = this->zobrist[i][j][1];
+        }
+    }
 }
 
 
@@ -42,7 +53,7 @@ void Zobrist_hash::update_hash(const int &pos_x, const int &pos_y, const char &s
 }
 
 void to_json(json &j, const Zobrist_hash &hash) {
-    uint64_t table[BOARD_SIZE][BOARD_SIZE][2];
+    std::vector<std::vector<std::vector<uint64_t>>> table;
     hash.copy_zobrist(table);
     j["zobrist"] = table;
     j["current_hash"] = hash.get_hash();
@@ -50,12 +61,9 @@ void to_json(json &j, const Zobrist_hash &hash) {
 
 void from_json(const json &j,Zobrist_hash &hash) {
     std::vector<std::vector< std::vector<uint64_t> > > vec_table;
-    uint64_t c_table[BOARD_SIZE][BOARD_SIZE][2];
     int hs;
     j.at("zobrist").get_to(vec_table);
     j.at("current_hash").get_to(hs);
-    for (int i=0;i<BOARD_SIZE;i++) for (int j=0;j<BOARD_SIZE;j++) for (int k=0;k<2;k++)
-        c_table[i][j][k] = vec_table[i][j][k];
     hash.set_hash(hs);
-    hash.set_zobrist(c_table);
+    hash.set_zobrist(vec_table);
 }

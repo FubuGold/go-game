@@ -15,14 +15,16 @@ namespace Config {
         sf::SoundBuffer("assets/audio/sfx/menuclick.wav"),
         sf::SoundBuffer("assets/audio/sfx/theme_1_stoneplace.wav"),
         sf::SoundBuffer("assets/audio/sfx/saveclick.wav"),
-        sf::SoundBuffer("assets/audio/sfx/kothreat.ogg")
+        sf::SoundBuffer("assets/audio/sfx/kothreat.wav"),
+        sf::SoundBuffer("assets/audio/sfx/stonecapture.wav")
     };
 
     sf::Sound sfx[] = {
         sf::Sound(sfx_buffer[0]),
         sf::Sound(sfx_buffer[1]),
         sf::Sound(sfx_buffer[2]),
-        sf::Sound(sfx_buffer[3])
+        sf::Sound(sfx_buffer[3]),
+        sf::Sound(sfx_buffer[4])
     };
 
     bool music_on = true;

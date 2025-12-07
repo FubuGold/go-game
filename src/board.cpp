@@ -122,8 +122,6 @@ void Board::redo_move() {
     auto last_move = undo_list.back();
     undo_list.pop_back();
 
-    std::cerr << last_move.pos_x << ' ' << last_move.pos_y << ' ' << last_move.stone_type << '\n';
-
     update_cell(last_move.pos_x, last_move.pos_y, '.', last_move.stone_type);
     for (auto &[pos_x, pos_y] : last_move.captured_stones) {
         update_cell(pos_x, pos_y, board[pos_x][pos_y], '.');
