@@ -23,6 +23,8 @@ namespace Config {
 
     extern sf::Texture theme_texture[3];
     extern sf::Sprite theme[3];
+    extern sf::SoundBuffer theme_sfx_buffer[3][2];
+    extern sf::Sound theme_sfx[3][2];
 
     // Config
     extern sf::Sprite selected_theme;
