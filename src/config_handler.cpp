@@ -13,7 +13,7 @@ namespace Config {
 
     sf::SoundBuffer sfx_buffer[] = {
         sf::SoundBuffer("assets/audio/sfx/menuclick.wav"),
-        sf::SoundBuffer("assets/audio/sfx/stoneplace.wav"),
+        sf::SoundBuffer("assets/audio/sfx/theme_1_stoneplace.wav"),
         sf::SoundBuffer("assets/audio/sfx/saveclick.wav"),
         sf::SoundBuffer("assets/audio/sfx/kothreat.ogg")
     };
@@ -37,6 +37,18 @@ namespace Config {
         sf::Sprite(theme_texture[0]),
         sf::Sprite(theme_texture[1]),
         sf::Sprite(theme_texture[2])
+    };
+
+    sf::SoundBuffer theme_sfx_buffer[3][2] = {
+        {sf::SoundBuffer("assets/audio/sfx/theme_1_stoneplace.wav"), sf::SoundBuffer("assets/audio/sfx/theme_1_stoneplace.wav")},
+        {sf::SoundBuffer("assets/audio/sfx/theme_2_stoneplace.wav"), sf::SoundBuffer("assets/audio/sfx/theme_2_stoneplace.wav")},
+        {sf::SoundBuffer("assets/audio/sfx/theme_3_stoneplace_white.wav"), sf::SoundBuffer("assets/audio/sfx/theme_3_stoneplace_black.wav")}
+    };
+
+    sf::Sound theme_sfx[3][2] = {
+        {sf::Sound(theme_sfx_buffer[0][0]), sf::Sound(theme_sfx_buffer[0][1])},
+        {sf::Sound(theme_sfx_buffer[1][0]), sf::Sound(theme_sfx_buffer[1][1])},
+        {sf::Sound(theme_sfx_buffer[2][0]), sf::Sound(theme_sfx_buffer[2][1])}
     };
 
     sf::Sprite selected_theme = theme[0];

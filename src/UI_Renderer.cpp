@@ -676,7 +676,10 @@ void Gameplay_Canvas::setup() {
                 int tmp1 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
                     if (ko_threat) Config::sfx[3].play();
-                    else Config::sfx[1].play();
+                    else {
+                        Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
+                    }
+                    std::cerr << "Ko threat: " << ko_threat << '\n';
                     std::cerr << "GAMEPLAY: Board add move\n";
                     
                     // Move pop-up
@@ -700,9 +703,7 @@ void Gameplay_Canvas::setup() {
                             current_board.update_turn();
                             return;
                         }
-                        ko_threat = check_ko_threat(new_move);
-                        if (ko_threat) Config::sfx[3].play();
-                        else Config::sfx[1].play();
+                        Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
                         std::cerr << "Adding AI move\n";
                         add_move(new_move);
                         std::cerr << "Complete adding AI move\n";
