@@ -122,6 +122,8 @@ void Board::redo_move() {
     auto last_move = undo_list.back();
     undo_list.pop_back();
 
+    std::cerr << last_move.pos_x << ' ' << last_move.pos_y << ' ' << last_move.stone_type << '\n';
+
     update_cell(last_move.pos_x, last_move.pos_y, '.', last_move.stone_type);
     for (auto &[pos_x, pos_y] : last_move.captured_stones) {
         update_cell(pos_x, pos_y, board[pos_x][pos_y], '.');
@@ -154,6 +156,7 @@ void to_json(json &j,const Move &move) {
 void from_json(const json &j, Move &move) {
     j.at("pos_x").get_to(move.pos_x);
     j.at("pos_y").get_to(move.pos_y);
+    j.at("stone_type").get_to(move.stone_type);
     j.at("hash_val").get_to(move.hash_val);
     j.at("captured_stones").get_to(move.captured_stones);
 }
