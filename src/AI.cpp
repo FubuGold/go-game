@@ -56,6 +56,7 @@ Move easy_ai() {
     }
     if (vec.size() == 0) return Move();
     int rnd = rng(0,vec.size()-1);
+    sf::sleep(sf::milliseconds(1500)); // Artifical delay
     return Move(vec[rnd].first,vec[rnd].second,AI_STONE);
 }
 
@@ -111,6 +112,7 @@ Move medium_ai() {
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
     std::cerr << "AI have thought for: " << ms_double.count() << "ms\n";
+    sf::sleep(sf::milliseconds(1500)); // Artifical delay
     return Move(res.second.first,res.second.second,AI_STONE);
 }
 
@@ -187,6 +189,6 @@ Move hard_ai() {
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
     std::cerr << "AI have thought for: " << ms_double.count() << "ms\n";
-
+    sf::sleep(sf::milliseconds(1500)); // Artifical delay
     return Move(res.second.first,res.second.second,AI_STONE);
 }
