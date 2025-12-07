@@ -631,8 +631,12 @@ void Gameplay_Canvas::setup() {
             cur_stone->set_window(window);
             cur_stone->set_press([this,i,j,cur_stone,invalid_move]() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
+                bool ko_threat = check_ko_threat(Move(i, j, current_board.get_turn() ? 'X' : 'O'));
+                std::cerr << "Check ko rule: " << check_ko_rule() << '\n';
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
-                    Config::sfx[1].play();
+                    if (ko_threat) Config::sfx[3].play();
+                    else Config::sfx[1].play();
+                    std::cerr << "Ko threat: " << ko_threat << '\n';
                     std::cerr << "GAMEPLAY: Board add move\n";
 
                     window->draw(*(cur_stone->stone_sprite[current_board.get_turn()]));
@@ -794,6 +798,7 @@ void Setting_Canvas::setup() {
     tmp->set_press([&]() {
         Config::sfx[0].play();
         std::cerr << "NEW GAME: Back button pressed\n";
+        Config::save_config();
         *gamestate = GameState::Menu;
     });
     add_element(tmp);

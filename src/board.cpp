@@ -112,7 +112,6 @@ void Board::undo_move(bool player_make_undo) {
     else if (last_move.stone_type == 'O') captured_black -= last_move.captured_stones.size();
 
     if (player_make_undo) {
-        std::cerr << last_move.stone_type << '\n';
         turn = last_move.stone_type == 'X';
         undo_list.push_back(last_move); //Only redo-able if this undo action is made by player
     }
@@ -132,7 +131,6 @@ void Board::redo_move() {
     else if (last_move.stone_type == 'O') captured_black += last_move.captured_stones.size();
 
     turn = last_move.stone_type != 'X';
-    std::cerr << last_move.stone_type << '\n';
     move_list.push_back(last_move);
 }
 

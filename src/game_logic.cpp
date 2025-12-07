@@ -130,7 +130,7 @@ bool check_ko_rule() {
     return false;
 }
 
-bool check_ko_thread(Move new_move) {
+bool check_ko_threat(Move new_move) {
     if (!check_ko_rule()) return false;
     if (!add_move(new_move)) return false;
     
@@ -152,6 +152,7 @@ bool check_ko_thread(Move new_move) {
         while (!q.empty()) {
             int u, v;
             std::tie(u, v) = q.front();
+            q.pop();
 
             for (int _k = 0; _k < 4; _k++) {
                 int _x = u + direction_x[_k], _y = v + direction_y[_k];

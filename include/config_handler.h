@@ -17,8 +17,8 @@ namespace Config {
     extern sf::Font font[2];
     extern sf::Music bgm[3];
 
-    extern sf::SoundBuffer sfx_buffer[3];
-    extern sf::Sound sfx[3];
+    extern sf::SoundBuffer sfx_buffer[4];
+    extern sf::Sound sfx[4];
     extern bool music_on;
 
     extern sf::Texture theme_texture[3];
