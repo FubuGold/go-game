@@ -30,6 +30,6 @@ bool check_ko_rule();
  * @return true 
  * @return false 
  */
-bool check_ko_thread(Move new_move);
+bool check_ko_threat(Move new_move);
 
 #endif
