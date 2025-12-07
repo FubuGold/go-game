@@ -502,7 +502,7 @@ void Gameplay_Canvas::setup() {
             }
             bool ko_threat = check_ko_threat(new_move);
             if (ko_threat) Config::sfx[3].play();
-            else Config::sfx[1].play();
+            else Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
             std::cerr << "Adding AI move\n";
             add_move(new_move);
             std::cerr << "Complete adding AI move\n";
@@ -630,35 +630,35 @@ void Gameplay_Canvas::setup() {
     add_element(invalid_move);
 
     Popup *ko_threat_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
-    ko_threat_popup->set_pos(160,409);
+    ko_threat_popup->set_pos(1480, 308);
     text = new sf::Text(Config::font[0]);
     text->setString("KO threat!");
     text->setFillColor(sf::Color::Red);
-    text->setPosition({160+63,409+16});
+    text->setPosition({1480 + 63, 308 + 16});
     ko_threat_popup->add_drawable(text);
     add_element(ko_threat_popup);
 
     Popup *capture_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
-    capture_popup->set_pos(160,490);
+    capture_popup->set_pos(1480, 415);
     text = new sf::Text(Config::font[0]);
     text->setString("Stone captured!");
     text->setFillColor(sf::Color::Red);
-    text->setPosition({160+24,490+16});
+    text->setPosition({1480 + 24, 415 + 16});
     capture_popup->add_drawable(text);
     add_element(capture_popup);
 
     tmp = new Rectangle_Button(229,114,{0xFF,0xB4,0x4c});
     tmp->rect->setOutlineThickness(4.f);
     tmp->rect->setOutlineColor(sf::Color::Black);
-    tmp->set_pos(182,715);
+    tmp->set_pos(193, 443);
     add_element(tmp);
 
     tmp = new Rectangle_Button(186,40,sf::Color::Transparent,sf::Color::Red,32);
-    create_button({182 + 22, 715 + 17},"Current turn",tmp);
+    create_button({193 + 22, 443 + 17},"Current turn",tmp);
     add_element(tmp);
 
     Rectangle_Button *turn_text = new Rectangle_Button(79,40,sf::Color::Transparent,sf::Color::Black,32);
-    create_button({182 + 75, 715 + 57},"Black",turn_text);
+    create_button({193 + 75, 443 + 57},"BLACK",turn_text);
     add_element(turn_text);
 
     for (int i = 0; i < BOARD_SIZE; i++) {
@@ -712,14 +712,14 @@ void Gameplay_Canvas::setup() {
                     current_board.pass = 0;
 
                     if (current_board.get_turn()) {
-                        turn_text->text->setString("Black");
+                        turn_text->text->setString("BLACK");
                         turn_text->text->setFillColor(sf::Color::Black);
-                        turn_text->set_pos({182 + 75, 715 + 57});
+                        turn_text->set_pos({193 + 75, 443 + 57});
                     }
                     else {
-                        turn_text->text->setString("White");
+                        turn_text->text->setString("WHITE");
                         turn_text->text->setFillColor(sf::Color::White);
-                        turn_text->set_pos({182 + 75, 715 + 57});
+                        turn_text->set_pos({193 + 75, 443 + 57});
                     }
 
                     if (current_board.board_diff != Difficulty::NONE) {
@@ -754,14 +754,14 @@ void Gameplay_Canvas::setup() {
                         while(window->pollEvent()) {}
 
                         if (current_board.get_turn()) {
-                            turn_text->text->setString("Black");
+                            turn_text->text->setString("BLACK");
                             turn_text->text->setFillColor(sf::Color::Black);
-                            turn_text->set_pos({182 + 75, 715 + 57});
+                            turn_text->set_pos({193 + 75, 443 + 57});
                         }
                         else {
-                            turn_text->text->setString("White");
+                            turn_text->text->setString("WHITE");
                             turn_text->text->setFillColor(sf::Color::White);
-                            turn_text->set_pos({182 + 75, 715 + 57});
+                            turn_text->set_pos({193 + 75, 443 + 57});
                         }
                     }
                 }
