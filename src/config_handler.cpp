@@ -6,15 +6,15 @@
 namespace Config {
     sf::Font font[] = {sf::Font("font/Jua-Regular.ttf"), sf::Font("font/Inter.ttf")};
     sf::Music bgm[] = {
-        sf::Music("audio/song/song_1.mp3"),
-        sf::Music("audio/song/song_2.mp3"),
-        sf::Music("audio/song/song_3.mp3")
+        sf::Music("assets/audio/song/song_1.mp3"),
+        sf::Music("assets/audio/song/song_2.mp3"),
+        sf::Music("assets/audio/song/song_3.mp3")
     };
 
     sf::SoundBuffer sfx_buffer[] = {
-        sf::SoundBuffer("audio/sfx/menuclick.wav"),
-        sf::SoundBuffer("audio/sfx/stoneplace.wav"),
-        sf::SoundBuffer("audio/sfx/saveclick.wav")
+        sf::SoundBuffer("assets/audio/sfx/menuclick.wav"),
+        sf::SoundBuffer("assets/audio/sfx/stoneplace.wav"),
+        sf::SoundBuffer("assets/audio/sfx/saveclick.wav")
     };
 
     sf::Sound sfx[] = {
@@ -26,9 +26,9 @@ namespace Config {
     bool music_on = true;
 
     sf::Texture theme_texture[] = {
-        sf::Texture("assets/theme/theme_1.png"),
-        sf::Texture("assets/theme/theme_2.png"),
-        sf::Texture("assets/theme/theme_3.png")
+        sf::Texture("assets/board_background/theme_1.png"),
+        sf::Texture("assets/board_background/theme_2.png"),
+        sf::Texture("assets/board_background/theme_3.png")
     };
 
     sf::Sprite theme[] = {

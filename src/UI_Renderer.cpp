@@ -164,22 +164,22 @@ void Menu_Canvas::setup() {
     create_button({1452, 1020}, "Game version: Sigma_7.2.7", tmp);
     add_element(tmp);
 
-    tmp = create_sprite({1291, 261}, "assets/black_stone.png");
+    tmp = create_sprite({1291, 261}, "assets/stones/theme_1_black_stone.png");
     add_element(tmp);
 
-    tmp = create_sprite({851, 480}, "assets/black_stone.png");
+    tmp = create_sprite({851, 480}, "assets/stones/theme_1_black_stone.png");
     add_element(tmp);
 
-    tmp = create_sprite({1511, 480}, "assets/black_stone.png");
+    tmp = create_sprite({1511, 480}, "assets/stones/theme_1_black_stone.png");
     add_element(tmp);
 
-    tmp = create_sprite({1291, 699}, "assets/black_stone.png");
+    tmp = create_sprite({1291, 699}, "assets/stones/theme_1_black_stone.png");
     add_element(tmp);
 
-    tmp = create_sprite({1291, 480}, "assets/white_stone.png");
+    tmp = create_sprite({1291, 480}, "assets/stones/theme_1_white_stone.png");
     add_element(tmp);
 
-    tmp = create_sprite({1071, 480}, "assets/white_stone.png");
+    tmp = create_sprite({1071, 480}, "assets/stones/theme_1_white_stone.png");
     add_element(tmp);
 
     add_element(popup);
@@ -346,7 +346,7 @@ void Gameplay_Canvas::setup() {
     save_popup->add_drawable(save_text);
     add_element(save_popup);
 
-    Rectangle_Button *tmp = create_sprite({38, 399}, "assets/save.png");
+    Rectangle_Button *tmp = create_sprite({38, 399}, "assets/gameplay_buttons/save.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([save_popup]() {
@@ -357,7 +357,7 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
-    tmp = create_sprite({38, 534}, "assets/back.png");
+    tmp = create_sprite({38, 534}, "assets/gameplay_buttons/back.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([&]() {
@@ -370,12 +370,12 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
-    tmp = create_sprite({38, 669}, "assets/music_off.png");
+    tmp = create_sprite({38, 669}, "assets/gameplay_buttons/music_off.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     add_element(tmp);
     
-    tmp = create_sprite({38, 669}, "assets/music_on.png");
+    tmp = create_sprite({38, 669}, "assets/gameplay_buttons/music_on.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([tmp]() {
@@ -394,7 +394,7 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
-    tmp = create_sprite({38, 804}, "assets/reset.png");
+    tmp = create_sprite({38, 804}, "assets/gameplay_buttons/reset.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([&]() {
@@ -465,7 +465,7 @@ void Gameplay_Canvas::setup() {
     end_game->add_element(tmp);
     // Add to the list at the end to draw it on the top layer
 
-    tmp = create_sprite({1785, 264}, "assets/pass.png");
+    tmp = create_sprite({1785, 264}, "assets/gameplay_buttons/pass.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([=]() {
@@ -493,7 +493,7 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
-    tmp = create_sprite({1785, 399}, "assets/redo.png");
+    tmp = create_sprite({1785, 399}, "assets/gameplay_buttons/redo.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
@@ -508,7 +508,7 @@ void Gameplay_Canvas::setup() {
     });
     add_element(tmp);
 
-    tmp = create_sprite({1785, 534}, "assets/undo.png");
+    tmp = create_sprite({1785, 534}, "assets/gameplay_buttons/undo.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
     tmp->set_press([]() {
@@ -536,7 +536,7 @@ void Gameplay_Canvas::setup() {
     create_button({94, 53}, "WHITE", tmp);
     add_element(tmp);
 
-    tmp = create_sprite({266, 164}, "assets/black_stone.png");
+    tmp = create_sprite({266, 164}, "assets/stones/theme_1_black_stone.png");
     tmp->sprite->setScale({0.375f, 0.375f});
     add_element(tmp);
 
@@ -557,7 +557,7 @@ void Gameplay_Canvas::setup() {
     create_button({53 + 1502, 13 + 804}, "BLACK", tmp);
     add_element(tmp);
 
-    tmp = create_sprite({228 + 1502, 124 + 804}, "assets/white_stone.png");
+    tmp = create_sprite({228 + 1502, 124 + 804}, "assets/stones/theme_1_white_stone.png");
     tmp->sprite->setScale({0.375f, 0.375f});
     add_element(tmp);
 

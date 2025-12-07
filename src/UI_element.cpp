@@ -222,7 +222,7 @@ Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button
     rect->setFillColor(background_color);
 
     this->board_pos = board_pos;
-    if (!textures[1].loadFromFile("assets/black_stone.png") || !textures[0].loadFromFile("assets/white_stone.png")) {
+    if (!textures[1].loadFromFile("assets/stones/theme_1_black_stone.png") || !textures[0].loadFromFile("assets/stones/theme_1_white_stone.png")) {
         std::cerr << "Failed to load stone assets\n";
     }
     else {
