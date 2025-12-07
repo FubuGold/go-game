@@ -400,7 +400,9 @@ void Gameplay_Canvas::setup() {
     tmp->set_press([&]() {
         Config::sfx[0].play();
         std::cerr << "Gameplay: Reset button pressed\n";
+        Difficulty tmp = current_board.board_diff;
         current_board.reset();
+        current_board.board_diff = tmp;
     });
     add_element(tmp);
 
