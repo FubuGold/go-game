@@ -26,6 +26,7 @@ namespace Config {
 
     // Config
     extern sf::Sprite selected_theme;
+    extern int selected_theme_number;
     extern int selected_bgm;
     extern int audio_volume[3]; // General - Music - SFX
 

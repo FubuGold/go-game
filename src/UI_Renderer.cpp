@@ -307,7 +307,7 @@ void Gameplay_Canvas::draw_stone() {
             // std::cerr << "drawing stone\n";
             char tmp = current_board.get_state(cur->board_pos.x, cur->board_pos.y);
             // std::cerr << tmp << '\n';
-            window->draw(*(cur->stone_sprite[tmp == 'X']));
+            window->draw(*(cur->stone_sprite[Config::selected_theme_number][tmp == 'X']));
         }
     }
     if (current_board.pass >= 2) {
@@ -319,7 +319,7 @@ void Gameplay_Canvas::draw_stone() {
     int new_id = hover_x * BOARD_SIZE + hover_y;
     Board_Stone *cur = stones[new_id];
     if (current_board.get_state(cur->board_pos.x, cur->board_pos.y) == '.') {
-        sf::Sprite tmp = *(cur->stone_sprite[current_board.get_turn()]);
+        sf::Sprite tmp = *(cur->stone_sprite[Config::selected_theme_number][current_board.get_turn()]);
         tmp.setColor({255,255,255,127});
         window->draw(tmp); 
     }
@@ -617,16 +617,18 @@ void Gameplay_Canvas::setup() {
             add_element(cur_stone);
             cur_stone->set_pos({static_cast<float>(510 + 50 * j) - cur_stone->button_width / 2.f, static_cast<float>(90 + 50 * i) - cur_stone->button_height / 2.f});
             
-            sf::FloatRect cur_bound = cur_stone->stone_sprite[0]->getLocalBounds();
-            cur_stone->stone_sprite[0]->setOrigin({cur_bound.size.x / 2.f, cur_bound.size.y / 2.f});
-            cur_bound = cur_stone->stone_sprite[1]->getLocalBounds();
-            cur_stone->stone_sprite[1]->setOrigin({cur_bound.size.x / 2.f, cur_bound.size.y / 2.f});
+            for (int k = 0; k < 3; k++) {
+                sf::FloatRect cur_bound = cur_stone->stone_sprite[k][0]->getLocalBounds();
+                cur_stone->stone_sprite[k][0]->setOrigin({cur_bound.size.x / 2.f, cur_bound.size.y / 2.f});
+                cur_bound = cur_stone->stone_sprite[k][1]->getLocalBounds();
+                cur_stone->stone_sprite[k][1]->setOrigin({cur_bound.size.x / 2.f, cur_bound.size.y / 2.f});
 
-            cur_stone->stone_sprite[0]->setPosition({static_cast<float>(510 + 50 * j + 1), static_cast<float>(90 + 50 * i + 1)});
-            cur_stone->stone_sprite[1]->setPosition({static_cast<float>(510 + 50 * j + 1), static_cast<float>(90 + 50 * i + 1)});
-            
-            cur_stone->stone_sprite[0]->setScale({0.225, 0.225});
-            cur_stone->stone_sprite[1]->setScale({0.225, 0.225});
+                cur_stone->stone_sprite[k][0]->setPosition({static_cast<float>(510 + 50 * j + 1), static_cast<float>(90 + 50 * i + 1)});
+                cur_stone->stone_sprite[k][1]->setPosition({static_cast<float>(510 + 50 * j + 1), static_cast<float>(90 + 50 * i + 1)});
+                
+                cur_stone->stone_sprite[k][0]->setScale({0.225, 0.225});
+                cur_stone->stone_sprite[k][1]->setScale({0.225, 0.225});
+            }
 
             cur_stone->set_window(window);
             cur_stone->set_press([this,i,j,cur_stone,invalid_move]() {
@@ -635,7 +637,7 @@ void Gameplay_Canvas::setup() {
                     Config::sfx[1].play();
                     std::cerr << "GAMEPLAY: Board add move\n";
 
-                    window->draw(*(cur_stone->stone_sprite[current_board.get_turn()]));
+                    window->draw(*(cur_stone->stone_sprite[Config::selected_theme_number][current_board.get_turn()]));
                     window->display();
                     
                     current_board.update_turn();
@@ -750,16 +752,19 @@ void Setting_Canvas::setup() {
     droplist->set_pos(tmp_pos + sf::Vector2f(84,379));
     droplist->add_element("Theme 1",[](){
         Config::sfx[0].play();
+        Config::selected_theme_number = 0;
         Config::selected_theme = Config::theme[0];
         std::cerr << "Theme 1 selected\n";
     });
     droplist->add_element("Theme 2",[](){
         Config::sfx[0].play();
+        Config::selected_theme_number = 1;
         Config::selected_theme = Config::theme[1];
         std::cerr << "Theme 2 selected\n";
     });
     droplist->add_element("Theme 3",[](){
         Config::sfx[0].play();
+        Config::selected_theme_number = 2;
         Config::selected_theme = Config::theme[2];
         std::cerr << "Theme 3 selected\n";
     });

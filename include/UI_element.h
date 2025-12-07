@@ -186,8 +186,8 @@ namespace GUI {
     public:
         float button_width, button_height;
         sf::Vector2i board_pos; //The coordination of this button on the board
-        sf::Texture textures[2];
-        sf::Sprite *stone_sprite[2] = {nullptr, nullptr};
+        sf::Texture textures[3][2];
+        sf::Sprite *stone_sprite[3][2];
         
         ~Board_Stone();
 

@@ -37,7 +37,8 @@ namespace Config {
         sf::Sprite(theme_texture[2])
     };
 
-    sf::Sprite selected_theme = theme[1];
+    sf::Sprite selected_theme = theme[0];
+    int selected_theme_number = 0;
 
     int selected_bgm = 0;
     int audio_volume[] = {100, 100, 100};

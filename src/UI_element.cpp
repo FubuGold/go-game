@@ -211,8 +211,10 @@ void Rectangle_Button::poll_event(const std::optional<sf::Event> &e) {
 // Board_Stone implementation
 
 Board_Stone::~Board_Stone() {
-    delete stone_sprite[0];
-    delete stone_sprite[1];
+    for (int i = 0; i < 3; i++) {
+        delete stone_sprite[i][0];
+        delete stone_sprite[i][1];
+    }
 }
 
 Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button_height, sf::Color background_color) {
@@ -222,16 +224,25 @@ Board_Stone::Board_Stone(sf::Vector2i board_pos, float button_width,float button
     rect->setFillColor(background_color);
 
     this->board_pos = board_pos;
-    if (!textures[1].loadFromFile("assets/stones/theme_1_black_stone.png") || !textures[0].loadFromFile("assets/stones/theme_1_white_stone.png")) {
+    if (!textures[0][1].loadFromFile("assets/stones/theme_1_black_stone.png") 
+    || !textures[0][0].loadFromFile("assets/stones/theme_1_white_stone.png")
+    || !textures[1][1].loadFromFile("assets/stones/theme_2_black_stone.png")
+    || !textures[1][0].loadFromFile("assets/stones/theme_2_white_stone.png")
+    || !textures[2][1].loadFromFile("assets/stones/theme_3_black_stone.png")
+    || !textures[2][0].loadFromFile("assets/stones/theme_3_white_stone.png")) {
         std::cerr << "Failed to load stone assets\n";
     }
     else {
-        textures[0].setSmooth(true);
-        textures[1].setSmooth(true);
+        for (int i = 0; i < 3; i++) {
+            textures[i][0].setSmooth(true);
+            textures[i][1].setSmooth(true);
+        }
     }
 
-    stone_sprite[0] = new sf::Sprite(textures[0]);
-    stone_sprite[1] = new sf::Sprite(textures[1]);
+    for (int i = 0; i < 3; i++) {
+        stone_sprite[i][0] = new sf::Sprite(textures[i][0]);
+        stone_sprite[i][1] = new sf::Sprite(textures[i][1]);
+    }
 
     parts.push_back(rect);
     update_bound();
