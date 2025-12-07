@@ -490,6 +490,26 @@ void Gameplay_Canvas::setup() {
             }
             // end_game->enable_popup();
         }
+        else {
+            if (current_board.board_diff != Difficulty::NONE) {
+            auto new_move = ai_move(current_board.board_diff); //For debugging if needed
+            std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")\n";
+            if (new_move.stone_type == '.') {
+                std::cerr << "Out of valid move\n";
+                current_board.pass++;
+                current_board.update_turn();
+                return;
+            }
+            bool ko_threat = check_ko_threat(new_move);
+            if (ko_threat) Config::sfx[3].play();
+            else Config::sfx[1].play();
+            std::cerr << "Adding AI move\n";
+            add_move(new_move);
+            std::cerr << "Complete adding AI move\n";
+            current_board.update_turn();
+            while(window->pollEvent()) {}
+        }
+        }
     });
     add_element(tmp);
 
@@ -602,12 +622,31 @@ void Gameplay_Canvas::setup() {
 
     Popup *invalid_move = new Popup(1000,420,83, {0xFF,0xB4,0x4c});
     invalid_move->set_pos(1480,140);
-    sf::Text *invalid_text = new sf::Text(Config::font[0]);
-    invalid_text->setString("You can't make this action");
-    invalid_text->setFillColor(sf::Color::Red);
-    invalid_text->setPosition({1480+25,140+22});
-    invalid_move->add_drawable(invalid_text);
+    sf::Text *text = new sf::Text(Config::font[0]);
+    text->setString("You can't make this action");
+    text->setFillColor(sf::Color::Red);
+    text->setPosition({1480+25,140+22});
+    invalid_move->add_drawable(text);
     add_element(invalid_move);
+
+    Popup *ko_threat_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
+    ko_threat_popup->set_pos(160,409);
+    text = new sf::Text(Config::font[0]);
+    text->setString("KO threat!");
+    text->setFillColor(sf::Color::Red);
+    text->setPosition({160+63,409+16});
+    ko_threat_popup->add_drawable(text);
+    add_element(ko_threat_popup);
+
+    Popup *capture_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
+    capture_popup->set_pos(160,490);
+    text = new sf::Text(Config::font[0]);
+    text->setString("Stone captured!");
+    text->setFillColor(sf::Color::Red);
+    text->setPosition({160+24,490+16});
+    capture_popup->add_drawable(text);
+    add_element(capture_popup);
+
 
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
@@ -631,15 +670,20 @@ void Gameplay_Canvas::setup() {
             }
 
             cur_stone->set_window(window);
-            cur_stone->set_press([this,i,j,cur_stone,invalid_move]() {
+            cur_stone->set_press([this,i,j,cur_stone,invalid_move,capture_popup,ko_threat_popup]() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
                 bool ko_threat = check_ko_threat(Move(i, j, current_board.get_turn() ? 'X' : 'O'));
-                std::cerr << "Check ko rule: " << check_ko_rule() << '\n';
+                int tmp1 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
                     if (ko_threat) Config::sfx[3].play();
                     else Config::sfx[1].play();
-                    std::cerr << "Ko threat: " << ko_threat << '\n';
                     std::cerr << "GAMEPLAY: Board add move\n";
+                    
+                    // Move pop-up
+                    int tmp2 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
+                    if (tmp2 > tmp1) capture_popup->enable_popup();
+                    if (ko_threat) ko_threat_popup->enable_popup();
+                    
 
                     window->draw(*(cur_stone->stone_sprite[Config::selected_theme_number][current_board.get_turn()]));
                     window->display();
@@ -656,7 +700,9 @@ void Gameplay_Canvas::setup() {
                             current_board.update_turn();
                             return;
                         }
-                        Config::sfx[1].play();
+                        ko_threat = check_ko_threat(new_move);
+                        if (ko_threat) Config::sfx[3].play();
+                        else Config::sfx[1].play();
                         std::cerr << "Adding AI move\n";
                         add_move(new_move);
                         std::cerr << "Complete adding AI move\n";
