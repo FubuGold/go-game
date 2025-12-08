@@ -504,7 +504,7 @@ void Gameplay_Canvas::setup() {
     invalid_move->add_drawable(text);
     add_element(invalid_move);
 
-    Popup *ko_threat_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
+    Popup *ko_threat_popup = new Popup(3000,274,72, {0xFF,0xB4,0x4c});
     ko_threat_popup->set_pos(1480, 308);
     text = new sf::Text(Config::font[0]);
     text->setString("KO threat!");
@@ -513,7 +513,7 @@ void Gameplay_Canvas::setup() {
     ko_threat_popup->add_drawable(text);
     add_element(ko_threat_popup);
 
-    Popup *capture_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
+    Popup *capture_popup = new Popup(3000,274,72, {0xFF,0xB4,0x4c});
     capture_popup->set_pos(1480, 415);
     text = new sf::Text(Config::font[0]);
     text->setString("Stone captured!");
@@ -751,6 +751,7 @@ void Gameplay_Canvas::setup() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
                 bool ko_threat = check_ko_threat(Move(i, j, current_board.get_turn() ? 'X' : 'O'));
                 int tmp1 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
+                
                 if (add_move(Move(i, j, current_board.get_turn() ? 'X' : 'O'))) {
                     int tmp2 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
                     if (ko_threat) Config::sfx[3].play();

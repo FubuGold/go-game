@@ -190,6 +190,6 @@ Move hard_ai() {
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
     std::cerr << "AI have thought for: " << ms_double.count() << "ms\n";
-    // sf::sleep(sf::milliseconds(1500)); // Artifical delay
+    sf::sleep(sf::milliseconds(1500)); // Artifical delay
     return Move(res.second.first,res.second.second,AI_STONE);
 }
