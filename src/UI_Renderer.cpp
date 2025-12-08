@@ -567,6 +567,7 @@ void Gameplay_Canvas::setup() {
         }
         else {
             if (current_board.board_diff != Difficulty::NONE) {
+                turn_text->draw();
                 int ai_res = play_ai_move();
                 if (ai_res == 0) {
                     if (current_board.pass >= 2) {
@@ -788,6 +789,7 @@ void Gameplay_Canvas::setup() {
                     }
 
                     if (current_board.board_diff != Difficulty::NONE) {
+                        turn_text->draw();
                         int ai_res = play_ai_move();
                         if (ai_res == 1) {
                             Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
@@ -947,23 +949,23 @@ void Setting_Canvas::setup() {
     droplist->add_element("Song 1",[tmp,song_pos,tmp_pos](){
         Config::sfx[0].play();
         std::cerr << "Song 1 selected\n";
+        Config::change_music(0);
         Config::selected_bgm = 0;
         tmp->set_pos(tmp_pos + song_pos[Config::selected_bgm]);
-        Config::change_music(0);
     });
     droplist->add_element("Song 2",[tmp,song_pos,tmp_pos](){
         Config::sfx[0].play();
         std::cerr << "Song 2 selected\n";
+        Config::change_music(1);
         Config::selected_bgm = 1;
         tmp->set_pos(tmp_pos + song_pos[Config::selected_bgm]);
-        Config::change_music(1);
     });
     droplist->add_element("Song 3",[tmp,song_pos,tmp_pos](){
         Config::sfx[0].play();
         std::cerr << "Song 3 selected\n";
+        Config::change_music(2);
         Config::selected_bgm = 2;
         tmp->set_pos(tmp_pos + song_pos[Config::selected_bgm]);
-        Config::change_music(2);
     });
     droplist->add_extra(tmp);
     // add_element(tmp);
