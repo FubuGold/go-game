@@ -16,7 +16,7 @@ struct Move {
     uint64_t hash_val; //The board's hash value after placed this move
     std::vector<std::pair<int, int>> captured_stones; //Store which stone has been captured in this move
 
-    Move(int pos_x = 0, int pos_y = 0, char stone_type = '.', uint64_t hash_val = 0, std::vector<std::pair<int, int>> captured_stones = {});
+    Move(int pos_x = -1, int pos_y = -1, char stone_type = '.', uint64_t hash_val = 0, std::vector<std::pair<int, int>> captured_stones = {});
 };
 
 class Board {
@@ -41,8 +41,6 @@ public:
      * 
      */
     void clear_undo_list();
-
-    Difficulty get_difficulty() const;
 
     char get_state(const int &pos_x, const int &pos_y) const; //Return the current state of cell (pos_x, pos_y)
 
