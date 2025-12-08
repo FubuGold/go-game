@@ -147,6 +147,8 @@ namespace GUI {
 
     class Gameplay_Canvas : public Canvas {
     private:
+        // 0: pass, 1: normal move, 2: capture move, 3: ko threat
+        int play_ai_move(); 
         std::vector<Board_Stone*> stones;
         int hover_x,hover_y;
         Popup *end_game = nullptr;

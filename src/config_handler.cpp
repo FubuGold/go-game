@@ -16,7 +16,8 @@ namespace Config {
         sf::SoundBuffer("assets/audio/sfx/theme_1_stoneplace.wav"),
         sf::SoundBuffer("assets/audio/sfx/saveclick.wav"),
         sf::SoundBuffer("assets/audio/sfx/kothreat.wav"),
-        sf::SoundBuffer("assets/audio/sfx/stonecapture.wav")
+        sf::SoundBuffer("assets/audio/sfx/stonecapture.wav"),
+        sf::SoundBuffer("assets/audio/sfx/gamefinish.wav")
     };
 
     sf::Sound sfx[] = {
@@ -24,7 +25,8 @@ namespace Config {
         sf::Sound(sfx_buffer[1]),
         sf::Sound(sfx_buffer[2]),
         sf::Sound(sfx_buffer[3]),
-        sf::Sound(sfx_buffer[4])
+        sf::Sound(sfx_buffer[4]),
+        sf::Sound(sfx_buffer[5])
     };
 
     bool music_on = true;
@@ -77,6 +79,8 @@ namespace Config {
         bgm[selected_bgm].setLooping(true);
         bgm[selected_bgm].play();
 
+        Config::selected_theme = Config::theme[selected_theme_number];
+
         return;
     }
 
@@ -104,7 +108,7 @@ namespace Config {
 
     void update_volume() {
         bgm[selected_bgm].setVolume(cal_music_vol(1));
-        for (int i=0;i<5;i++) {
+        for (int i=0;i<6;i++) {
             sfx[i].setVolume(cal_music_vol(2));
         }
     }

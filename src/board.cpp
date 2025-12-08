@@ -112,6 +112,7 @@ void Board::undo_move(bool player_make_undo) {
     else if (last_move.stone_type == 'O') captured_black -= last_move.captured_stones.size();
 
     if (player_make_undo) {
+        if (last_move.stone_type == '.') pass--;
         turn = !turn;
         undo_list.push_back(last_move); //Only redo-able if this undo action is made by player
     }
@@ -131,6 +132,7 @@ void Board::redo_move() {
     else if (last_move.stone_type == 'O') captured_black += last_move.captured_stones.size();
 
     turn = !turn;
+    if (last_move.stone_type == '.') pass++;
     move_list.push_back(last_move);
 }
 

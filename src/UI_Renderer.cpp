@@ -333,6 +333,36 @@ void Gameplay_Canvas::poll_event(const std::optional<sf::Event> &e) {
     
 }
 
+int Gameplay_Canvas::play_ai_move() {
+    // std::cerr << current_board.pass << '\n';
+    auto new_move = ai_move(current_board.board_diff); //For debugging if needed
+    // std::cerr << current_board.pass << '\n';
+    std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")\n";
+    if (new_move.stone_type == '.') {
+        std::cerr << "Out of valid move\n";
+        // std::cerr << "Ai pre add:" << current_board.pass << '\n';
+        current_board.pass++;
+        // std::cerr << "Ai post add:" << current_board.pass << '\n';
+        current_board.update_turn();
+        return 0;
+    }
+
+    bool ko_threat = check_ko_threat(Move(new_move));
+
+    std::cerr << "Adding AI move\n";
+    int tmp1 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
+    add_move(new_move);
+    int tmp2 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
+    std::cerr << "Complete adding AI move\n";
+
+    current_board.pass = 0;
+    current_board.update_turn();
+    
+    if (ko_threat) return 3;
+    else if (tmp2 > tmp1) return 2;
+    return 1;
+}
+
 void Gameplay_Canvas::setup() {
     hover_x = -1, hover_y = -1;
     current_board.pass = 0;
@@ -465,16 +495,61 @@ void Gameplay_Canvas::setup() {
     end_game->add_element(tmp);
     // Add to the list at the end to draw it on the top layer
 
+    Popup *invalid_move = new Popup(1000,420,83, {0xFF,0xB4,0x4c});
+    invalid_move->set_pos(1480,140);
+    sf::Text *text = new sf::Text(Config::font[0]);
+    text->setString("You can't make this action");
+    text->setFillColor(sf::Color::Red);
+    text->setPosition({1480+25,140+22});
+    invalid_move->add_drawable(text);
+    add_element(invalid_move);
+
+    Popup *ko_threat_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
+    ko_threat_popup->set_pos(1480, 308);
+    text = new sf::Text(Config::font[0]);
+    text->setString("KO threat!");
+    text->setFillColor(sf::Color::Red);
+    text->setPosition({1480 + 63, 308 + 16});
+    ko_threat_popup->add_drawable(text);
+    add_element(ko_threat_popup);
+
+    Popup *capture_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
+    capture_popup->set_pos(1480, 415);
+    text = new sf::Text(Config::font[0]);
+    text->setString("Stone captured!");
+    text->setFillColor(sf::Color::Red);
+    text->setPosition({1480 + 24, 415 + 16});
+    capture_popup->add_drawable(text);
+    add_element(capture_popup);
+
+    tmp = new Rectangle_Button(229,114,{0xFF,0xB4,0x4c});
+    tmp->rect->setOutlineThickness(4.f);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->set_pos(193, 443);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(186,40,sf::Color::Transparent,sf::Color::Red,32);
+    create_button({193 + 22, 443 + 17},"Current turn",tmp);
+    add_element(tmp);
+
+    Rectangle_Button *turn_text = new Rectangle_Button(79,40,sf::Color::Transparent,sf::Color::Black,32);
+    if (current_board.get_turn()) create_button({193 + 75, 443 + 57},"BLACK",turn_text);
+    else create_button({193 + 75, 443 + 57},"WHITE",turn_text);
+    add_element(turn_text);
+
     tmp = create_sprite({1785, 264}, "assets/gameplay_buttons/pass.png");
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
-    tmp->set_press([=]() {
+    tmp->set_press([this,black_score,white_score,result_string,capture_popup,turn_text]() {
         Config::sfx[0].play();
         std::cerr << "Gameplay: Pass button pressed\n";
         current_board.add_move(Move());
         current_board.update_turn();
+        // std::cerr << current_board.pass << '\n';
         current_board.pass++;
-        if (current_board.pass == 2) {
+        // std::cerr << current_board.pass << '\n';
+        if (current_board.pass >= 2) {
+            Config::sfx[5].play();
             int black,white;
             std::tie(black,white) = scoring(current_board);
             *black_score = black;
@@ -492,23 +567,51 @@ void Gameplay_Canvas::setup() {
         }
         else {
             if (current_board.board_diff != Difficulty::NONE) {
-            auto new_move = ai_move(current_board.board_diff); //For debugging if needed
-            std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")\n";
-            if (new_move.stone_type == '.') {
-                std::cerr << "Out of valid move\n";
-                current_board.pass++;
-                current_board.update_turn();
-                return;
+                int ai_res = play_ai_move();
+                if (ai_res == 0) {
+                    if (current_board.pass >= 2) {
+                        Config::sfx[5].play();
+                        int black,white;
+                        std::tie(black,white) = scoring(current_board);
+                        *black_score = black;
+                        *white_score = white;
+                        if (black > white) {
+                            result_string->setString("BLACK WON");
+                        }
+                        else if (black < white) {
+                            result_string->setString("WHITE WON");
+                        }
+                        else {
+                            result_string->setString("TIE");
+                        }
+                        while(window->pollEvent()) {}
+                        return;
+                        // end_game->enable_popup();
+                    }
+                }
+                else if (ai_res == 1) {
+                    Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
+                }
+                else if (ai_res == 2) {
+                    Config::sfx[4].play();
+                }
+                else if (ai_res == 3) {
+                    capture_popup->enable_popup();
+                    Config::sfx[3].play();
+                }
+
+                while(window->pollEvent()) {}
             }
-            bool ko_threat = check_ko_threat(new_move);
-            if (ko_threat) Config::sfx[3].play();
-            else Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
-            std::cerr << "Adding AI move\n";
-            add_move(new_move);
-            std::cerr << "Complete adding AI move\n";
-            current_board.update_turn();
-            while(window->pollEvent()) {}
         }
+        if (current_board.get_turn()) {
+            turn_text->text->setString("BLACK");
+            turn_text->text->setFillColor(sf::Color::Black);
+            turn_text->set_pos({193 + 75, 443 + 57});
+        }
+        else {
+            turn_text->text->setString("WHITE");
+            turn_text->text->setFillColor(sf::Color::White);
+            turn_text->set_pos({193 + 75, 443 + 57});
         }
     });
     add_element(tmp);
@@ -620,47 +723,6 @@ void Gameplay_Canvas::setup() {
         add_element(tmp);
     }
 
-    Popup *invalid_move = new Popup(1000,420,83, {0xFF,0xB4,0x4c});
-    invalid_move->set_pos(1480,140);
-    sf::Text *text = new sf::Text(Config::font[0]);
-    text->setString("You can't make this action");
-    text->setFillColor(sf::Color::Red);
-    text->setPosition({1480+25,140+22});
-    invalid_move->add_drawable(text);
-    add_element(invalid_move);
-
-    Popup *ko_threat_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
-    ko_threat_popup->set_pos(1480, 308);
-    text = new sf::Text(Config::font[0]);
-    text->setString("KO threat!");
-    text->setFillColor(sf::Color::Red);
-    text->setPosition({1480 + 63, 308 + 16});
-    ko_threat_popup->add_drawable(text);
-    add_element(ko_threat_popup);
-
-    Popup *capture_popup = new Popup(2000,274,72, {0xFF,0xB4,0x4c});
-    capture_popup->set_pos(1480, 415);
-    text = new sf::Text(Config::font[0]);
-    text->setString("Stone captured!");
-    text->setFillColor(sf::Color::Red);
-    text->setPosition({1480 + 24, 415 + 16});
-    capture_popup->add_drawable(text);
-    add_element(capture_popup);
-
-    tmp = new Rectangle_Button(229,114,{0xFF,0xB4,0x4c});
-    tmp->rect->setOutlineThickness(4.f);
-    tmp->rect->setOutlineColor(sf::Color::Black);
-    tmp->set_pos(193, 443);
-    add_element(tmp);
-
-    tmp = new Rectangle_Button(186,40,sf::Color::Transparent,sf::Color::Red,32);
-    create_button({193 + 22, 443 + 17},"Current turn",tmp);
-    add_element(tmp);
-
-    Rectangle_Button *turn_text = new Rectangle_Button(79,40,sf::Color::Transparent,sf::Color::Black,32);
-    create_button({193 + 75, 443 + 57},"BLACK",turn_text);
-    add_element(turn_text);
-
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
             Board_Stone *cur_stone = new Board_Stone({i, j});
@@ -683,7 +745,7 @@ void Gameplay_Canvas::setup() {
             }
 
             cur_stone->set_window(window);
-            cur_stone->set_press([this,i,j,cur_stone,invalid_move,capture_popup,ko_threat_popup,turn_text]() {
+            cur_stone->set_press([this,i,j,capture_popup,ko_threat_popup,cur_stone,turn_text,invalid_move]() {
                 std::cerr << "GAMEPLAY: Intersection (" << i << ", " << j << ") pressed\n";
                 bool ko_threat = check_ko_threat(Move(i, j, current_board.get_turn() ? 'X' : 'O'));
                 int tmp1 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
@@ -723,34 +785,18 @@ void Gameplay_Canvas::setup() {
                     }
 
                     if (current_board.board_diff != Difficulty::NONE) {
-                        auto new_move = ai_move(current_board.board_diff); //For debugging if needed
-                        std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")\n";
-                        if (new_move.stone_type == '.') {
-                            std::cerr << "Out of valid move\n";
-                            current_board.pass++;
-                            current_board.update_turn();
-                            return;
-                        }
-
-                        ko_threat = check_ko_threat(Move(new_move));
-
-                        std::cerr << "Adding AI move\n";
-                        tmp1 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
-                        add_move(new_move);
-                        tmp2 = current_board.get_turn() ? current_board.captured_white : current_board.captured_black;
-                        std::cerr << "Complete adding AI move\n";
-                        
-                        if (ko_threat) Config::sfx[3].play();
-                        else if (tmp2 > tmp1) {
-                            capture_popup->enable_popup();
-                            Config::sfx[4].play();
-                        }
-                        else {
+                        int ai_res = play_ai_move();
+                        if (ai_res == 1) {
                             Config::theme_sfx[Config::selected_theme_number][current_board.get_turn()].play();
                         }
+                        else if (ai_res == 2) {
+                            Config::sfx[4].play();
+                        }
+                        else if (ai_res == 3) {
+                            capture_popup->enable_popup();
+                            Config::sfx[3].play();
+                        }
                         
-
-                        current_board.update_turn();
                         while(window->pollEvent()) {}
 
                         if (current_board.get_turn()) {
