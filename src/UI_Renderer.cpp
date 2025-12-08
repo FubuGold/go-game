@@ -852,6 +852,47 @@ void Setting_Canvas::setup() {
     tmp->set_pos(tmp_pos);
     add_element(tmp);
 
+     //Resolution change
+    tmp = new Rectangle_Button(284, 63, sf::Color::Transparent, {188, 72, 0}, 50);
+    create_button({37 + 393, 484 + 250}, "RESOLUTION", tmp);
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(267, 75, {247, 222, 57}, sf::Color::Black, 40);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({37 + 393, 578 + 250}, "1920x1080", tmp);
+    tmp->set_press([this]() {
+        std::cerr << "SETTING: 1920x1080 button pressed\n";
+        window->create(sf::VideoMode({1920, 1080}), Config::game_name, sf::Style::Close, sf::State::Windowed);
+        window->setIcon(Config::game_icon);
+        Config::isFullscreen = false;
+    });
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(267, 75, {247, 222, 57}, sf::Color::Black, 40);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({371 + 393, 578 + 250}, "1280x720", tmp);
+    tmp->set_press([this]() {
+        std::cerr << "SETTING: 1280x720 button pressed\n";
+        window->create(sf::VideoMode({1280, 720}), Config::game_name, sf::Style::Close, sf::State::Windowed);
+        window->setIcon(Config::game_icon);
+        Config::isFullscreen = false;
+    });
+    add_element(tmp);
+
+    tmp = new Rectangle_Button(267, 75, {247, 222, 57}, sf::Color::Black, 40);
+    tmp->rect->setOutlineColor(sf::Color::Black);
+    tmp->rect->setOutlineThickness(4.f);
+    create_button({704 + 393, 578 + 250}, "800x450", tmp);
+    tmp->set_press([this]() {
+        std::cerr << "SETTING: 800x450 button pressed\n";
+        window->create(sf::VideoMode({800, 450}), Config::game_name, sf::Style::Close, sf::State::Windowed);
+        window->setIcon(Config::game_icon);
+        Config::isFullscreen = false;
+    });
+    add_element(tmp);
+    
     tmp = new Rectangle_Button(143, 63, sf::Color::Transparent, sf::Color(0xBC,0x48,0x00), 50);
     create_button(tmp_pos + sf::Vector2f(37,24),"AUDIO",tmp);
     add_element(tmp);

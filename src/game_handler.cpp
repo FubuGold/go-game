@@ -9,7 +9,7 @@ GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) 
     this->window_width = window_width;
     this->window_height = window_height;
     
-    window = sf::RenderWindow(sf::VideoMode::getDesktopMode(), game_name, sf::Style::Close, sf::State::Fullscreen);
+    window = sf::RenderWindow(sf::VideoMode::getDesktopMode(), Config::game_name, sf::Style::Close, sf::State::Fullscreen);
     window.setIcon(Config::game_icon);
     game_state = GameState::Menu;
 
@@ -57,7 +57,6 @@ void GameHandler::run() {
     UI_view.setViewport(sf::FloatRect({0.f, 0.f}, {1.f, 1.f}));
     window.setView(UI_view);
     
-    bool isFullscreen = true;
     sf::VideoMode video_mode = sf::VideoMode::getDesktopMode();
     
     while (window.isOpen()) {
@@ -68,15 +67,15 @@ void GameHandler::run() {
             }
             else if (event->is<sf::Event::KeyPressed>()
                     && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::F11) {
-                if (isFullscreen) {
-                    window.create(sf::VideoMode({1280, 720}), game_name, sf::Style::Close, sf::State::Windowed);
+                if (Config::isFullscreen) {
+                    window.create(sf::VideoMode({1280, 720}), Config::game_name, sf::Style::Close, sf::State::Windowed);
                     window.setIcon(Config::game_icon);
                 }
                 else {
-                    window.create(video_mode, game_name, sf::Style::Close, sf::State::Fullscreen);
+                    window.create(video_mode, Config::game_name, sf::Style::Close, sf::State::Fullscreen);
                     window.setIcon(Config::game_icon);
                 }
-                isFullscreen ^= 1;
+                Config::isFullscreen ^= 1;
             }
             else if (event.has_value()){
                 canvas[cur_state]->poll_event(event);

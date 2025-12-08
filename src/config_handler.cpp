@@ -5,6 +5,7 @@
 
 namespace Config {
     sf::Image game_icon("assets/stones/theme_2_black_stone.png");
+    bool isFullscreen = true;
 
     sf::Font font[] = {sf::Font("font/Jua-Regular.ttf"), sf::Font("font/Inter.ttf")};
     sf::Music bgm[] = {

@@ -14,7 +14,9 @@ enum class Difficulty {
 };
 
 namespace Config {
+    const std::string game_name = "Uma@GO";
     extern sf::Image game_icon;
+    extern bool isFullscreen;
 
     extern sf::Font font[2];
     extern sf::Music bgm[3];
