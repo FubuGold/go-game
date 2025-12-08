@@ -4,6 +4,8 @@
 #include <iostream> // Debug only
 
 namespace Config {
+    sf::Image game_icon("assets/stones/theme_2_black_stone.png");
+
     sf::Font font[] = {sf::Font("font/Jua-Regular.ttf"), sf::Font("font/Inter.ttf")};
     sf::Music bgm[] = {
         sf::Music("assets/audio/song/song_1.mp3"),

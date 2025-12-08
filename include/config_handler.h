@@ -14,6 +14,8 @@ enum class Difficulty {
 };
 
 namespace Config {
+    extern sf::Image game_icon;
+
     extern sf::Font font[2];
     extern sf::Music bgm[3];
 

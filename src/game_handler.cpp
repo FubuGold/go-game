@@ -10,6 +10,7 @@ GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) 
     this->window_height = window_height;
     
     window = sf::RenderWindow(sf::VideoMode::getDesktopMode(), game_name, sf::Style::Close, sf::State::Fullscreen);
+    window.setIcon(Config::game_icon);
     game_state = GameState::Menu;
 
     canvas[0] = new GUI::Menu_Canvas();
@@ -69,9 +70,11 @@ void GameHandler::run() {
                     && event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::F11) {
                 if (isFullscreen) {
                     window.create(sf::VideoMode({1280, 720}), game_name, sf::Style::Close, sf::State::Windowed);
+                    window.setIcon(Config::game_icon);
                 }
                 else {
                     window.create(video_mode, game_name, sf::Style::Close, sf::State::Fullscreen);
+                    window.setIcon(Config::game_icon);
                 }
                 isFullscreen ^= 1;
             }
