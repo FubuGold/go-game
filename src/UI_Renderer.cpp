@@ -852,49 +852,70 @@ void Setting_Canvas::setup() {
     Droplist *droplist = new Droplist(
         406, 75, "Theme", {247, 222, 57}, sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
     );
+    
+    sf::Vector2f theme_pos[3] = {{84+336,379+88},{84+336,379+163},{84+336,379+238}};
+    tmp = create_sprite(tmp_pos + theme_pos[Config::selected_theme_number],"assets/indicator.png");
+    
     droplist->title_button->rect->setOutlineColor(sf::Color::Black);
     droplist->title_button->rect->setOutlineThickness(-4);
     droplist->set_pos(tmp_pos + sf::Vector2f(84,379));
-    droplist->add_element("Theme 1",[](){
+    droplist->add_element("Theme 1",[tmp,theme_pos,tmp_pos](){
         Config::sfx[0].play();
         Config::selected_theme_number = 0;
         Config::selected_theme = Config::theme[0];
+        tmp->set_pos(tmp_pos + theme_pos[Config::selected_theme_number]);
         std::cerr << "Theme 1 selected\n";
     });
-    droplist->add_element("Theme 2",[](){
+    droplist->add_element("Theme 2",[tmp,theme_pos,tmp_pos](){
         Config::sfx[0].play();
         Config::selected_theme_number = 1;
         Config::selected_theme = Config::theme[1];
+        tmp->set_pos(tmp_pos + theme_pos[Config::selected_theme_number]);
         std::cerr << "Theme 2 selected\n";
     });
-    droplist->add_element("Theme 3",[](){
+    droplist->add_element("Theme 3",[tmp,theme_pos,tmp_pos](){
         Config::sfx[0].play();
         Config::selected_theme_number = 2;
         Config::selected_theme = Config::theme[2];
+        tmp->set_pos(tmp_pos + theme_pos[Config::selected_theme_number]);
         std::cerr << "Theme 3 selected\n";
     });
+    droplist->add_extra(tmp);
+    // add_element(tmp);
     add_element(droplist);
+    
+    sf::Vector2f song_pos[3] = {{555+336,379+88},{555+336,379+163},{555+336,379+238}};
+    tmp = create_sprite(tmp_pos + song_pos[Config::selected_theme_number],"assets/indicator.png");
+    
     droplist = new Droplist(
         406, 75, "Song", {247, 222, 57}, sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
     );
     droplist->title_button->rect->setOutlineColor(sf::Color::Black);
     droplist->title_button->rect->setOutlineThickness(-4);
     droplist->set_pos(tmp_pos + sf::Vector2f(555,379));
-    droplist->add_element("Song 1",[](){
+    droplist->add_element("Song 1",[tmp,song_pos,tmp_pos](){
         Config::sfx[0].play();
         std::cerr << "Song 1 selected\n";
+        Config::selected_bgm = 0;
+        tmp->set_pos(tmp_pos + song_pos[Config::selected_bgm]);
         Config::change_music(0);
     });
-    droplist->add_element("Song 2",[](){
+    droplist->add_element("Song 2",[tmp,song_pos,tmp_pos](){
         Config::sfx[0].play();
         std::cerr << "Song 2 selected\n";
+        Config::selected_bgm = 1;
+        tmp->set_pos(tmp_pos + song_pos[Config::selected_bgm]);
         Config::change_music(1);
     });
-    droplist->add_element("Song 3",[](){
+    droplist->add_element("Song 3",[tmp,song_pos,tmp_pos](){
         Config::sfx[0].play();
         std::cerr << "Song 3 selected\n";
+        Config::selected_bgm = 2;
+        tmp->set_pos(tmp_pos + song_pos[Config::selected_bgm]);
         Config::change_music(2);
     });
+    droplist->add_extra(tmp);
+    // add_element(tmp);
     add_element(droplist);
 
     tmp = new Rectangle_Button(377, 103, {255, 183, 106}, sf::Color::Black, 60);

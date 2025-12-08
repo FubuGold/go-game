@@ -354,16 +354,20 @@ Droplist::Droplist(
             sf::Color main_color,
             sf::Color main_text_color,
             sf::Color sub_color,
-            sf::Color sub_text_color
+            sf::Color sub_text_color,
+            int text_size
         ) {
     this->button_width = button_width;
     this->button_height = button_height;
     this->sub_color = sub_color;
     this->sub_text_color = sub_text_color;
+    this->text_size = text_size;
 
     title_button = new Rectangle_Button(button_width, button_height);
+    title_button->text->setCharacterSize(text_size);
     title_button->set_text_string(title_text);
     title_button->set_press([this](){
+        Config::sfx[0].play();
         is_expanded = !is_expanded;
     });
     title_button->rect->setFillColor(main_color);
@@ -392,6 +396,9 @@ void Droplist::set_window(sf::RenderWindow *render_win_p) {
     for (Rectangle_Button *p: drop_list) {
         p->set_window(render_win_p);
     }
+    for (Element *p: extra) {
+        p->set_window(render_win_p);
+    }
     window = render_win_p;
 }
 
@@ -401,7 +408,7 @@ void Droplist::add_element(const std::string &text, callback_t func) {
     tmp->set_press([this,func](){
         if (is_expanded) func();
     });
-    tmp->set_text_string(text);
+    tmp->text->setCharacterSize(text_size);
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(-4);
     tmp->rect->setFillColor(sub_color);
@@ -416,7 +423,12 @@ void Droplist::add_element(const std::string &text, callback_t func) {
     prev_pos.y += button_height;
     tmp->set_pos(prev_pos);
     drop_list.push_back(tmp);
+    tmp->set_text_string(text);
     update_bound();
+}
+
+void Droplist::add_extra(Element *p) {
+    extra.push_back(p);
 }
 
 void Droplist::set_pos(float pos_x,float pos_y) {
@@ -445,6 +457,10 @@ void Droplist::draw() {
     title_button->draw();
     if (is_expanded) {
         for (Rectangle_Button *p: drop_list) {
+            p->draw();
+        }
+        for (Element *p: extra) {
+            // std::cerr << p << '\n';
             p->draw();
         }
     }

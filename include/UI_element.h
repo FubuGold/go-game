@@ -271,6 +271,7 @@ namespace GUI {
     class Droplist : public Element {
     private:
         std::vector<Rectangle_Button*> drop_list;
+        std::vector<Element*> extra;
         void update_bound();
         float button_width,button_height;
 
@@ -278,6 +279,7 @@ namespace GUI {
         Rectangle_Button *title_button;
         sf::Color sub_color, sub_text_color;
         int count = 0;
+        int text_size;
         bool is_expanded = 0;
 
         Droplist(
@@ -287,7 +289,8 @@ namespace GUI {
             sf::Color main_color = sf::Color::Black,
             sf::Color main_text_color = sf::Color::White,
             sf::Color sub_color = sf::Color::White,
-            sf::Color sub_text_color = sf::Color::Black
+            sf::Color sub_text_color = sf::Color::Black,
+            int text_size = 40
         );
         ~Droplist();
 
@@ -298,6 +301,14 @@ namespace GUI {
          * @param func 
          */
         void add_element(const std::string &text, callback_t func);
+
+        /**
+         * @brief Add extra element to droplist
+         * 
+         * @param text 
+         * @param func 
+         */
+        void add_extra(Element *p);
 
         void set_window(sf::RenderWindow *render_win_ptr) override;
 
