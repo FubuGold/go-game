@@ -71,6 +71,7 @@ namespace Config {
         // j.at("theme").get_to(selected_theme);
         j.at("bgm").get_to(selected_bgm);
         j.at("audio_volume").get_to(audio_volume);
+        j.at("theme").get_to(selected_theme_number);
 
         bgm[selected_bgm].setVolume(cal_music_vol(1));
         bgm[selected_bgm].setLooping(true);
@@ -85,6 +86,7 @@ namespace Config {
         // j["theme"] = selected_theme;
         j["bgm"] = selected_bgm;
         j["audio_volume"] = audio_volume;
+        j["theme"] = selected_theme_number;
 
         std::ofstream out("data/config.json");
         out << j;
@@ -100,14 +102,10 @@ namespace Config {
         bgm[selected_bgm].play();
     }
 
-    void change_theme(int new_theme) {
-
-    }
-
     void update_volume() {
         bgm[selected_bgm].setVolume(cal_music_vol(1));
-        sfx[0].setVolume(cal_music_vol(2));
-        sfx[1].setVolume(cal_music_vol(2));
-        sfx[2].setVolume(cal_music_vol(2));
+        for (int i=0;i<5;i++) {
+            sfx[i].setVolume(cal_music_vol(2));
+        }
     }
 }

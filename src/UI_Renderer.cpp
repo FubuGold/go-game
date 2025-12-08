@@ -885,7 +885,7 @@ void Setting_Canvas::setup() {
     add_element(droplist);
     
     sf::Vector2f song_pos[3] = {{555+336,379+88},{555+336,379+163},{555+336,379+238}};
-    tmp = create_sprite(tmp_pos + song_pos[Config::selected_theme_number],"assets/indicator.png");
+    tmp = create_sprite(tmp_pos + song_pos[Config::selected_bgm],"assets/indicator.png");
     
     droplist = new Droplist(
         406, 75, "Song", {247, 222, 57}, sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
