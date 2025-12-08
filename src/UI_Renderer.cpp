@@ -340,10 +340,10 @@ int Gameplay_Canvas::play_ai_move() {
     std::cerr << "GAMEPLAY: AI made a move: (" << new_move.pos_x << ", " << new_move.pos_y << ")\n";
     if (new_move.stone_type == '.') {
         std::cerr << "Out of valid move\n";
-        // std::cerr << "Ai pre add:" << current_board.pass << '\n';
+        std::cerr << "Ai pre add:" << current_board.pass << '\n';
         current_board.pass++;
-        // std::cerr << "Ai post add:" << current_board.pass << '\n';
-        current_board.update_turn();
+        std::cerr << "Ai post add:" << current_board.pass << '\n';
+        // current_board.update_turn();
         return 0;
     }
 
@@ -356,7 +356,7 @@ int Gameplay_Canvas::play_ai_move() {
     std::cerr << "Complete adding AI move\n";
 
     current_board.pass = 0;
-    current_board.update_turn();
+    // current_board.update_turn();
     
     if (ko_threat) return 3;
     else if (tmp2 > tmp1) return 2;
@@ -600,6 +600,8 @@ void Gameplay_Canvas::setup() {
                     Config::sfx[3].play();
                 }
 
+                current_board.update_turn();
+
                 while(window->pollEvent()) {}
             }
         }
@@ -796,6 +798,8 @@ void Gameplay_Canvas::setup() {
                             capture_popup->enable_popup();
                             Config::sfx[3].play();
                         }
+
+                        current_board.update_turn();
                         
                         while(window->pollEvent()) {}
 

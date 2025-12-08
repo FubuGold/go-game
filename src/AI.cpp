@@ -40,9 +40,9 @@ Move ai_move(Difficulty difficulty) {
     if (difficulty == Difficulty::EASY) tmp = easy_ai();
     else if (difficulty == Difficulty::MEDIUM) tmp = medium_ai();
     else tmp = hard_ai();
-    // std::cerr << tmp.pos_x << ' ' << tmp.pos_y << ' ' << tmp.stone_type << '\n';
+    std::cerr << tmp.pos_x << ' ' << tmp.pos_y << ' ' << tmp.stone_type << '\n';
     if (tmp.pos_x >= BOARD_SIZE || tmp.pos_y >= BOARD_SIZE || tmp.pos_x < 0 || tmp.pos_y < 0 || tmp.stone_type == '.') tmp = Move();
-    // std::cerr << tmp.pos_x << ' ' << tmp.pos_y << ' ' << tmp.stone_type << '\n';
+    std::cerr << tmp.pos_x << ' ' << tmp.pos_y << ' ' << tmp.stone_type << '\n';
     return tmp;
 }
 
@@ -131,7 +131,7 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
     }
     // Speed up by trying to play move that capture stone
     int pre = ai_turn ? current_board.captured_black : current_board.captured_white;
-    Node best_move = {tmp.first - tmp.second, {BOARD_SIZE,BOARD_SIZE}};
+    Node best_move = {ai_turn ? INT_MAX : INT_MIN, {BOARD_SIZE,BOARD_SIZE}};
     char op = opposite_stone(AI_STONE);
     std::vector<Node> vec;
     for (int i=0;i<BOARD_SIZE;i++) {
@@ -190,6 +190,6 @@ Move hard_ai() {
     auto t2 = high_resolution_clock::now();
     duration<double, std::milli> ms_double = t2 - t1;
     std::cerr << "AI have thought for: " << ms_double.count() << "ms\n";
-    sf::sleep(sf::milliseconds(1500)); // Artifical delay
+    // sf::sleep(sf::milliseconds(1500)); // Artifical delay
     return Move(res.second.first,res.second.second,AI_STONE);
 }
