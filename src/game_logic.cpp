@@ -8,10 +8,6 @@
 Board current_board;
 bool ko_rule_violated = false;
 
-void reset_game() {
-    current_board.reset();
-}
-
 CustomQueue q;
 
 std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> find_captured_stone(int stx,int sty) {

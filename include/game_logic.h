@@ -9,8 +9,6 @@ const int direction_y[] = {1, -1, 0, 0};
 extern Board current_board;
 extern bool ko_rule_violated;
 
-void reset_game();
-
 std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int, int>>> find_captured_stone(int stx,int sty); //Return two vectors which contain captured white and black stone 
 
 bool add_move(Move new_move);
