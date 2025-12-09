@@ -50,13 +50,13 @@ std::pair<int,int> scoring(const Board &board) {
                 if (!check(vx,vy) || board.get_state(vx,vy) != '.') continue;
                 if (board.get_state(i,j) == 'X') {
                         if (vst[vx][vy] == 1 || vst[vx][vy] == 3) continue;
-                        if (vst[vx][vy] == 2) dfs(i,j,3,vst,board);
-                        else dfs(i,j,1,vst,board);
+                        if (vst[vx][vy] == 2) dfs(vx,vy,3,vst,board);
+                        else dfs(vx,vy,1,vst,board);
                 }
                 else if (board.get_state(i,j) == 'O') {
                     if (vst[vx][vy] == 2 || vst[vx][vy] == 3) continue;
-                    if (vst[vx][vy] == 1) dfs(i,j,3,vst,board);
-                    else dfs(i,j,2,vst,board);
+                    if (vst[vx][vy] == 1) dfs(vx,vy,3,vst,board);
+                    else dfs(vx,vy,2,vst,board);
                 }
             }
         }

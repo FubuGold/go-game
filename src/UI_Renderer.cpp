@@ -866,9 +866,10 @@ void Setting_Canvas::setup() {
         window->create(sf::VideoMode({1920, 1080}), Config::game_name, sf::Style::Close, sf::State::Windowed);
         window->setIcon(Config::game_icon);
         Config::isFullscreen = false;
+        Config::resolution = {1920,1080};
     });
     add_element(tmp);
-
+    
     tmp = new Rectangle_Button(267, 75, {247, 222, 57}, sf::Color::Black, 40);
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
@@ -878,9 +879,10 @@ void Setting_Canvas::setup() {
         window->create(sf::VideoMode({1280, 720}), Config::game_name, sf::Style::Close, sf::State::Windowed);
         window->setIcon(Config::game_icon);
         Config::isFullscreen = false;
+        Config::resolution = {1280,720};
     });
     add_element(tmp);
-
+    
     tmp = new Rectangle_Button(267, 75, {247, 222, 57}, sf::Color::Black, 40);
     tmp->rect->setOutlineColor(sf::Color::Black);
     tmp->rect->setOutlineThickness(4.f);
@@ -890,6 +892,7 @@ void Setting_Canvas::setup() {
         window->create(sf::VideoMode({800, 450}), Config::game_name, sf::Style::Close, sf::State::Windowed);
         window->setIcon(Config::game_icon);
         Config::isFullscreen = false;
+        Config::resolution = {800,450};
     });
     add_element(tmp);
     

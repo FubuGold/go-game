@@ -9,7 +9,9 @@ GameHandler::GameHandler(unsigned int window_width, unsigned int window_height) 
     this->window_width = window_width;
     this->window_height = window_height;
     
-    window = sf::RenderWindow(sf::VideoMode::getDesktopMode(), Config::game_name, sf::Style::Close, sf::State::Fullscreen);
+    sf::VideoMode vidmode = Config::isFullscreen ? sf::VideoMode::getDesktopMode() : sf::VideoMode({(unsigned int)Config::resolution.first,(unsigned int)Config::resolution.second});
+    std::cerr << vidmode.size.x << ' ' << vidmode.size.y << '\n';
+    window = sf::RenderWindow(vidmode, Config::game_name, sf::Style::Close, Config::isFullscreen ? sf::State::Fullscreen : sf::State::Windowed);
     window.setIcon(Config::game_icon);
     game_state = GameState::Menu;
 
@@ -58,7 +60,7 @@ void GameHandler::run() {
     window.setView(UI_view);
     
     sf::VideoMode video_mode = sf::VideoMode::getDesktopMode();
-    
+
     while (window.isOpen()) {
         size_t cur_state = state_to_int(game_state);
         while (const std::optional event = window.pollEvent()) {

@@ -17,6 +17,7 @@ namespace Config {
     const std::string game_name = "Uma@GO";
     extern sf::Image game_icon;
     extern bool isFullscreen;
+    extern std::pair<int,int> resolution;
 
     extern sf::Font font[2];
     extern sf::Music bgm[3];

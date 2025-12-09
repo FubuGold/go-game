@@ -6,6 +6,7 @@
 namespace Config {
     sf::Image game_icon("assets/stones/theme_2_black_stone.png");
     bool isFullscreen = true;
+    std::pair<int,int> resolution = {1920,1080};
 
     sf::Font font[] = {sf::Font("font/Jua-Regular.ttf"), sf::Font("font/Inter.ttf")};
     sf::Music bgm[] = {
@@ -77,6 +78,8 @@ namespace Config {
         j.at("bgm").get_to(selected_bgm);
         j.at("audio_volume").get_to(audio_volume);
         j.at("theme").get_to(selected_theme_number);
+        j.at("isFullscreen").get_to(isFullscreen);
+        j.at("resolution").get_to(resolution);
 
         bgm[selected_bgm].setVolume(cal_music_vol(1));
         bgm[selected_bgm].setLooping(true);
@@ -94,6 +97,8 @@ namespace Config {
         j["bgm"] = selected_bgm;
         j["audio_volume"] = audio_volume;
         j["theme"] = selected_theme_number;
+        j["isFullscreen"] = isFullscreen;
+        j["resolution"] = resolution;
 
         std::ofstream out("data/config.json");
         out << j;
