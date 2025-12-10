@@ -43,7 +43,6 @@ namespace Config {
     void save_config();
 
     void change_music(int new_bgm);
-    void change_theme(int new_theme);
     void update_volume();
 }
 
