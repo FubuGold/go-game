@@ -18,30 +18,85 @@ Run `make` (or `make all`) to build
 ## File tree
 
 ```bash
-go-game
- ┣ 📂.vscode
- ┃ ┣ 📜settings.json
- ┃ ┗ 📜tasks.json
- ┣ 📂data
- ┃ ┗ 📜config.json
- ┣ 📂include
- ┃ ┣ 📜board.h
- ┃ ┣ 📜game_logic.h
- ┃ ┣ 📜game_scoring.h
- ┃ ┣ 📜test.h
- ┃ ┗ 📜zobrist_hash.h
- ┣ 📂lib
- ┃ ┗ 📜json.hpp
- ┣ 📂src
- ┃ ┣ 📜board.cpp
- ┃ ┣ 📜game_logic.cpp
- ┃ ┣ 📜game_scoring.cpp
- ┃ ┣ 📜main.cpp
- ┃ ┣ 📜test.cpp
- ┃ ┗ 📜zobrist_hash.cpp
- ┣ 📜.gitignore
- ┣ 📜Makefile
- ┗ 📜README.md
+go-game/
+ ┣ data
+ ┃ ┣ config.json
+ ┃ ┗ saved_game.json
+ ┣ font
+ ┃ ┣ Inter.ttf
+ ┃ ┗ Jua-Regular.ttf
+ ┣ include
+ ┃ ┣ AI.h
+ ┃ ┣ board.h
+ ┃ ┣ config_handler.h
+ ┃ ┣ custom_util.h
+ ┃ ┣ game_handler.h
+ ┃ ┣ game_logic.h
+ ┃ ┣ game_scoring.h
+ ┃ ┣ test.h
+ ┃ ┣ UI_element.h
+ ┃ ┣ UI_Renderer.h
+ ┃ ┗ zobrist_hash.h
+ ┣ lib/
+ ┃ ┗ json.hpp
+ ┣ src
+ ┃ ┣ AI.cpp
+ ┃ ┣ board.cpp
+ ┃ ┣ config_handler.cpp
+ ┃ ┣ game_handler.cpp
+ ┃ ┣ game_logic.cpp
+ ┃ ┣ game_scoring.cpp
+ ┃ ┣ main.cpp
+ ┃ ┣ test.cpp
+ ┃ ┣ UI_element.cpp
+ ┃ ┣ UI_Renderer.cpp
+ ┃ ┗ zobrist_hash.cpp
+ ┣ assets
+ ┃ ┣ audio
+ ┃ ┃ ┣ sfx
+ ┃ ┃ ┃ ┣ gamefinish.wav
+ ┃ ┃ ┃ ┣ kothreat.wav
+ ┃ ┃ ┃ ┣ menuclick.wav
+ ┃ ┃ ┃ ┣ saveclick.wav
+ ┃ ┃ ┃ ┣ stonecapture.wav
+ ┃ ┃ ┃ ┣ theme_1_stoneplace.wav
+ ┃ ┃ ┃ ┣ theme_2_stoneplace.wav
+ ┃ ┃ ┃ ┣ theme_3_stoneplace_black.wav
+ ┃ ┃ ┃ ┗ theme_3_stoneplace_white.wav
+ ┃ ┃ ┗ song
+ ┃ ┃ ┃ ┣ note.txt
+ ┃ ┃ ┃ ┣ song_1.mp3
+ ┃ ┃ ┃ ┣ song_2.mp3
+ ┃ ┃ ┃ ┗ song_3.mp3
+ ┃ ┣ board_background
+ ┃ ┃ ┣ theme_1.png
+ ┃ ┃ ┣ theme_2.png
+ ┃ ┃ ┗ theme_3.png
+ ┃ ┣ gameplay_buttons
+ ┃ ┃ ┣ back.png
+ ┃ ┃ ┣ music_off.png
+ ┃ ┃ ┣ music_on.png
+ ┃ ┃ ┣ pass.png
+ ┃ ┃ ┣ redo.png
+ ┃ ┃ ┣ reset.png
+ ┃ ┃ ┣ save.png
+ ┃ ┃ ┗ undo.png
+ ┃ ┣ stones
+ ┃ ┃ ┣ theme_1_black_stone.png
+ ┃ ┃ ┣ theme_1_white_stone.png
+ ┃ ┃ ┣ theme_2_black_stone.png
+ ┃ ┃ ┣ theme_2_white_stone.png
+ ┃ ┃ ┣ theme_3_black_stone.png
+ ┃ ┃ ┗ theme_3_white_stone.png
+ ┃ ┣ 2_players.png
+ ┃ ┣ easy.png
+ ┃ ┣ game_title.png
+ ┃ ┣ hard.png
+ ┃ ┣ indicator.png
+ ┃ ┣ normal.png
+ ┃ ┗ vs_computer.png
+ ┣ Makefile
+ ┗ README.md
 ```
 
 ## Tech stack
