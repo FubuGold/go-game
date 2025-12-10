@@ -119,5 +119,11 @@ namespace Config {
         for (int i=0;i<6;i++) {
             sfx[i].setVolume(cal_volume(2));
         }
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 2; j++) {
+                theme_sfx[i][j].setVolume(cal_volume(2));
+            }
+        }
     }
 }
