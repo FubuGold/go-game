@@ -65,7 +65,7 @@ namespace Config {
     int selected_bgm = 0;
     int audio_volume[] = {100, 100, 100};
 
-    float cal_music_vol(int id) {
+    float cal_volume(int id) {
         return 1.f * audio_volume[0] / 100.f * audio_volume[id];
     }
 
@@ -81,7 +81,7 @@ namespace Config {
         j.at("isFullscreen").get_to(isFullscreen);
         j.at("resolution").get_to(resolution);
 
-        bgm[selected_bgm].setVolume(cal_music_vol(1));
+        bgm[selected_bgm].setVolume(cal_volume(1));
         bgm[selected_bgm].setLooping(true);
         bgm[selected_bgm].play();
 
@@ -110,14 +110,14 @@ namespace Config {
         bgm[selected_bgm].stop();
         selected_bgm = new_bgm;
         bgm[selected_bgm].setLooping(true);
-        bgm[selected_bgm].setVolume(cal_music_vol(1));
+        bgm[selected_bgm].setVolume(cal_volume(1));
         bgm[selected_bgm].play();
     }
 
     void update_volume() {
-        bgm[selected_bgm].setVolume(cal_music_vol(1));
+        bgm[selected_bgm].setVolume(cal_volume(1));
         for (int i=0;i<6;i++) {
-            sfx[i].setVolume(cal_music_vol(2));
+            sfx[i].setVolume(cal_volume(2));
         }
     }
 }
