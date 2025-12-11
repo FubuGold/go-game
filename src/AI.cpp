@@ -156,9 +156,7 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
             if (ai_turn) {
                 best_move = std::min(best_move,cur);
                 beta = std::min(beta,cur.first);
-                // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
                 if (beta <= alpha) {
-                    // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
                     current_board.undo_move(false);
                     return best_move;
                 }
@@ -166,9 +164,7 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
             else {
                 best_move = std::max(best_move,cur);
                 alpha = std::max(alpha,cur.first);
-                // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
                 if (beta <= alpha) {
-                    // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
                     current_board.undo_move(false);
                     return best_move;
                 }
