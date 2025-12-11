@@ -76,7 +76,6 @@ Node minimax(bool ai_turn,int depth) {
             if (add_move(Move(i,j,ai_turn ? AI_STONE : op))) {
                 Node cur = minimax(!ai_turn,depth-1);
                 cur.second = {i,j};
-                // std::cerr << cur.first << '\n';
                 if (ai_turn) { // minimize
                     if (best_move > cur.first) {
                         vec.clear();
@@ -96,9 +95,7 @@ Node minimax(bool ai_turn,int depth) {
                     }
                 }
 
-                // std::cerr << "AI board pass end 1.1: " << current_board.pass << '\n';
                 current_board.undo_move(false);
-                // std::cerr << "AI board pass end 1.2: " << current_board.pass << '\n';
             }
         }
     }
@@ -156,9 +153,7 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
             if (ai_turn) {
                 best_move = std::min(best_move,cur);
                 beta = std::min(beta,cur.first);
-                // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
                 if (beta <= alpha) {
-                    // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
                     current_board.undo_move(false);
                     return best_move;
                 }
@@ -166,9 +161,7 @@ Node minimax_pruning(bool ai_turn,int depth,int alpha,int beta) {
             else {
                 best_move = std::max(best_move,cur);
                 alpha = std::max(alpha,cur.first);
-                // std::cerr << best_move.first << ' ' << best_move.second.first << ' ' << best_move.second.second << '\n';
                 if (beta <= alpha) {
-                    // std::cerr << "Break: " << ai_turn << ' ' << depth << ' ' << alpha << ' ' << beta << '\n';
                     current_board.undo_move(false);
                     return best_move;
                 }
