@@ -22,9 +22,6 @@ enum class GameState {
 };
 
 namespace GUI {
-
-    void game_reset();
-
     class Canvas {
     protected:
         std::vector<Element*> element_l;
@@ -166,8 +163,9 @@ namespace GUI {
 
     class Setting_Canvas : public Canvas {
     private:
-
-    public:    
+        bool *dropbox_1_is_show = nullptr;
+        bool *dropbox_2_is_show = nullptr;
+    public:
         void setup() override;
     };
 }

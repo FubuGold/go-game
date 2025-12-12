@@ -862,6 +862,7 @@ void Setting_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({37 + 393, 578 + 250}, "1920x1080", tmp);
     tmp->set_press([this]() {
+        if (*dropbox_1_is_show) return;
         std::cerr << "SETTING: 1920x1080 button pressed\n";
         window->create(sf::VideoMode({1920, 1080}), Config::game_name, sf::Style::Close, sf::State::Windowed);
         window->setIcon(Config::game_icon);
@@ -875,6 +876,7 @@ void Setting_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({371 + 393, 578 + 250}, "1280x720", tmp);
     tmp->set_press([this]() {
+        if (*dropbox_1_is_show || *dropbox_2_is_show) return;
         std::cerr << "SETTING: 1280x720 button pressed\n";
         window->create(sf::VideoMode({1280, 720}), Config::game_name, sf::Style::Close, sf::State::Windowed);
         window->setIcon(Config::game_icon);
@@ -888,6 +890,7 @@ void Setting_Canvas::setup() {
     tmp->rect->setOutlineThickness(4.f);
     create_button({704 + 393, 578 + 250}, "800x450", tmp);
     tmp->set_press([this]() {
+        if (*dropbox_2_is_show) return;
         std::cerr << "SETTING: 800x450 button pressed\n";
         window->create(sf::VideoMode({800, 450}), Config::game_name, sf::Style::Close, sf::State::Windowed);
         window->setIcon(Config::game_icon);
@@ -896,6 +899,7 @@ void Setting_Canvas::setup() {
     });
     add_element(tmp);
     
+    //Audio
     tmp = new Rectangle_Button(143, 63, sf::Color::Transparent, sf::Color(0xBC,0x48,0x00), 50);
     create_button(tmp_pos + sf::Vector2f(37,24),"AUDIO",tmp);
     add_element(tmp);
@@ -946,9 +950,11 @@ void Setting_Canvas::setup() {
     create_button(tmp_pos + sf::Vector2f(37,285),"OTHER",tmp);
     add_element(tmp);
 
+    //Theme and song
     Droplist *droplist = new Droplist(
         406, 75, "Theme", {247, 222, 57}, sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
     );
+    dropbox_1_is_show = &droplist->is_expanded;
     
     sf::Vector2f theme_pos[3] = {{84+336,379+88},{84+336,379+163},{84+336,379+238}};
     tmp = create_sprite(tmp_pos + theme_pos[Config::selected_theme_number],"assets/indicator.png");
@@ -987,6 +993,8 @@ void Setting_Canvas::setup() {
     droplist = new Droplist(
         406, 75, "Song", {247, 222, 57}, sf::Color::Black, sf::Color(0xBA,0xBA,0xBA), sf::Color::Black
     );
+    dropbox_2_is_show = &droplist->is_expanded;
+
     droplist->title_button->rect->setOutlineColor(sf::Color::Black);
     droplist->title_button->rect->setOutlineThickness(-4);
     droplist->set_pos(tmp_pos + sf::Vector2f(555,379));

@@ -144,7 +144,7 @@ clean:
   - Minimax.
   - Minimax + Alpha-Beta Pruning.
 
-## Credit:
+## Credit
 - [JSON for Modern C++ by nlohmann](https://json.nlohmann.me/)
 
 - Background music:
