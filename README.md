@@ -1,4 +1,5 @@
 ![Game logo](assets/game_title.png)
+
 Version: Sigma_7.2.7.
 
 This is a Go game with Japanese ruleset recreation using C++.
