@@ -1,19 +1,12 @@
-# Go game
-Version 0.1
+![Game logo](assets/game_title.png)
+Version: Sigma_7.2.7.
 
-This is a Go game recreation using C++. Japanese ruleset is used.
+This is a Go game with Japanese ruleset recreation using C++.
 
 ## Instruction
 Currently, the game needs C++ and its library in PATH environment variable to correctly link to the .dll files.
 
 Run game.exe file to play.
-
-## Build
-Make use you have `makefile` to build.
-
-Change the SFML path (`CFLAGS` and `LDFLAGS`) before build.
-
-Run `make` (or `make all`) to build
 
 ## File tree
 
@@ -98,20 +91,24 @@ go-game/
  ┣ Makefile
  ┗ README.md
 ```
+## Gameplay Preview
+Main menu:
+![Main menu preview](img/menu.png)
+Theme 1:
+![Theme 1 preview](img/theme_1.png)
+Theme 2:
+![Theme 2 preview](img/theme_2.png)
+Theme 3:
+![Theme 3 preview](img/theme_3.png)
 
-## Tech stack
-Language: C++
-- Compiler: g++ (Rev8, Built by MSYS2 project) 15.2.0.
-- Build system: Makefile.
+## Build
+- Make use you have `makefile` to build.
 
-Graphic (not implemented): SFML 
+- Change the SFML path (`CFLAGS` and `LDFLAGS`) before build.
 
-AI (not implemented):
-- Random - No judgement 
-- Minimax - Shallow 
-- Minimax + Alpha-Beta Pruning
+- Run `make` (or `make all`) to build
 
-## Makefile
+## Makefile Example
 ```bash
 CXX = g++
 CXXFLAGS = -std=c++17 -Iinclude -I[SFML-PATH]\include -DSFML_STATIC -static -static-libgcc -static-libstdc++
@@ -133,3 +130,25 @@ $(TARGET): $(OBJ)
 clean:
 	rm -f src/*.o $(TARGET) $(TEST_TARGET)
 ```
+
+## Technology Stack
+- Language: C++
+  - Compiler: g++ (Rev8, Built by MSYS2 project) 15.2.0.
+  - Build system: Makefile.
+
+- Graphic: SFML 3.0.2.
+
+- AI:
+  - Random.
+  - Minimax.
+  - Minimax + Alpha-Beta Pruning.
+
+## Credit:
+- [JSON for Modern C++ by nlohmann](https://json.nlohmann.me/)
+
+- Background music:
+  - Song 1: Himeko's Theme - Narcissu 1st and Side 2nd OST.
+  - Song 2: ミツキヨ (Mitsukiyo) - おかえりトロイメへ.
+  - Song 3: re:plus - Solitude.
+
+- Theme 3 used image and sound effect references from the game [Umamusume: Pretty Derby](https://umamusume.com/), all copyrights belong to Cygames, Inc.
