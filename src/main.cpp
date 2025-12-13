@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include <windows.h>
 
 #include "../include/game_handler.h"
 #include "../include/test.h"
